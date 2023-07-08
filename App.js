@@ -107,7 +107,15 @@ const App = () => {
         ? Object.values(error.response?.data)
         : ""
       if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+        if (
+          showWError[0] === "Business Subscription currently is not active."
+        ) {
+          Toast.show(
+            `Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then`
+          )
+        } else {
+          Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+        }
       } else {
         Toast.show(`Error: ${JSON.stringify(error)}`)
       }
@@ -130,9 +138,17 @@ const App = () => {
         ? Object.values(error.response?.data)
         : ""
       if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+        if (
+          showWError[0] === "Business Subscription currently is not active."
+        ) {
+          Toast.show(
+            `Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then`
+          )
+        } else {
+          Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+        }
       } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
+        Toast.show(`ErrorF  : ${JSON.stringify(error)}`)
       }
     }
   }

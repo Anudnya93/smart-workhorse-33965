@@ -123,14 +123,14 @@ function AuthLoading({ navigation }) {
         // alert(err)
       })
     messaging().onNotificationOpenedApp(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage)
+      console.log("Message handled in the background!", remoteMessage)
     })
 
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       var localNotification = {
         id: 0, // (optional) Valid unique 32 bit integer specified as string.
         title: remoteMessage.notification.title, // (optional)
-        message: remoteMessage.notification.body, // (required)
+        message: remoteMessage.notification.body // (required)
         // data: remoteMessage.data
       }
 
@@ -149,7 +149,7 @@ function AuthLoading({ navigation }) {
           notification.finish(PushNotificationIOS.FetchResult.NoData)
         },
         onRegistrationError: function (err) {
-          console.warn(err.message, err);
+          console.warn(err.message, err)
         },
         senderID: "987250699049",
         permissions: {
@@ -177,7 +177,7 @@ function AuthLoading({ navigation }) {
     const token = await AsyncStorage.getItem("token")
     const user = await AsyncStorage.getItem("user")
     const userData = JSON.parse(user)
-    console.warn('getToken', getToken);
+    console.warn("getToken", getToken)
     const payloadRead = {
       device_id: getToken, // Send if you can otherwise remove field
       registration_id: getToken,
@@ -195,7 +195,7 @@ function AuthLoading({ navigation }) {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL
-    console.warn('enabled', enabled);
+    console.warn("enabled", enabled)
     registerAppWithFCM()
     if (enabled) {
     }
