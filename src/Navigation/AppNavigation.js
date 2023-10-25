@@ -46,10 +46,8 @@ export const AuthNavigator = props => {
   return (
     <Stack.Navigator
       screenOptions={{ gestureEnabled: false }}
-      initialRouteName={'splash'}
-      headerMode='none'
+      headerMode="none"
     >
-      <Stack.Screen name={'splash'} component={SplashScene} />
       <Stack.Screen name={'AuthLoading'} component={AuthLoading} />
       <Stack.Screen name={'chooseEnv'} component={ChooseEnvScene} />
 
