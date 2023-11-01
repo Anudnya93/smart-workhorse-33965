@@ -52,7 +52,7 @@ const forms = {
   addressLine2: 'Address line 2',
   city: 'City',
   birthdayLabel: 'Birth Date',
-  pricePerHr: 'Hourly Rate e.g. 99.99',
+  pricePerHr: 'Hourly Rate',
   workInfo: 'Work Information',
   worksiteLocation: 'Worksite Location e.g Park Avenue',
   worksiteName: 'Worksite Name e.g. Tall Tower',

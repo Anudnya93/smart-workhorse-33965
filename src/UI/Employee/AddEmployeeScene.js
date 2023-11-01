@@ -262,6 +262,8 @@ export default function AddEmployeeScene({ navigation, route }) {
           value={state[fields.key]}
           onChangeText={(text, isValid) => handleChange(fields.key, text)}
           key={fields.key}
+          placeholder={fields.placeholder}
+          keyboardType="number-pad"
         />
       ) : (
         <PrimaryTextInput

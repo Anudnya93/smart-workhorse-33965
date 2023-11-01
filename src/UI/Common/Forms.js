@@ -218,7 +218,7 @@ const fields = {
     key: 'price',
     dateType: false,
     label: Strings.pricePerHr,
-    placeholder: '',
+    placeholder: Strings.pricePerHr,
     textInputProps: { keyboardType: 'number-pad' }
   },
   pay_frequency: {

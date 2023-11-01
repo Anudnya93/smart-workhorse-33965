@@ -150,7 +150,7 @@ const CustomPhoneInput = ({
           {...rest}
         />
         <TouchableOpacity
-          style={{ position: 'absolute', right: 10, zIndex: 1, top: 13 }}
+          style={{ position: 'absolute', left: 10, zIndex: 1, top: 13 }}
           onPress={() => {
             setVisible(true)
           }}
@@ -248,6 +248,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     ...Fonts.poppinsRegular(14),
-    height: 50
+    height: 50,
+    marginLeft: 25
   }
 })
