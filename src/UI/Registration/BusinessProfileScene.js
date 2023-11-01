@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState } from 'react'
 import {
   View,
   Text,
@@ -11,23 +11,25 @@ import {
   Modal,
   FlatList,
   ActivityIndicator
-} from "react-native"
-import { Header, PrimaryTextInput, Forms, Button } from "../Common"
-import { Fonts, Colors, Images } from "../../res"
-import ImagePicker from "react-native-image-crop-picker"
-import Strings from "../../res/Strings"
-import Toast from "react-native-simple-toast"
-import { createAdminProfile } from "../../api/auth"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import moment from "moment"
-import { useFocusEffect } from "@react-navigation/native"
-import AppContext from "../../Utils/Context"
-import { useContext } from "react"
-import PhoneInput from "react-native-phone-input"
-import { useRef } from "react"
-import { useEffect } from "react"
-import Autocomplete from "react-native-autocomplete-input"
-import { Icon } from "react-native-elements"
+} from 'react-native'
+import { Header, PrimaryTextInput, Forms, Button } from '../Common'
+import { Fonts, Colors, Images } from '../../res'
+import ImagePicker from 'react-native-image-crop-picker'
+import Strings from '../../res/Strings'
+import Toast from 'react-native-simple-toast'
+import { createAdminProfile } from '../../api/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import moment from 'moment'
+import { useFocusEffect } from '@react-navigation/native'
+import AppContext from '../../Utils/Context'
+import { useContext } from 'react'
+import PhoneInput from 'react-native-phone-input'
+import { useRef } from 'react'
+import { useEffect } from 'react'
+import Autocomplete from 'react-native-autocomplete-input'
+import { Icon } from 'react-native-elements'
+import countryList from '../../constants/countries'
+import CustomPhoneInput from '../Common/CustomPhoneInput'
 
 export default function BusinessProfileScene({ navigation, route }) {
   const {
@@ -42,33 +44,33 @@ export default function BusinessProfileScene({ navigation, route }) {
   const phoneRef = useRef(null)
   const userData = route?.params?.userData
   // State
-  console.warn("userData", userData)
+  // console.warn("userData", userData)
   const [state, setState] = useState({
-    name: adminProfile?.business_information?.name || "",
-    pay_frequency: adminProfile?.business_information?.pay_frequency || "",
+    name: adminProfile?.business_information?.name || '',
+    pay_frequency: adminProfile?.business_information?.pay_frequency || '',
     first_name:
       adminProfile?.personal_information?.first_name ||
-      userData?.name?.split(" ")[0] ||
-      "",
+      userData?.name?.split(' ')[0] ||
+      '',
     last_name:
       adminProfile?.personal_information?.last_name ||
-      userData?.name?.split(" ")[1] ||
-      "",
-    phone: adminProfile?.personal_information?.phone || userData?.phone || "",
-    date_of_birth: adminProfile?.personal_information?.date_of_birth || "",
-    address_line_one: adminProfile?.business_address?.address_line_one || "",
-    address_line_two: adminProfile?.business_address?.address_line_two || "",
-    city: adminProfile?.business_address?.city || "",
-    city_name: adminProfile?.business_address?.city_name || "",
-    selectedState: adminProfile?.business_address?.state || "",
-    state_name: adminProfile?.business_address?.state_name || "",
-    country: "",
-    zipcode: adminProfile?.business_address?.zipcode || "",
-    profile_image: adminProfile?.business_information?.profile_image || "",
+      userData?.name?.split(' ')[1] ||
+      '',
+    phone: adminProfile?.personal_information?.phone || userData?.phone || '',
+    date_of_birth: adminProfile?.personal_information?.date_of_birth || '',
+    address_line_one: adminProfile?.business_address?.address_line_one || '',
+    address_line_two: adminProfile?.business_address?.address_line_two || '',
+    city: adminProfile?.business_address?.city || '',
+    city_name: adminProfile?.business_address?.city_name || '',
+    selectedState: adminProfile?.business_address?.state || '',
+    state_name: adminProfile?.business_address?.state_name || '',
+    country: '',
+    zipcode: adminProfile?.business_address?.zipcode || '',
+    profile_image: adminProfile?.business_information?.profile_image || '',
     photo: null,
     loading: false,
     validNumber: userData?.phone ? true : false,
-    cityText: "",
+    cityText: '',
     openCity: false
   })
 
@@ -96,7 +98,7 @@ export default function BusinessProfileScene({ navigation, route }) {
   } = state
 
   const handleChange = (name, value) => {
-    if (name === "phone") {
+    if (name === 'phone') {
       setState(pre => ({
         ...pre,
         validNumber: phoneRef?.current?.isValidNumber()
@@ -107,7 +109,7 @@ export default function BusinessProfileScene({ navigation, route }) {
 
   useEffect(() => {
     if (adminProfile) {
-      handleChange("validNumber", phoneRef?.current?.isValidNumber())
+      handleChange('validNumber', phoneRef?.current?.isValidNumber())
     }
   }, [adminProfile])
 
@@ -124,13 +126,14 @@ export default function BusinessProfileScene({ navigation, route }) {
     })
     return newList
   }
+  console.log({ phone })
 
   const _uploadImage = async type => {
-    handleChange("uploading", true)
+    handleChange('uploading', true)
     let OpenImagePicker =
-      type == "camera"
+      type == 'camera'
         ? ImagePicker.openCamera
-        : type == ""
+        : type == ''
         ? ImagePicker.openPicker
         : ImagePicker.openPicker
     OpenImagePicker({
@@ -141,43 +144,43 @@ export default function BusinessProfileScene({ navigation, route }) {
     })
       .then(async response => {
         if (!response.path) {
-          handleChange("uploading", false)
+          handleChange('uploading', false)
         } else {
           const uri = response.path
           const uploadUri =
-            Platform.OS === "ios" ? uri.replace("file://", "") : uri
+            Platform.OS === 'ios' ? uri.replace('file://', '') : uri
           const photo = {
             uri: uploadUri,
-            name: "userimage1.png",
+            name: 'userimage1.png',
             type: response.mime
           }
-          handleChange("profile_image", uploadUri)
-          handleChange("photo", response.data)
-          handleChange("uploading", false)
-          Toast.show("Profile Add Successfully")
+          handleChange('profile_image', uploadUri)
+          handleChange('photo', response.data)
+          handleChange('uploading', false)
+          Toast.show('Profile Add Successfully')
         }
       })
       .catch(err => {
-        handleChange("showAlert", false)
-        handleChange("uploading", false)
+        handleChange('showAlert', false)
+        handleChange('uploading', false)
       })
   }
 
   const handleProfile = async () => {
     try {
-      handleChange("loading", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loading', true)
+      const token = await AsyncStorage.getItem('token')
       const formData = {
         business_information: {
           name,
-          pay_frequency: pay_frequency || "Every two weeks"
+          pay_frequency: pay_frequency || 'Every two weeks'
           // profile_image: photo
         },
         personal_information: {
           first_name,
           last_name,
           phone,
-          date_of_birth: moment(date_of_birth).format("YYYY-MM-DD")
+          date_of_birth: moment(date_of_birth).format('YYYY-MM-DD')
           // gender: 'MALE'
         },
         business_address: {
@@ -189,14 +192,14 @@ export default function BusinessProfileScene({ navigation, route }) {
         }
       }
       photo && (formData.business_information.profile_image = photo)
-      console.warn("formData", formData)
+      // console.warn("formData", formData)
       await createAdminProfile(formData, token)
       _getProfile(token)
-      handleChange("loading", false)
-      navigation.navigate("AuthLoading")
-      Toast.show(`Your profile has been updated!`)
+      handleChange('loading', false)
+      navigation.navigate('AuthLoading')
+      Toast.show('Your profile has been updated!')
     } catch (error) {
-      handleChange("loading", false)
+      handleChange('loading', false)
       if (error.response?.data?.detail) {
         Toast.show(`Error: ${JSON.stringify(error.response?.data?.detail)}`)
       } else {
@@ -209,7 +212,7 @@ export default function BusinessProfileScene({ navigation, route }) {
   }
 
   const renderTextInput = () => {
-    return Forms.fields("businessInfo").map((fields, index) => {
+    return Forms.fields('businessInfo').map((fields, index) => {
       if (index === 2) {
         return (
           <>
@@ -222,39 +225,21 @@ export default function BusinessProfileScene({ navigation, route }) {
             />
           </>
         )
-      } else if (fields.key === "phone") {
+      } else if (fields.key === 'phone') {
         return (
-          <View
-            style={{
-              height: 50,
-              width: "90%",
-              paddingTop: 0,
-              borderRadius: 10,
-              color: Colors.TEXT_INPUT_COLOR,
-              paddingHorizontal: 15,
-              ...Fonts.poppinsRegular(14),
-              borderWidth: 1,
-              backgroundColor: Colors.TEXT_INPUT_BG,
-              width: "90%",
-              marginLeft: "5%",
-              alignItems: "center",
-              justifyContent: "center",
-              marginVertical: 5,
-              borderWidth: 1,
-              borderColor:
-                !state[fields.key] || (state[fields.key] && validNumber)
-                  ? Colors.TEXT_INPUT_BORDER
-                  : Colors.INVALID_TEXT_INPUT
-            }}
-          >
-            <PhoneInput
-              initialValue={state[fields.key]}
-              textProps={{ placeholder: fields.label }}
-              textStyle={{ ...Fonts.poppinsRegular(14), marginTop: 2 }}
-              ref={phoneRef}
-              onChangePhoneNumber={props => handleChange(fields.key, props)}
+          <>
+            <CustomPhoneInput
+              setter={val => setState(pre => ({ ...pre, phone: val }))}
+              placeholder={fields.label}
+              val={phone}
+              handleInvalid={() => {
+                setState(pre => ({ ...pre, validNumber: false }))
+              }}
+              handleValid={() => {
+                setState(pre => ({ ...pre, validNumber: true }))
+              }}
             />
-          </View>
+          </>
         )
       } else {
         return (
@@ -269,40 +254,42 @@ export default function BusinessProfileScene({ navigation, route }) {
     })
   }
 
+  console.log({ state })
+
   const getCityValue = value => {
     const filtered = cities?.filter(e => e?.name === value || e?.id === value)
-    return filtered?.length > 0 && filtered[0]?.id ? filtered[0]?.id : ""
+    return filtered?.length > 0 && filtered[0]?.id ? filtered[0]?.id : ''
   }
 
   const getStateValue = value => {
     const filtered = states?.filter(e => e.name === value || e.id === value)
-    return filtered?.length > 0 ? filtered[0].id : ""
+    return filtered?.length > 0 ? filtered[0].id : ''
   }
   const getStateText = (list, value) => {
     const filtered = list?.filter(e => e?.id === value)
-    return filtered?.length > 0 ? filtered[0]?.name : ""
+    return filtered?.length > 0 ? filtered[0]?.name : ''
   }
 
   const renderEmergencyTextInput = () => {
-    return Forms.fields("businessAddress").map(fields => {
-      if (fields.key === "city") {
+    return Forms.fields('businessAddress').map(fields => {
+      if (fields.key === 'city') {
         return (
           <TouchableOpacity
-            onPress={() => handleChange("openCity", true)}
+            onPress={() => handleChange('openCity', true)}
             style={{
               height: 50,
-              width: "90%",
+              width: '90%',
               paddingTop: 0,
               marginTop: 5,
               borderRadius: 10,
               color: Colors.TEXT_INPUT_COLOR,
               paddingHorizontal: 15,
               borderWidth: 1,
-              marginLeft: "5%",
+              marginLeft: '5%',
               backgroundColor: Colors.TEXT_INPUT_BG,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               borderColor: Colors.TEXT_INPUT_BORDER
             }}
           >
@@ -312,7 +299,7 @@ export default function BusinessProfileScene({ navigation, route }) {
                 color: city_name ? Colors.BLACK : Colors.BLUR_TEXT
               }}
             >
-              {city_name || "City"}
+              {city_name || 'City'}
             </Text>
             <Icon
               name="down"
@@ -323,22 +310,22 @@ export default function BusinessProfileScene({ navigation, route }) {
             />
           </TouchableOpacity>
         )
-      } else if (fields.key === "state") {
+      } else if (fields.key === 'state') {
         return (
           <View
             style={{
               height: 50,
-              width: "90%",
+              width: '90%',
               paddingTop: 0,
               borderRadius: 10,
               marginTop: 10,
               paddingHorizontal: 15,
               borderWidth: 1,
-              marginLeft: "5%",
+              marginLeft: '5%',
               backgroundColor: Colors.TEXT_INPUT_BG,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               borderColor: Colors.TEXT_INPUT_BORDER
             }}
           >
@@ -348,7 +335,7 @@ export default function BusinessProfileScene({ navigation, route }) {
                 color: state_name ? Colors.BLACK : Colors.BLUR_TEXT
               }}
             >
-              {state_name || "State"}
+              {state_name || 'State'}
             </Text>
           </View>
         )
@@ -392,17 +379,17 @@ export default function BusinessProfileScene({ navigation, route }) {
   }
 
   const onSubmit = () => {
-    navigation.navigate("home")
+    navigation.navigate('home')
   }
 
   const hideModal = () => {
-    handleChange("openCity", false)
+    handleChange('openCity', false)
   }
 
   const renderContent = () => {
     return (
       <ScrollView
-        keyboardShouldPersistTaps={"handled"}
+        keyboardShouldPersistTaps={'handled'}
         nestedScrollEnabled
         style={{ flex: 1, paddingBottom: 30 }}
       >
@@ -417,7 +404,7 @@ export default function BusinessProfileScene({ navigation, route }) {
                     : adminProfile?.business_information?.profile_image ||
                       profile_image
                 }}
-                style={{ width: "100%", height: "100%", borderRadius: 10 }}
+                style={{ width: '100%', height: '100%', borderRadius: 10 }}
               />
             ) : (
               <>
@@ -439,12 +426,12 @@ export default function BusinessProfileScene({ navigation, route }) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
     >
       <View style={styles.container}>
         <Header
           onLeftPress={() => navigation.goBack()}
-          title={adminProfile ? "Update Profile" : "Create Profile"}
+          title={adminProfile ? 'Update Profile' : 'Create Profile'}
           leftButton
         />
         {renderContent()}
@@ -457,24 +444,24 @@ export default function BusinessProfileScene({ navigation, route }) {
       >
         <View style={styles.centerMode}>
           <View style={styles.modal}>
-            <View style={{ alignItems: "flex-end" }}>
+            <View style={{ alignItems: 'flex-end' }}>
               <TouchableOpacity onPress={hideModal}>
                 <Icon name="close" type="antdesign" />
               </TouchableOpacity>
             </View>
-            <View style={{ width: "110%", marginLeft: "-5%" }}>
+            <View style={{ width: '110%', marginLeft: '-5%' }}>
               <PrimaryTextInput
                 text={cityText}
                 key="cityText"
                 label="Enter city name"
                 onChangeText={(text, isValid) => {
                   _getCities(`?search=${cityText}`)
-                  handleChange("cityText", text)
+                  handleChange('cityText', text)
                 }}
               />
             </View>
             {loadingCity && (
-              <ActivityIndicator color={Colors.BACKGROUND_BG} size={"small"} />
+              <ActivityIndicator color={Colors.BACKGROUND_BG} size={'small'} />
             )}
             <FlatList
               data={cities}
@@ -482,18 +469,18 @@ export default function BusinessProfileScene({ navigation, route }) {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      handleChange("openCity", false)
-                      handleChange("cityText", "")
-                      handleChange("city", item?.id)
-                      handleChange("city_name", item?.name)
-                      handleChange("state_name", item?.region?.name)
-                      handleChange("selectedState", item?.region?.id)
+                      handleChange('openCity', false)
+                      handleChange('cityText', '')
+                      handleChange('city', item?.id)
+                      handleChange('city_name', item?.name)
+                      handleChange('state_name', item?.region?.name)
+                      handleChange('selectedState', item?.region?.id)
                     }}
                     key={index}
                     style={{
-                      width: "100%",
+                      width: '100%',
                       height: 30,
-                      justifyContent: "center",
+                      justifyContent: 'center',
                       borderBottomWidth: 1,
                       borderBottomColor: Colors.TEXT_INPUT_BORDER
                     }}
@@ -531,43 +518,43 @@ const styles = StyleSheet.create({
     flex: 1
   },
   footerButton: {
-    marginTop: "5%",
+    marginTop: '5%',
     marginBottom: 20
   },
   description: {
     ...Fonts.poppinsRegular(14),
     color: Colors.TEXT_COLOR,
-    textAlign: "left",
+    textAlign: 'left',
     marginTop: 20,
     lineHeight: 24
   },
   uploadText: {
     ...Fonts.poppinsRegular(10),
-    alignSelf: "center",
+    alignSelf: 'center',
     color: Colors.GREEN_COLOR,
     marginTop: 5
   },
   imageView: {
     width: 102,
     height: 102,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginVertical: 30,
     backgroundColor: Colors.DARK_GREY,
     borderRadius: 10,
-    alignSelf: "center"
+    alignSelf: 'center'
   },
   centerMode: {
     backgroundColor: Colors.MODAL_BG,
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center"
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   modal: {
     backgroundColor: Colors.WHITE,
     borderRadius: 10,
     padding: 20,
-    width: "90%"
+    width: '90%'
   }
 })

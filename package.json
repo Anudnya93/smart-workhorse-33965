@@ -33,6 +33,7 @@
     "babel-plugin-inline-import": "^3.0.0",
     "firebase": "^9.13.0",
     "haversine": "^1.1.1",
+    "intl": "^1.2.5",
     "moment-timezone": "^0.5.37",
     "react": "17.0.1",
     "react-native": "0.64.0",
@@ -78,6 +79,7 @@
     "eslint": "7.14.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.64.0",
+    "react-native-svg-transformer": "^1.1.0",
     "react-test-renderer": "17.0.1"
   },
   "jest": {

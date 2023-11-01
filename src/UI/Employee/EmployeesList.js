@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useFocusEffect } from "@react-navigation/native"
-import React, { useCallback, useState } from "react"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useFocusEffect } from '@react-navigation/native'
+import React, { useCallback, useState } from 'react'
 import {
   ScrollView,
   View,
@@ -10,11 +10,12 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator
-} from "react-native"
-import Toast from "react-native-simple-toast"
-import { getAllEmployee } from "../../api/business"
-import { Fonts, Colors } from "../../res"
-import Sample from "../../res/Images/common/sample.png"
+} from 'react-native'
+import Toast from 'react-native-simple-toast'
+import { getAllEmployee } from '../../api/business'
+import { Fonts, Colors } from '../../res'
+import Sample from '../../res/Images/common/sample.png'
+import { currencyFormatIntl } from '../../Utils/number'
 
 export default function EmployeeListScene({ navigation }) {
   const [state, setState] = useState({
@@ -34,13 +35,13 @@ export default function EmployeeListScene({ navigation }) {
   )
   const _getAllEmployee = async () => {
     try {
-      handleChange("loading", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loading', true)
+      const token = await AsyncStorage.getItem('token')
       const res = await getAllEmployee(token)
-      handleChange("loading", false)
-      handleChange("allEmployee", res?.data?.results)
+      handleChange('loading', false)
+      handleChange('allEmployee', res?.data?.results)
     } catch (error) {
-      handleChange("loading", false)
+      handleChange('loading', false)
       const showWError = Object.values(error.response?.data?.error)
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -53,16 +54,16 @@ export default function EmployeeListScene({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.hourly}>Hourly rate</Text>
       {loading && (
-        <View style={{ marginBottom: 10, width: "100%", alignItems: "center" }}>
-          <ActivityIndicator color={Colors.BACKGROUND_BG} size={"small"} />
+        <View style={{ marginBottom: 10, width: '100%', alignItems: 'center' }}>
+          <ActivityIndicator color={Colors.BACKGROUND_BG} size={'small'} />
         </View>
       )}
       <FlatList
         scrollEnabled={false}
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         data={allEmployee}
         ListEmptyComponent={() => (
-          <View style={{ width: "100%", alignItems: "center" }}>
+          <View style={{ width: '100%', alignItems: 'center' }}>
             <Text
               style={{ ...Fonts.poppinsRegular(14), color: Colors.BLUR_TEXT }}
             >
@@ -72,10 +73,10 @@ export default function EmployeeListScene({ navigation }) {
         )}
         renderItem={({ item, index }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("employeesView", { item })}
+            onPress={() => navigation.navigate('employeesView', { item })}
             style={styles.listContainer}
           >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image
                 source={
                   item?.personal_information?.profile_image
@@ -92,7 +93,7 @@ export default function EmployeeListScene({ navigation }) {
               <View>
                 <Text style={styles.title}>
                   {item?.personal_information?.first_name +
-                    " " +
+                    ' ' +
                     item?.personal_information?.last_name}
                 </Text>
                 <Text style={styles.job}>
@@ -101,23 +102,23 @@ export default function EmployeeListScene({ navigation }) {
                 <Text style={styles.location}>
                   {(item?.address_information?.address_line_one
                     ? item?.address_information?.address_line_one
-                    : "") +
-                    " " +
+                    : '') +
+                    ' ' +
                     (item?.address_information?.address_line_two
                       ? item?.address_information?.address_line_two
-                      : "")}
+                      : '')}
                 </Text>
               </View>
             </View>
             <View
               style={{
-                alignItems: "flex-end",
-                justifyContent: "space-between",
-                height: "100%"
+                alignItems: 'flex-end',
+                justifyContent: 'space-between',
+                height: '100%'
               }}
             >
               <Text style={styles.title}>
-                ${item?.work_information?.hourly_rate}/hr
+                {currencyFormatIntl(item?.work_information?.hourly_rate)}/hr
               </Text>
               <Text style={styles.message}>Message</Text>
             </View>
@@ -130,20 +131,20 @@ export default function EmployeeListScene({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'center',
     backgroundColor: Colors.WHITE
   },
   listContainer: {
     backgroundColor: Colors.TEXT_INPUT_BG,
-    width: "100%",
+    width: '100%',
     height: 70,
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   title: {
     ...Fonts.poppinsRegular(14),
@@ -159,9 +160,9 @@ const styles = StyleSheet.create({
   },
   hourly: {
     ...Fonts.poppinsRegular(13),
-    textTransform: "uppercase",
-    textAlign: "right",
-    width: "100%",
+    textTransform: 'uppercase',
+    textAlign: 'right',
+    width: '100%',
     marginBottom: 10,
     color: Colors.BLUR_TEXT
   },
@@ -174,12 +175,12 @@ const styles = StyleSheet.create({
     padding: 20
   },
   footerButton: {
-    marginTop: "15%"
+    marginTop: '15%'
   },
   description: {
     ...Fonts.poppinsRegular(14),
     color: Colors.TEXT_COLOR,
-    textAlign: "left",
+    textAlign: 'left',
     marginTop: 20,
     lineHeight: 24
   }

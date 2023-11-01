@@ -1,19 +1,19 @@
-import React, { useState } from "react"
-import { ActivityIndicator, Modal, StyleSheet, Text, View } from "react-native"
-import Colors from "../../res/Theme/Colors"
-import { Fonts } from "../../res/Theme"
-import Header from "../Common/Header"
-import { Icon } from "react-native-elements"
-import Button from "../Common/Button"
-import moment from "moment"
-import momenttimezone from "moment-timezone"
-import { useContext } from "react"
-import AppContext from "../../Utils/Context"
-import PrimaryTextInput from "../Common/PrimaryTextInput"
-import { TouchableOpacity } from "react-native"
-import DatePicker from "react-native-date-picker"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import React, { useState } from 'react'
+import { ActivityIndicator, Modal, StyleSheet, Text, View } from 'react-native'
+import Colors from '../../res/Theme/Colors'
+import { Fonts } from '../../res/Theme'
+import Header from '../Common/Header'
+import { Icon } from 'react-native-elements'
+import Button from '../Common/Button'
+import moment from 'moment'
+import momenttimezone from 'moment-timezone'
+import { useContext } from 'react'
+import AppContext from '../../Utils/Context'
+import PrimaryTextInput from '../Common/PrimaryTextInput'
+import { TouchableOpacity } from 'react-native'
+import DatePicker from 'react-native-date-picker'
+import BouncyCheckbox from 'react-native-bouncy-checkbox'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
   createEvent,
   deleteEvent,
@@ -21,31 +21,31 @@ import {
   getAllWorksites,
   getEventDetails,
   updateEvent
-} from "../../api/business"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import Toast from "react-native-simple-toast"
-import { useFocusEffect } from "@react-navigation/native"
-import { useCallback } from "react"
-import { FlatList } from "react-native"
-import { Image } from "react-native"
-import userProfile from "../../res/Images/common/sample.png"
+} from '../../api/business'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Toast from 'react-native-simple-toast'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
+import { FlatList } from 'react-native'
+import { Image } from 'react-native'
+import userProfile from '../../res/Images/common/sample.png'
 
 export default function AddEvents({ navigation, route }) {
   const selectedEvent = route?.params?.selectedEvent
   const { schedules } = useContext(AppContext)
   const [state, setState] = useState({
-    mode: "week",
-    worksite: "",
-    start_date: "",
-    end_date: "",
-    frequency: "",
-    description: "",
+    mode: 'week',
+    worksite: '',
+    start_date: '',
+    end_date: '',
+    frequency: '',
+    description: '',
     start_time: new Date(),
-    start_time_text: "",
+    start_time_text: '',
     end_time: new Date(),
     frequency_end_date: new Date(),
-    end_time_text: "",
-    notes: "",
+    end_time_text: '',
+    notes: '',
     openStart: false,
     reminder: false,
     loading: false,
@@ -59,8 +59,8 @@ export default function AddEvents({ navigation, route }) {
     selected_tasks: [],
     allEmployee: [],
     employees: [],
-    event_status: "",
-    publishing_reminder: "",
+    event_status: '',
+    publishing_reminder: '',
     eventDetails: null,
     deleteAll: false,
     deleteThis: true,
@@ -101,16 +101,16 @@ export default function AddEvents({ navigation, route }) {
   } = state
 
   const reminderList = [
-    { label: "1 Day", value: "ONE_DAY" },
-    { label: "2 Days", value: "TWO_DAYS" },
-    { label: "1 Week", value: "ONE_WEEK" },
-    { label: "2 Weeks", value: "TWO_WEEKS" },
-    { label: "1 Month", value: "ONE_MONTH" }
+    { label: '1 Day', value: 'ONE_DAY' },
+    { label: '2 Days', value: 'TWO_DAYS' },
+    { label: '1 Week', value: 'ONE_WEEK' },
+    { label: '2 Weeks', value: 'TWO_WEEKS' },
+    { label: '1 Month', value: 'ONE_MONTH' }
   ]
 
   const getReminderListText = value => {
     const filtered = reminderList.filter(e => e.value === value)
-    return filtered.length > 0 ? filtered[0].label : ""
+    return filtered.length > 0 ? filtered[0].label : ''
   }
 
   const handleChange = (key, value) => {
@@ -128,7 +128,7 @@ export default function AddEvents({ navigation, route }) {
   )
 
   function convertLocalDateToUTCDate(time, toLocal) {
-    const todayDate = moment(new Date()).format("YYYY-MM-DD")
+    const todayDate = moment(new Date()).format('YYYY-MM-DD')
     if (toLocal) {
       const today = momenttimezone.tz.guess()
       const timeUTC = momenttimezone.tz(`${time}`, today).format()
@@ -147,23 +147,23 @@ export default function AddEvents({ navigation, route }) {
     } else {
       const today = momenttimezone.tz.guess()
       const todayDate1 = momenttimezone.tz(time, today).format()
-      const utcTime = moment.utc(todayDate1).format("YYYY-MM-DD HH:mm:ss")
+      const utcTime = moment.utc(todayDate1).format('YYYY-MM-DD HH:mm:ss')
       return utcTime
     }
   }
 
   const handleSubmit = async () => {
     try {
-      handleChange("loading", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loading', true)
+      const token = await AsyncStorage.getItem('token')
       const payload = {
         worksite,
         start_time: moment
-          .utc(moment(start_date + " " + start_time_text))
-          .format("YYYY-MM-DD HH:mm:ss"),
+          .utc(moment(start_date + ' ' + start_time_text))
+          .format('YYYY-MM-DD HH:mm:ss'),
         end_time: moment
-          .utc(moment(end_date + " " + end_time_text))
-          .format("YYYY-MM-DD HH:mm:ss"),
+          .utc(moment(end_date + ' ' + end_time_text))
+          .format('YYYY-MM-DD HH:mm:ss'),
         description,
         notes,
         reminder,
@@ -172,25 +172,24 @@ export default function AddEvents({ navigation, route }) {
         employees,
         selected_tasks
       }
-      publishing_reminder &&
-        (payload["publishing_reminder"] = publishing_reminder)
-      frequency && (payload["frequency"] = frequency)
+      publishing_reminder && (payload.publishing_reminder = publishing_reminder)
+      frequency && (payload.frequency = frequency)
       frequency_end_date &&
-        (payload["frequency_end_date"] = moment
+        (payload.frequency_end_date = moment
           .utc(moment(frequency_end_date))
-          .format("YYYY-MM-DD"))
+          .format('YYYY-MM-DD'))
       if (selectedEvent) {
         await updateEvent(selectedEvent?.id, payload, token)
-        Toast.show("Event has been updated")
+        Toast.show('Event has been updated')
       } else {
         await createEvent(payload, token)
-        Toast.show("Event has been created")
+        Toast.show('Event has been created')
       }
-      handleChange("loading", false)
-      handleChange("visible1", false)
+      handleChange('loading', false)
+      handleChange('visible1', false)
       navigation.goBack()
     } catch (error) {
-      handleChange("loading", false)
+      handleChange('loading', false)
       const showWError = Object.values(error.response?.data)
       const showWError1 = Object.values(error.response?.data?.error)
       if (showWError1?.length > 0) {
@@ -205,14 +204,14 @@ export default function AddEvents({ navigation, route }) {
 
   const _getAllEmployee = async () => {
     try {
-      handleChange("loading", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loading', true)
+      const token = await AsyncStorage.getItem('token')
       const res = await getAllEmployee(token)
-      handleChange("loading", false)
-      handleChange("allEmployee", res?.data?.results)
+      handleChange('loading', false)
+      handleChange('allEmployee', res?.data?.results)
     } catch (error) {
-      handleChange("loading", false)
-      console.warn("err", error?.response?.data)
+      handleChange('loading', false)
+      // console.warn("err", error?.response?.data)
       const showWError = Object.values(error.response?.data?.error)
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -224,10 +223,10 @@ export default function AddEvents({ navigation, route }) {
 
   const _getAllWorksites = async () => {
     try {
-      handleChange("loading", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loading', true)
+      const token = await AsyncStorage.getItem('token')
       const res = await getAllWorksites(token)
-      handleChange("allWorksites", res?.data?.results)
+      handleChange('allWorksites', res?.data?.results)
       const list = []
       res?.data?.results?.forEach(element => {
         if (element) {
@@ -237,10 +236,10 @@ export default function AddEvents({ navigation, route }) {
           })
         }
       })
-      handleChange("worksiteOptions", list)
+      handleChange('worksiteOptions', list)
     } catch (error) {
-      handleChange("loading", false)
-      console.warn("err", error?.response?.data)
+      handleChange('loading', false)
+      // console.warn('err', error?.response?.data)
       const showWError = Object.values(error.response?.data?.error)
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -252,50 +251,53 @@ export default function AddEvents({ navigation, route }) {
 
   const _getEventDetails = async () => {
     try {
-      handleChange("loadingMain", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loadingMain', true)
+      const token = await AsyncStorage.getItem('token')
       const res = await getEventDetails(selectedEvent?.id, token)
-      console.warn('res?.data',res?.data);
-      handleChange("loadingMain", false)
-      handleChange("eventDetails", res?.data)
-      handleChange("worksite", res?.data?.worksite)
+      // console.warn('res?.data', res?.data)
+      handleChange('loadingMain', false)
+      handleChange('eventDetails', res?.data)
+      handleChange('worksite', res?.data?.worksite)
       handleChange(
-        "start_date",
-        moment.utc(res?.data?.start_time).local().format("MM/DD/YYYY")
+        'start_date',
+        moment.utc(res?.data?.start_time).local().format('MM/DD/YYYY')
       )
       handleChange(
-        "start_time",
+        'start_time',
         new Date(moment.utc(res?.data?.start_time).local().format())
       )
       handleChange(
-        "start_time_text",
-        moment.utc(res?.data?.start_time).local().format("hh:mm A")
+        'start_time_text',
+        moment.utc(res?.data?.start_time).local().format('hh:mm A')
       )
       handleChange(
-        "end_date",
-        moment.utc(res?.data?.end_time).local().format("MM/DD/YYYY")
+        'end_date',
+        moment.utc(res?.data?.end_time).local().format('MM/DD/YYYY')
       )
       handleChange(
-        "end_time",
+        'end_time',
         new Date(moment.utc(res?.data?.end_time).local().format())
       )
       handleChange(
-        "end_time_text",
-        moment.utc(res?.data?.end_time).local().format("hh:mm A")
+        'end_time_text',
+        moment.utc(res?.data?.end_time).local().format('hh:mm A')
       )
-      handleChange("frequency", res?.data?.frequency)
-      handleChange("frequency_end_date", moment.utc(res?.data?.frequency_end_date).local().format("MM/DD/YYYY"))
-      handleChange("description", res?.data?.description)
-      handleChange("notes", res?.data?.notes)
-      handleChange("reminder", res?.data?.reminder)
-      handleChange("schedule_inspection", res?.data?.schedule_inspection)
-      handleChange("event_status", res?.data?.event_status)
-      handleChange("employees", res?.data?.employees)
-      handleChange("selected_tasks", res?.data?.selected_tasks)
-      handleChange("publishing_reminder", res?.data?.publishing_reminder)
+      handleChange('frequency', res?.data?.frequency)
+      handleChange(
+        'frequency_end_date',
+        moment.utc(res?.data?.frequency_end_date).local().format('MM/DD/YYYY')
+      )
+      handleChange('description', res?.data?.description)
+      handleChange('notes', res?.data?.notes)
+      handleChange('reminder', res?.data?.reminder)
+      handleChange('schedule_inspection', res?.data?.schedule_inspection)
+      handleChange('event_status', res?.data?.event_status)
+      handleChange('employees', res?.data?.employees)
+      handleChange('selected_tasks', res?.data?.selected_tasks)
+      handleChange('publishing_reminder', res?.data?.publishing_reminder)
     } catch (error) {
-      handleChange("loadingMain", false)
-      console.warn("err", error?.response?.data)
+      handleChange('loadingMain', false)
+      // console.warn('err', error?.response?.data)
       const showWError = Object.values(error.response?.data?.error)
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -307,19 +309,19 @@ export default function AddEvents({ navigation, route }) {
 
   const _deleteEvent = async () => {
     try {
-      handleChange("loadingDelete", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loadingDelete', true)
+      const token = await AsyncStorage.getItem('token')
       const payload = {
         event: selectedEvent?.id,
         all_events: deleteAll,
         this_and_following_event: deleteFollowing
       }
       const res = await deleteEvent(payload, token)
-      handleChange("loadingDelete", false)
-      handleChange("visible", false)
+      handleChange('loadingDelete', false)
+      handleChange('visible', false)
       navigation.goBack()
     } catch (error) {
-      handleChange("loadingDelete", false)
+      handleChange('loadingDelete', false)
       const showWError = Object.values(error.response?.data?.error)
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -331,11 +333,11 @@ export default function AddEvents({ navigation, route }) {
   const getWorksiteText = id => {
     const filtered = allWorksites?.filter(e => e.id === id)
     return (
-      (filtered?.length > 0 && filtered[0]?.personal_information?.name) || ""
+      (filtered?.length > 0 && filtered[0]?.personal_information?.name) || ''
     )
   }
 
-  console.warn("frequency", frequency)
+  // console.warn('frequency', frequency)
 
   const getWorksiteTask = id => {
     const filtered = allWorksites?.filter(e => e.id === id)
@@ -345,13 +347,13 @@ export default function AddEvents({ navigation, route }) {
     return (
       <View
         style={{
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          height: "100%"
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100%'
         }}
       >
-        <ActivityIndicator color={Colors.GREEN_COLOR} size={"large"} />
+        <ActivityIndicator color={Colors.GREEN_COLOR} size={'large'} />
       </View>
     )
   }
@@ -359,67 +361,67 @@ export default function AddEvents({ navigation, route }) {
   return (
     <KeyboardAwareScrollView
       style={styles.container}
-      contentContainerStyle={{ alignItems: "center" }}
+      contentContainerStyle={{ alignItems: 'center' }}
     >
       <Header
         leftButton
         onLeftPress={() => navigation.goBack()}
-        title={eventDetails ? "Edit Event" : "Create Event"}
+        title={eventDetails ? 'Edit Event' : 'Create Event'}
       />
-      <Text style={styles.title}>{"Event information"}</Text>
+      <Text style={styles.title}>{'Event information'}</Text>
       <PrimaryTextInput
         dropdown={true}
         text={getWorksiteText(worksite)}
         items={worksiteOptions}
-        label={getWorksiteText(worksite) || "Worksite"}
+        label={getWorksiteText(worksite) || 'Worksite'}
         key="worksite"
         // placeholder='worksite'
-        onChangeText={(text, isValid) => handleChange("worksite", text)}
+        onChangeText={(text, isValid) => handleChange('worksite', text)}
       />
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          width: "95%",
-          justifyContent: "space-between"
+          flexDirection: 'row',
+          alignItems: 'center',
+          width: '95%',
+          justifyContent: 'space-between'
         }}
       >
-        <View style={{ width: "50%" }}>
+        <View style={{ width: '50%' }}>
           <PrimaryTextInput
             dateType={true}
             text={start_date}
-            maxDate={new Date("2050/01/01")}
+            maxDate={new Date('2050/01/01')}
             label="From"
             key="start_date"
             placeholder="start_date"
-            onChangeText={(text, isValid) => handleChange("start_date", text)}
+            onChangeText={(text, isValid) => handleChange('start_date', text)}
           />
         </View>
-        <View style={{ width: "50%" }}>
+        <View style={{ width: '50%' }}>
           <PrimaryTextInput
             dateType={true}
-            maxDate={new Date("2050/01/01")}
+            maxDate={new Date('2050/01/01')}
             text={end_date}
             label="To"
             key="end_date"
             placeholder="end_date"
-            onChangeText={(text, isValid) => handleChange("end_date", text)}
+            onChangeText={(text, isValid) => handleChange('end_date', text)}
           />
         </View>
       </View>
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          width: "90%",
+          flexDirection: 'row',
+          alignItems: 'center',
+          width: '90%',
           marginVertical: 10,
-          justifyContent: "space-between"
+          justifyContent: 'space-between'
         }}
       >
-        <View style={{ width: "48%" }}>
+        <View style={{ width: '48%' }}>
           <TouchableOpacity
             style={styles.inputStyle}
-            onPress={() => handleChange("openStart", true)}
+            onPress={() => handleChange('openStart', true)}
           >
             <Text
               style={[
@@ -429,33 +431,33 @@ export default function AddEvents({ navigation, route }) {
                 }
               ]}
             >
-              {start_time_text || "From"}
+              {start_time_text || 'From'}
             </Text>
             <Icon
-              name={"time-outline"}
-              type={"ionicon"}
+              name={'time-outline'}
+              type={'ionicon'}
               color={Colors.BLUR_TEXT}
             />
           </TouchableOpacity>
           <DatePicker
             modal
             open={openStart}
-            mode={"time"}
+            mode={'time'}
             date={start_time}
             onConfirm={date => {
-              handleChange("openStart", false)
-              handleChange("start_time", date)
-              handleChange("start_time_text", moment(date).format("hh:mm A"))
+              handleChange('openStart', false)
+              handleChange('start_time', date)
+              handleChange('start_time_text', moment(date).format('hh:mm A'))
             }}
             onCancel={() => {
-              handleChange("openStart", false)
+              handleChange('openStart', false)
             }}
           />
         </View>
-        <View style={{ width: "47%" }}>
+        <View style={{ width: '47%' }}>
           <TouchableOpacity
             style={styles.inputStyle}
-            onPress={() => handleChange("endStart", true)}
+            onPress={() => handleChange('endStart', true)}
           >
             <Text
               style={[
@@ -465,26 +467,26 @@ export default function AddEvents({ navigation, route }) {
                 }
               ]}
             >
-              {end_time_text || "To"}
+              {end_time_text || 'To'}
             </Text>
             <Icon
-              name={"time-outline"}
-              type={"ionicon"}
+              name={'time-outline'}
+              type={'ionicon'}
               color={Colors.BLUR_TEXT}
             />
           </TouchableOpacity>
           <DatePicker
             modal
-            mode={"time"}
+            mode={'time'}
             open={endStart}
             date={end_time}
             onConfirm={date => {
-              handleChange("endStart", false)
-              handleChange("end_time", date)
-              handleChange("end_time_text", moment(date).format("hh:mm A"))
+              handleChange('endStart', false)
+              handleChange('end_time', date)
+              handleChange('end_time_text', moment(date).format('hh:mm A'))
             }}
             onCancel={() => {
-              handleChange("endStart", false)
+              handleChange('endStart', false)
             }}
           />
         </View>
@@ -493,27 +495,27 @@ export default function AddEvents({ navigation, route }) {
         dropdown={true}
         text={frequency}
         items={[
-          { label: "DAILY", value: "DAILY" },
-          { label: "WEEKLY", value: "WEEKLY" },
-          { label: "MONTHLY", value: "MONTHLY" },
-          { label: "YEARLY", value: "YEARLY" }
+          { label: 'DAILY', value: 'DAILY' },
+          { label: 'WEEKLY', value: 'WEEKLY' },
+          { label: 'MONTHLY', value: 'MONTHLY' },
+          { label: 'YEARLY', value: 'YEARLY' }
         ]}
         label="Frequency of event"
         key="frequency"
         placeholder="frequency"
-        onChangeText={(text, isValid) => handleChange("frequency", text)}
+        onChangeText={(text, isValid) => handleChange('frequency', text)}
       />
-      {frequency !== "" && frequency && (
+      {frequency !== '' && frequency && (
         <PrimaryTextInput
           dateType={true}
-          maxDate={new Date("2050/01/01")}
+          maxDate={new Date('2050/01/01')}
           minDate={new Date()}
           text={frequency_end_date}
           label="End Date"
           key="frequency_end_date"
           placeholder="End Date"
           onChangeText={(text, isValid) =>
-            handleChange("frequency_end_date", text)
+            handleChange('frequency_end_date', text)
           }
         />
       )}
@@ -522,21 +524,21 @@ export default function AddEvents({ navigation, route }) {
         label="Description"
         key="description"
         placeholder="description"
-        onChangeText={(text, isValid) => handleChange("description", text)}
+        onChangeText={(text, isValid) => handleChange('description', text)}
       />
       <PrimaryTextInput
         text={notes}
         label="Notes"
         key="notes"
         placeholder="notes"
-        onChangeText={(text, isValid) => handleChange("notes", text)}
+        onChangeText={(text, isValid) => handleChange('notes', text)}
       />
       <View
         style={{
-          flexDirection: "row",
-          width: "90%",
+          flexDirection: 'row',
+          width: '90%',
           marginTop: 10,
-          alignItems: "center"
+          alignItems: 'center'
         }}
       >
         {/* <BouncyCheckbox
@@ -563,10 +565,10 @@ export default function AddEvents({ navigation, route }) {
       </View>
       <View
         style={{
-          flexDirection: "row",
-          width: "90%",
+          flexDirection: 'row',
+          width: '90%',
           marginTop: 10,
-          alignItems: "center"
+          alignItems: 'center'
         }}
       >
         <BouncyCheckbox
@@ -584,7 +586,7 @@ export default function AddEvents({ navigation, route }) {
             marginBottom: 2
           }}
           onPress={() =>
-            handleChange("schedule_inspection", !schedule_inspection)
+            handleChange('schedule_inspection', !schedule_inspection)
           }
           isChecked={schedule_inspection}
         />
@@ -593,9 +595,9 @@ export default function AddEvents({ navigation, route }) {
       <Text style={styles.title}>Tasks </Text>
       <View
         style={{
-          flexDirection: "row",
-          width: "90%",
-          alignItems: "center"
+          flexDirection: 'row',
+          width: '90%',
+          alignItems: 'center'
         }}
       >
         <BouncyCheckbox
@@ -614,7 +616,7 @@ export default function AddEvents({ navigation, route }) {
           }}
           onPress={() => {
             if (selected_tasks?.length === getWorksiteTask(worksite)?.length) {
-              handleChange("selected_tasks", [])
+              handleChange('selected_tasks', [])
             } else {
               if (getWorksiteTask(worksite)?.length > 0) {
                 const tasklist = []
@@ -623,7 +625,7 @@ export default function AddEvents({ navigation, route }) {
                     tasklist.push(element?.id)
                   }
                 })
-                handleChange("selected_tasks", tasklist)
+                handleChange('selected_tasks', tasklist)
               }
             }
           }}
@@ -638,10 +640,10 @@ export default function AddEvents({ navigation, route }) {
         getWorksiteTask(worksite)?.map((task, index) => (
           <View
             style={{
-              flexDirection: "row",
-              width: "90%",
+              flexDirection: 'row',
+              width: '90%',
               marginVertical: 10,
-              alignItems: "center",
+              alignItems: 'center',
               paddingBottom: 8,
               borderBottomColor: Colors.TEXT_INPUT_BORDER,
               borderBottomWidth: 1
@@ -666,9 +668,9 @@ export default function AddEvents({ navigation, route }) {
                   const removed = selected_tasks?.filter(
                     e => e !== Number(task?.id)
                   )
-                  handleChange("selected_tasks", removed)
+                  handleChange('selected_tasks', removed)
                 } else {
-                  handleChange("selected_tasks", [
+                  handleChange('selected_tasks', [
                     ...selected_tasks,
                     Number(task?.id)
                   ])
@@ -676,20 +678,20 @@ export default function AddEvents({ navigation, route }) {
               }}
               isChecked={selected_tasks?.includes(Number(task?.id))}
             />
-            <Text style={[styles.inputText, { width: "90%" }]}>
+            <Text style={[styles.inputText, { width: '90%' }]}>
               {task?.name}
             </Text>
           </View>
         ))}
-      <Text style={styles.title}>{"Assign Employees"}</Text>
+      <Text style={styles.title}>{'Assign Employees'}</Text>
       <FlatList
         data={allEmployee}
-        style={{ width: "90%", marginTop: 20 }}
+        style={{ width: '90%', marginTop: 20 }}
         renderItem={({ item, index }) => (
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
               marginBottom: 20,
               borderBottomWidth: 1,
               paddingBottom: 10,
@@ -726,13 +728,13 @@ export default function AddEvents({ navigation, route }) {
                 borderRadius: 5,
                 marginBottom: 2
               }}
-              style={{ right: 0, position: "absolute" }}
+              style={{ right: 0, position: 'absolute' }}
               onPress={() => {
                 if (employees?.includes(Number(item?.id))) {
                   const removed = employees?.filter(e => e !== Number(item?.id))
-                  handleChange("employees", removed)
+                  handleChange('employees', removed)
                 } else {
-                  handleChange("employees", [...employees, Number(item?.id)])
+                  handleChange('employees', [...employees, Number(item?.id)])
                 }
               }}
               isChecked={employees?.includes(Number(item?.id))}
@@ -740,12 +742,12 @@ export default function AddEvents({ navigation, route }) {
           </View>
         )}
       />
-      <Text style={styles.title}>{"Event Status"}</Text>
+      <Text style={styles.title}>{'Event Status'}</Text>
       <View
         style={{
-          flexDirection: "row",
-          width: "90%",
-          alignItems: "center"
+          flexDirection: 'row',
+          width: '90%',
+          alignItems: 'center'
         }}
       >
         <BouncyCheckbox
@@ -763,22 +765,22 @@ export default function AddEvents({ navigation, route }) {
             marginBottom: 2
           }}
           onPress={() => {
-            if (event_status === "DRAFT") {
-              handleChange("event_status", "")
+            if (event_status === 'DRAFT') {
+              handleChange('event_status', '')
             } else {
-              handleChange("event_status", "DRAFT")
+              handleChange('event_status', 'DRAFT')
             }
           }}
-          isChecked={event_status === "DRAFT"}
+          isChecked={event_status === 'DRAFT'}
         />
         <Text style={styles.inputText}>Draft</Text>
       </View>
       <View
         style={{
-          flexDirection: "row",
-          width: "90%",
+          flexDirection: 'row',
+          width: '90%',
           marginTop: 10,
-          alignItems: "center"
+          alignItems: 'center'
         }}
       >
         <BouncyCheckbox
@@ -796,13 +798,13 @@ export default function AddEvents({ navigation, route }) {
             marginBottom: 2
           }}
           onPress={() => {
-            if (event_status === "PUBLISHED") {
-              handleChange("event_status", "")
+            if (event_status === 'PUBLISHED') {
+              handleChange('event_status', '')
             } else {
-              handleChange("event_status", "PUBLISHED")
+              handleChange('event_status', 'PUBLISHED')
             }
           }}
-          isChecked={event_status === "PUBLISHED"}
+          isChecked={event_status === 'PUBLISHED'}
         />
         <Text style={styles.inputText}>Published</Text>
       </View>
@@ -817,10 +819,10 @@ export default function AddEvents({ navigation, route }) {
         key="publishing_reminder"
         placeholder="publishing_reminder"
         onChangeText={(text, isValid) =>
-          handleChange("publishing_reminder", text)
+          handleChange('publishing_reminder', text)
         }
       />
-      <View style={{ width: "100%", marginBottom: 20 }}>
+      <View style={{ width: '100%', marginBottom: 20 }}>
         {selectedEvent && (
           <Button
             color={Colors.BUTTON_BG}
@@ -828,13 +830,13 @@ export default function AddEvents({ navigation, route }) {
               width: 20,
               height: 20,
               tintColor: Colors.GREEN_COLOR,
-              resizeMode: "contain"
+              resizeMode: 'contain'
             }}
             style={[styles.footerWhiteButton]}
-            onPress={() => handleChange("visible", true)}
-            title={"Delete"}
+            onPress={() => handleChange('visible', true)}
+            title={'Delete'}
             isWhiteBg
-            icon={"delete"}
+            icon={'delete'}
           />
         )}
         <Button
@@ -856,36 +858,36 @@ export default function AddEvents({ navigation, route }) {
             selected_tasks.length === 0
           }
           onPress={() =>
-            event_status === "PUBLISHED"
-              ? handleChange("visible1", true)
+            event_status === 'PUBLISHED'
+              ? handleChange('visible1', true)
               : handleSubmit()
           }
-          title={selectedEvent ? "Save" : "Create"}
+          title={selectedEvent ? 'Save' : 'Create'}
         />
       </View>
       <Modal
         visible={visible}
         transparent
-        onDismiss={() => handleChange("visible", false)}
-        onRequestClose={() => handleChange("visible", false)}
+        onDismiss={() => handleChange('visible', false)}
+        onRequestClose={() => handleChange('visible', false)}
       >
         <View style={styles.centerMode}>
           <View style={styles.modal}>
-            <View style={{ alignItems: "flex-end" }}>
-              <TouchableOpacity onPress={() => handleChange("visible", false)}>
+            <View style={{ alignItems: 'flex-end' }}>
+              <TouchableOpacity onPress={() => handleChange('visible', false)}>
                 <Icon name="close" type="antdesign" />
               </TouchableOpacity>
             </View>
-            <Text style={[styles.title, { textAlign: "center" }]}>
-              {"Are you sure you want to delete this event?"}
+            <Text style={[styles.title, { textAlign: 'center' }]}>
+              {'Are you sure you want to delete this event?'}
             </Text>
             <View
               style={{
-                flexDirection: "row",
-                width: "80%",
-                marginLeft: "5%",
+                flexDirection: 'row',
+                width: '80%',
+                marginLeft: '5%',
                 marginTop: 10,
-                alignItems: "center"
+                alignItems: 'center'
               }}
             >
               <BouncyCheckbox
@@ -903,9 +905,9 @@ export default function AddEvents({ navigation, route }) {
                   marginBottom: 2
                 }}
                 onPress={() => {
-                  handleChange("deleteFollowing", false)
-                  handleChange("deleteThis", false)
-                  handleChange("deleteAll", !deleteAll)
+                  handleChange('deleteFollowing', false)
+                  handleChange('deleteThis', false)
+                  handleChange('deleteAll', !deleteAll)
                 }}
                 isChecked={deleteAll}
               />
@@ -914,11 +916,11 @@ export default function AddEvents({ navigation, route }) {
 
             <View
               style={{
-                flexDirection: "row",
-                width: "80%",
-                marginLeft: "5%",
+                flexDirection: 'row',
+                width: '80%',
+                marginLeft: '5%',
                 marginTop: 10,
-                alignItems: "center"
+                alignItems: 'center'
               }}
             >
               <BouncyCheckbox
@@ -936,9 +938,9 @@ export default function AddEvents({ navigation, route }) {
                   marginBottom: 2
                 }}
                 onPress={() => {
-                  handleChange("deleteAll", false)
-                  handleChange("deleteThis", false)
-                  handleChange("deleteFollowing", !deleteFollowing)
+                  handleChange('deleteAll', false)
+                  handleChange('deleteThis', false)
+                  handleChange('deleteFollowing', !deleteFollowing)
                 }}
                 isChecked={deleteFollowing}
               />
@@ -948,11 +950,11 @@ export default function AddEvents({ navigation, route }) {
             </View>
             <View
               style={{
-                flexDirection: "row",
-                width: "80%",
-                marginLeft: "5%",
+                flexDirection: 'row',
+                width: '80%',
+                marginLeft: '5%',
                 marginTop: 10,
-                alignItems: "center"
+                alignItems: 'center'
               }}
             >
               <BouncyCheckbox
@@ -970,9 +972,9 @@ export default function AddEvents({ navigation, route }) {
                   marginBottom: 2
                 }}
                 onPress={() => {
-                  handleChange("deleteFollowing", false)
-                  handleChange("deleteAll", false)
-                  handleChange("deleteThis", !deleteThis)
+                  handleChange('deleteFollowing', false)
+                  handleChange('deleteAll', false)
+                  handleChange('deleteThis', !deleteThis)
                 }}
                 isChecked={deleteThis}
               />
@@ -982,15 +984,15 @@ export default function AddEvents({ navigation, route }) {
               style={{ height: 40 }}
               onPress={_deleteEvent}
               loading={loadingDelete}
-              title={"Yes"}
+              title={'Yes'}
             />
             <Button
               style={{ height: 40 }}
-              onPress={() => handleChange("visible", false)}
+              onPress={() => handleChange('visible', false)}
               isWhiteBg
               color={Colors.GREEN_COLOR}
-              backgroundColor={"transparent"}
-              title={"Cancel"}
+              backgroundColor={'transparent'}
+              title={'Cancel'}
             />
           </View>
         </View>
@@ -998,13 +1000,13 @@ export default function AddEvents({ navigation, route }) {
       <Modal
         visible={visible1}
         transparent
-        onDismiss={() => handleChange("visible1", false)}
-        onRequestClose={() => handleChange("visible1", false)}
+        onDismiss={() => handleChange('visible1', false)}
+        onRequestClose={() => handleChange('visible1', false)}
       >
         <View style={styles.centerMode}>
           <View style={styles.modal}>
-            <View style={{ alignItems: "flex-end" }}>
-              <TouchableOpacity onPress={() => handleChange("visible1", false)}>
+            <View style={{ alignItems: 'flex-end' }}>
+              <TouchableOpacity onPress={() => handleChange('visible1', false)}>
                 <Icon name="close" type="antdesign" />
               </TouchableOpacity>
             </View>
@@ -1016,14 +1018,14 @@ export default function AddEvents({ navigation, route }) {
               ]}
             >
               {
-                "All impacted employees will receive a notification regarding the shift change"
+                'All impacted employees will receive a notification regarding the shift change'
               }
             </Text>
             <Button
               style={{ height: 40 }}
               onPress={handleSubmit}
               disabled={loading}
-              title={"Publish"}
+              title={'Publish'}
             />
             <Button
               onPress={handleSubmit}
@@ -1036,7 +1038,7 @@ export default function AddEvents({ navigation, route }) {
                 borderColor: Colors.BACKGROUND_BG
               }}
               color={Colors.GREEN_COLOR}
-              title={"Do not notify"}
+              title={'Do not notify'}
             />
           </View>
         </View>
@@ -1047,43 +1049,43 @@ export default function AddEvents({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     backgroundColor: Colors.WHITE,
-    height: "100%"
+    height: '100%'
   },
   logo: {
-    alignSelf: "center",
-    marginLeft: "auto",
-    marginRight: "auto"
+    alignSelf: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   },
   title: {
     ...Fonts.poppinsMedium(20),
     color: Colors.TEXT_COLOR,
     margin: 20,
-    width: "90%"
+    width: '90%'
   },
   titleText: {
     color: Colors.WHITE,
     ...Fonts.poppinsMedium(18),
-    alignSelf: "center",
-    width: "70%",
-    textAlign: "center"
+    alignSelf: 'center',
+    width: '70%',
+    textAlign: 'center'
   },
   headerCommon: {
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   imageLogo: {
     height: 300,
     width: 128,
-    resizeMode: "contain"
+    resizeMode: 'contain'
   },
   inputStyle: {
     height: 50,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
     borderRadius: 10,
     color: Colors.TEXT_INPUT_COLOR,
     paddingHorizontal: 15,
@@ -1097,24 +1099,24 @@ const styles = StyleSheet.create({
     ...Fonts.poppinsRegular(14)
   },
   footerWhiteButton: {
-    marginTop: "5%",
+    marginTop: '5%',
     height: 40,
-    width: "90%",
-    backgroundColor: "red",
+    width: '90%',
+    backgroundColor: 'red',
     borderWidth: 1,
     borderColor: Colors.BUTTON_BG
   },
   centerMode: {
     backgroundColor: Colors.MODAL_BG,
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center"
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   modal: {
     backgroundColor: Colors.WHITE,
     borderRadius: 10,
     padding: 20,
-    width: "90%"
+    width: '90%'
   }
 })

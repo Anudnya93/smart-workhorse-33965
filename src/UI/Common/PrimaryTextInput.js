@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import {
   Text,
   StyleSheet,
@@ -8,24 +8,25 @@ import {
   TouchableOpacity,
   Keyboard,
   Platform
-} from "react-native"
-import { Fonts, Colors, Images } from "../../res"
+} from 'react-native'
+import { Fonts, Colors, Images } from '../../res'
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger
-} from "react-native-popup-menu"
-import DatePicker from "react-native-datepicker"
-import { Icon } from "react-native-elements"
-import { ScrollView } from "react-native"
-import Toast from "react-native-simple-toast"
+} from 'react-native-popup-menu'
+import DatePicker from 'react-native-datepicker'
+import { Icon } from 'react-native-elements'
+import { ScrollView } from 'react-native'
+import Toast from 'react-native-simple-toast'
+import { widthPercentageToDP } from 'react-native-responsive-screen'
 
 class PrimaryTextInput extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      text: this.props.text || "",
+      text: this.props.text || '',
       isFocused: false,
       isValid: false,
       isPwdVisible: false,
@@ -37,11 +38,11 @@ class PrimaryTextInput extends Component {
   }
 
   text() {
-    return this.state.text ? this.state.text : ""
+    return this.state.text ? this.state.text : ''
   }
 
   clear() {
-    this.setState({ text: "" })
+    this.setState({ text: '' })
   }
 
   isValid(text, countryCodeInput) {
@@ -77,12 +78,12 @@ class PrimaryTextInput extends Component {
   }
 
   onBlur = key => {
-    console.log("this.props", this.props.placeholder)
-    if (this.props.placeholder === "Email Address") {
+    console.log('this.props', this.props.placeholder)
+    if (this.props.placeholder === 'Email Address') {
       if (!this.props.regex?.test(this.state?.text)) {
-        this.props.onChangeText("", false)
-        Toast.show("Invalid email")
-        this.setState({ isFocused: false, text: "" })
+        this.props.onChangeText('', false)
+        Toast.show('Invalid email')
+        this.setState({ isFocused: false, text: '' })
       }
     }
     this.setState({ isFocused: false })
@@ -115,28 +116,28 @@ class PrimaryTextInput extends Component {
       return (
         <DatePicker
           style={{
-            width: "87%",
+            width: '87%',
             top: 5,
-            position: "absolute",
-            justifyContent: "flex-start"
+            position: 'absolute',
+            justifyContent: 'flex-start'
           }}
           ref={o => (this.datePicker = o)}
           mode="date"
-          androidMode={"spinner"}
+          androidMode={'spinner'}
           display="default"
           placeholder=" "
           showIcon={false}
-          confirmBtnText={"Confirm"}
-          cancelBtnText={"Cancel"}
+          confirmBtnText={'Confirm'}
+          cancelBtnText={'Cancel'}
           format=" MM/DD/YYYY"
           date={new Date(this.props.text ? this.props.text : Date.now())}
           maxDate={this.props.maxDate || new Date()}
-          minDate={this.props.minDate || new Date("1900/01/01")}
+          minDate={this.props.minDate || new Date('1900/01/01')}
           customStyles={{
             dateInput: [
               styles.inputStyle,
               {
-                backgroundColor: "transparent",
+                backgroundColor: 'transparent',
                 borderWidth: 0,
                 height: 40,
                 borderColor: this.state.isFocused
@@ -145,7 +146,7 @@ class PrimaryTextInput extends Component {
               }
             ],
             dateText: styles.dateText,
-            datePicker: { justifyContent: "center" }
+            datePicker: { justifyContent: 'center' }
           }}
           onDateChange={text => this.onChangeText(text)}
         />
@@ -159,7 +160,7 @@ class PrimaryTextInput extends Component {
         this.props.streetCity || !!this.props.secondaryItems
           ? this.props.secondaryItems
             ? this.props.secondaryItems
-            : [{ label: "", value: "" }]
+            : [{ label: '', value: '' }]
           : this.props.items
       return (
         // <RNPickerSelect
@@ -201,25 +202,35 @@ class PrimaryTextInput extends Component {
           // ref={el => {
           //   this.inputRefs = el
           // }}
+          // rendererProps={{
+          //   anchorStyle: {
+          //     backgroundColor: 'transparent'
+          //   }
+          // }}
           style={[styles.inputStyle, { paddingTop: 0 }]}
         >
-          <MenuTrigger style={{ width: "100%" }}>
+          <MenuTrigger
+            customStyles={{
+              TriggerTouchableComponent: TouchableOpacity
+            }}
+            style={{ width: '100%' }}
+          >
             <View
               style={[
                 {
-                  alignItems: "center",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  height: "100%"
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  height: '100%'
                 }
               ]}
             >
               <Text
                 style={{
                   color: !this.state.text ? Colors.BLUR_TEXT : Colors.BLACK,
-                  ...Fonts.poppinsRegular(12),
-                  textTransform: "capitalize"
+                  ...Fonts.poppinsRegular(14),
+                  textTransform: 'capitalize'
                 }}
               >
                 {this.state.text
@@ -237,10 +248,27 @@ class PrimaryTextInput extends Component {
               />
             </View>
           </MenuTrigger>
-          <MenuOptions>
+          <MenuOptions
+            optionsContainerStyle={{
+              width: '90%',
+              marginLeft: -widthPercentageToDP(4),
+              marginTop: 50,
+              borderRadius: 8
+            }}
+          >
             <ScrollView style={{ maxHeight: 300 }}>
               {list?.map((item, index) => (
                 <MenuOption
+                  style={{
+                    paddingLeft: 15,
+                    paddingVertical: 5
+                  }}
+                  customStyles={{
+                    OptionTouchableComponent: TouchableOpacity,
+                    optionText: {
+                      ...Fonts.poppinsRegular(14)
+                    }
+                  }}
                   key={index}
                   onSelect={() => this.onChangeDropdownText(item)}
                   text={item?.label}
@@ -264,11 +292,11 @@ class PrimaryTextInput extends Component {
           }}
         >
           {this.state.isPwdVisible ? (
-            <Icon name="eye" type="feather" color={"#818080"} size={20} />
+            <Icon name="eye" type="feather" color={'#818080'} size={20} />
           ) : (
             <Image
               {...Images.hide}
-              style={{ resizeMode: "contain", width: 20, height: 20 }}
+              style={{ resizeMode: 'contain', width: 20, height: 20 }}
             />
           )}
         </TouchableOpacity>
@@ -292,7 +320,7 @@ class PrimaryTextInput extends Component {
         >
           <Image
             {...this.props.rightIcon}
-            style={{ resizeMode: "contain", width: 20, height: 20 }}
+            style={{ resizeMode: 'contain', width: 20, height: 20 }}
           />
         </TouchableOpacity>
       )
@@ -309,13 +337,11 @@ class PrimaryTextInput extends Component {
         ]}
         ref={ref =>
           ref &&
-          ref.props &&
           ref.setNativeProps({
-            text: ref.props.value,
-            style: { fontFamily: "Poppins-Regular" }
+            style: { ...Fonts.poppinsRegular(14) }
           })
         }
-        placeholder={!this.props.dropdown ? this.props.label : ""}
+        placeholder={!this.props.dropdown ? this.props.label : ''}
         textAlignVertical="top"
         multiline={this.props.multiline}
         onFocus={() => this.onFocus()}
@@ -325,7 +351,7 @@ class PrimaryTextInput extends Component {
         onChangeText={text => this.onChangeText(text)}
         value={this.state.text || this.props.text}
         secureTextEntry={
-          (this.state.text !== "" || this.props.text !== "") &&
+          (this.state.text !== '' || this.props.text !== '') &&
           !this.state.isPwdVisible &&
           !!this.props.onPasswordValidationCheck
         }
@@ -367,16 +393,16 @@ class PrimaryTextInput extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    alignSelf: "center",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 7
   },
   inputStyle: {
     height: 50,
-    width: "90%",
-    paddingTop: Platform.OS === "android" ? 15 : 0,
+    width: '90%',
+    paddingTop: Platform.OS === 'android' ? 15 : 0,
     borderRadius: 10,
     color: Colors.TEXT_INPUT_COLOR,
     paddingHorizontal: 15,
@@ -386,28 +412,28 @@ const styles = StyleSheet.create({
     borderColor: Colors.TEXT_INPUT_BORDER
   },
   rightInputView: {
-    position: "absolute",
+    position: 'absolute',
     right: 30,
     top: 15
   },
   inputIOS: {
     height: 50,
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
-    width: "90%",
+    width: '90%',
     paddingHorizontal: 30,
-    color: "transparent",
+    color: 'transparent',
     ...Fonts.poppinsRegular(14)
   },
   inputAndroid: {
     // height: 44,
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 25,
-    width: "90%",
+    width: '90%',
     paddingHorizontal: 20
   },
-  dateText: { display: "none" }
+  dateText: { display: 'none' }
 })
 
 export default PrimaryTextInput

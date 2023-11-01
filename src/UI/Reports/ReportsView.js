@@ -1,49 +1,49 @@
-import React, { useState } from "react"
+import React, { useState } from 'react'
 import {
   View,
   StyleSheet,
   ScrollView,
   Text,
   TouchableOpacity
-} from "react-native"
-import { Header } from "../Common"
-import { Fonts, Images, Colors } from "../../res"
-import { Button } from "../Common"
+} from 'react-native'
+import { Header } from '../Common'
+import { Fonts, Images, Colors } from '../../res'
+import { Button } from '../Common'
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger
-} from "react-native-popup-menu"
-import { Icon } from "react-native-elements"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+} from 'react-native-popup-menu'
+import { Icon } from 'react-native-elements'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   inspectionReports,
   locationVarianceReports,
   payrollReports,
   scheduleVarianceReports
-} from "../../api/business"
-import { useFocusEffect } from "@react-navigation/native"
-import { useCallback } from "react"
-import Fab from "../Common/Fab"
-import PieChart from "react-native-pie-chart"
-import { Modal } from "react-native"
-import PrimaryTextInput from "../Common/PrimaryTextInput"
-import momenttimezone from "moment-timezone"
-import moment from "moment"
+} from '../../api/business'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
+import Fab from '../Common/Fab'
+import PieChart from 'react-native-pie-chart'
+import { Modal } from 'react-native'
+import PrimaryTextInput from '../Common/PrimaryTextInput'
+import momenttimezone from 'moment-timezone'
+import moment from 'moment'
 // import { convertLocalDateToUTCDate } from '../../Utils'
 
 export default function ReportsView({ navigation, route }) {
   const title = route?.params?.title
   const series = [123, 321, 123]
-  const sliceColor = ["#23C263", "#EFF259", "#F84F31"]
+  const sliceColor = ['#23C263', '#EFF259', '#F84F31']
   const [state, setState] = useState({
     loading: false,
     visible: false,
     reports: [],
     reportsFiltered: [],
-    from: "",
-    to: ""
+    from: '',
+    to: ''
   })
 
   const { loading, visible, reportsFiltered, reports, from, to } = state
@@ -52,7 +52,7 @@ export default function ReportsView({ navigation, route }) {
   }
 
   function convertLocalDateToUTCDate(time, toLocal) {
-    const todayDate = moment(new Date()).format("YYYY-MM-DD")
+    const todayDate = moment(new Date()).format('YYYY-MM-DD')
     if (toLocal) {
       const today = momenttimezone.tz.guess()
       const timeUTC = momenttimezone.tz(`${time}`, today).format()
@@ -73,7 +73,7 @@ export default function ReportsView({ navigation, route }) {
       const todayDate1 = momenttimezone
         .tz(`${todayDate} ${time}`, today)
         .format()
-      const utcTime = moment.utc(todayDate1).format("YYYY-MM-DDTHH:mm")
+      const utcTime = moment.utc(todayDate1).format('YYYY-MM-DDTHH:mm')
       return utcTime
     }
   }
@@ -86,67 +86,67 @@ export default function ReportsView({ navigation, route }) {
 
   const _getReportsByFilter = async () => {
     try {
-      handleChange("loading", true)
-      const token = await AsyncStorage.getItem("token")
-      const payload = `?from=${moment(from).format("YYYY-MM-DD")}&to=${moment(
+      handleChange('loading', true)
+      const token = await AsyncStorage.getItem('token')
+      const payload = `?from=${moment(from).format('YYYY-MM-DD')}&to=${moment(
         to
-      ).format("YYYY-MM-DD")}`
+      ).format('YYYY-MM-DD')}`
       let res
-      if (title === "Schedule Variances") {
+      if (title === 'Schedule Variances') {
         res = await scheduleVarianceReports(payload, token)
-      } else if (title === "Location Variances") {
+      } else if (title === 'Location Variances') {
         res = await locationVarianceReports(payload, token)
-      } else if (title === "Payroll Reports") {
+      } else if (title === 'Payroll Reports') {
         res = await payrollReports(payload, token)
-      } else if (title === "Inspection") {
+      } else if (title === 'Inspection') {
         res = await inspectionReports(payload, token)
       }
       if (res?.data) {
-        handleChange("reports", res?.data?.results || res?.data?.response)
+        handleChange('reports', res?.data?.results || res?.data?.response)
       }
-      handleChange("loading", false)
-      handleChange("visible", false)
+      handleChange('loading', false)
+      handleChange('visible', false)
     } catch (error) {
-      handleChange("loading", false)
+      handleChange('loading', false)
       Toast.show(`Error: ${error.message}`)
     }
   }
 
   const _getReports = async () => {
     try {
-      handleChange("loading", true)
-      const token = await AsyncStorage.getItem("token")
+      handleChange('loading', true)
+      const token = await AsyncStorage.getItem('token')
       let res
-      if (title === "Schedule Variances") {
-        res = await scheduleVarianceReports("", token)
-      } else if (title === "Location Variances") {
-        res = await locationVarianceReports("", token)
-      } else if (title === "Payroll Reports") {
-        res = await payrollReports("", token)
-      } else if (title === "Inspection") {
-        res = await inspectionReports("", token)
+      if (title === 'Schedule Variances') {
+        res = await scheduleVarianceReports('', token)
+      } else if (title === 'Location Variances') {
+        res = await locationVarianceReports('', token)
+      } else if (title === 'Payroll Reports') {
+        res = await payrollReports('', token)
+      } else if (title === 'Inspection') {
+        res = await inspectionReports('', token)
       }
       if (res?.data) {
-        handleChange("reports", res?.data?.results || res?.data?.response)
+        handleChange('reports', res?.data?.results || res?.data?.response)
         handleChange(
-          "reportsFiltered",
+          'reportsFiltered',
           res?.data?.results || res?.data?.response
         )
       }
-      handleChange("loading", false)
+      handleChange('loading', false)
     } catch (error) {
-      handleChange("loading", false)
+      handleChange('loading', false)
       Toast.show(`Error: ${error.message}`)
     }
   }
 
   const handleClose = () => {
-    handleChange("visible", false)
+    handleChange('visible', false)
   }
   // console.warn("reports", reports)
   const sortBy = type => {
     function sortFunction(a, b) {}
-    if (type === "za") {
+    if (type === 'za') {
       const sorted = reports?.sort(function (a, b) {
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
@@ -154,10 +154,10 @@ export default function ReportsView({ navigation, route }) {
         var dateB = new Date(a.updated_at || a?.created_at).getTime()
         return dateA > dateB ? 1 : -1
       })
-      console.warn("sorted", sorted)
-      handleChange("reportsFiltered", sorted)
+      // console.warn("sorted", sorted)
+      handleChange('reportsFiltered', sorted)
     }
-    if (type === "az") {
+    if (type === 'az') {
       const sorted = reports?.sort(function (a, b) {
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
@@ -165,15 +165,15 @@ export default function ReportsView({ navigation, route }) {
         var dateB = new Date(b.updated_at || b?.created_at).getTime()
         return dateA > dateB ? 1 : -1
       })
-      console.warn("sorted", sorted)
-      handleChange("reportsFiltered", sorted)
+      // console.warn("sorted", sorted)
+      handleChange('reportsFiltered', sorted)
     }
   }
 
   function toHoursAndMinutes(totalMinutes) {
     const hours = Math.floor(totalMinutes / 60)
     const minutes = totalMinutes % 60
-    return `${hours}h${minutes > 0 ? ` ${minutes.toFixed(0)}m` : ""}`
+    return `${hours}h${minutes > 0 ? ` ${minutes.toFixed(0)}m` : ''}`
   }
 
   return (
@@ -181,45 +181,48 @@ export default function ReportsView({ navigation, route }) {
       <Header
         back
         leftButton
-        title={title + " Reports"}
+        title={title + ' Reports'}
         onLeftPress={() => navigation.goBack()}
       />
       <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        style={{ width: "100%" }}
+        contentContainerStyle={{ alignItems: 'center' }}
+        style={{ width: '100%' }}
       >
         <View
           style={{
             marginTop: 20,
-            flexDirection: "row",
-            alignItems: "center",
-            width: "90%",
-            justifyContent: "space-between"
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '90%',
+            justifyContent: 'space-between'
           }}
         >
           <Menu
             style={{
-              width: "45%",
+              width: '45%',
               borderWidth: 1,
               borderColor: Colors.TEXT_INPUT_BORDER,
               borderRadius: 10
             }}
           >
             <MenuTrigger
+              customStyles={{
+                TriggerTouchableComponent: TouchableOpacity
+              }}
               style={{
-                width: "100%",
+                width: '100%',
                 height: 35,
-                alignItems: "center",
-                justifyContent: "center"
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               <View
                 style={[
                   {
-                    alignItems: "center",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "90%",
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '90%',
                     marginTop: 0
                   }
                 ]}
@@ -228,10 +231,10 @@ export default function ReportsView({ navigation, route }) {
                   style={{
                     color: Colors.BUTTON_BG1,
                     ...Fonts.poppinsRegular(12),
-                    textTransform: "capitalize"
+                    textTransform: 'capitalize'
                   }}
                 >
-                  {"Sort by"}
+                  {'Sort by'}
                 </Text>
                 <Icon
                   name="down"
@@ -246,11 +249,11 @@ export default function ReportsView({ navigation, route }) {
               optionsContainerStyle={{
                 borderRadius: 10,
                 marginTop: 35,
-                width: "40%"
+                width: '40%'
               }}
             >
-              <MenuOption onSelect={() => sortBy("az")} text="Newest" />
-              <MenuOption onSelect={() => sortBy("za")} text="Oldest" />
+              <MenuOption onSelect={() => sortBy('az')} text="Newest" />
+              <MenuOption onSelect={() => sortBy('za')} text="Oldest" />
               {/* <MenuOption
                 // onSelect={() => handleChange(`mode`, 'month')}
                 text="Increasing"
@@ -263,19 +266,19 @@ export default function ReportsView({ navigation, route }) {
           </Menu>
           <Button
             backgroundColor={Colors.BUTTON_BG1}
-            icon={"filter"}
-            onPress={() => handleChange("visible", true)}
-            style={{ height: 40, width: "48%", marginTop: 0 }}
+            icon={'filter'}
+            onPress={() => handleChange('visible', true)}
+            style={{ height: 40, width: '48%', marginTop: 0 }}
             iconStyle={{ height: 18, width: 18 }}
-            title={"Filter"}
+            title={'Filter'}
           />
         </View>
-        {title === "Schedule Variances" && (
-          <View style={{ width: "90%", marginBottom: 20, marginTop: 20 }}>
-            <Text style={styles.description}>{"Totals"}</Text>
-            <Text style={styles.title}>{"Actual Shift Duration:"}</Text>
-            <Text style={styles.title}>{"Scheduled Shift Duration:"}</Text>
-            <Text style={styles.title}>{"Variance:"}</Text>
+        {title === 'Schedule Variances' && (
+          <View style={{ width: '90%', marginBottom: 20, marginTop: 20 }}>
+            <Text style={styles.description}>{'Totals'}</Text>
+            <Text style={styles.title}>{'Actual Shift Duration:'}</Text>
+            <Text style={styles.title}>{'Scheduled Shift Duration:'}</Text>
+            <Text style={styles.title}>{'Variance:'}</Text>
           </View>
         )}
         {reportsFiltered?.map((item, index) => (
@@ -284,7 +287,7 @@ export default function ReportsView({ navigation, route }) {
             style={{
               backgroundColor: Colors.TEXT_INPUT_BG,
               padding: 10,
-              width: "90%",
+              width: '90%',
               marginTop: 10,
               marginBottom: 10,
               borderRadius: 10
@@ -293,13 +296,13 @@ export default function ReportsView({ navigation, route }) {
             <View style={{ marginVertical: 10 }}>
               <View
                 style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "space-between"
+                  flexDirection: 'row',
+                  width: '100%',
+                  justifyContent: 'space-between'
                 }}
               >
-                {title === "Schedule Variances" ? (
-                  <Text style={styles.description}>{"Late Clock in"}</Text>
+                {title === 'Schedule Variances' ? (
+                  <Text style={styles.description}>{'Late Clock in'}</Text>
                 ) : (
                   <View />
                 )}
@@ -314,85 +317,85 @@ export default function ReportsView({ navigation, route }) {
               <Text
                 style={[
                   styles.title,
-                  { marginTop: title === "Schedule Variances" ? 0 : -20 }
+                  { marginTop: title === 'Schedule Variances' ? 0 : -20 }
                 ]}
               >
-                {title === "Inspection" ? "Worksite" : "Employee Name:"}
+                {title === 'Inspection' ? 'Worksite' : 'Employee Name:'}
               </Text>
               <Text style={styles.description}>
-                {title === "Location Variances" ||
-                title === "Schedule Variances"
+                {title === 'Location Variances' ||
+                title === 'Schedule Variances'
                   ? item?.employee
-                  : title === "Inspection"
+                  : title === 'Inspection'
                   ? item?.worksite?.name
                   : item?.employee?.name}
               </Text>
             </View>
-            {title === "Schedule Variances" && (
+            {title === 'Schedule Variances' && (
               <>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Worksite:"}</Text>
+                  <Text style={styles.title}>{'Worksite:'}</Text>
                   <Text style={styles.description}>{item?.worksite}</Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Actual Time:"}</Text>
+                  <Text style={styles.title}>{'Actual Time:'}</Text>
                   <Text style={styles.description}>{item?.actual_time}</Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Edited Time:"}</Text>
+                  <Text style={styles.title}>{'Edited Time:'}</Text>
                   <Text style={styles.description}>{item?.edited_time}</Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Actual Shift Duration:"}</Text>
+                  <Text style={styles.title}>{'Actual Shift Duration:'}</Text>
                   <Text style={styles.description}>
                     {toHoursAndMinutes(item?.actual_shift_duration)}
                   </Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
                   <Text style={styles.title}>
-                    {"Scheduled Shift Duration:"}
+                    {'Scheduled Shift Duration:'}
                   </Text>
                   <Text style={styles.description}>
                     {toHoursAndMinutes(item?.scheduled_shift_duration)}
                   </Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Variance:"}</Text>
+                  <Text style={styles.title}>{'Variance:'}</Text>
                   <Text style={styles.description}>{item?.variance}</Text>
                 </View>
               </>
             )}
-            {title === "Location Variances" && (
+            {title === 'Location Variances' && (
               <>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Worksite:"}</Text>
+                  <Text style={styles.title}>{'Worksite:'}</Text>
                   <Text style={styles.description}>{item?.worksite}</Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Actual Time:"}</Text>
+                  <Text style={styles.title}>{'Actual Time:'}</Text>
                   <Text style={styles.description}>
                     {moment
                       .utc(item?.actual_time)
                       .local()
-                      .format("YYYY/MM/DD hh:mm")}
+                      .format('YYYY/MM/DD hh:mm')}
                   </Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Actual Location:"}</Text>
+                  <Text style={styles.title}>{'Actual Location:'}</Text>
                   <Text style={styles.description}>
                     {item?.actual_location}
                     <Text style={styles.title}> - Map</Text>
                   </Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Worksite Location:"}</Text>
+                  <Text style={styles.title}>{'Worksite Location:'}</Text>
                   <Text style={styles.description}>
                     {item?.worksite_location}
                     <Text style={styles.title}> - Map</Text>
                   </Text>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.title}>{"Distance Deviation:"}</Text>
+                  <Text style={styles.title}>{'Distance Deviation:'}</Text>
                   <Text style={styles.description}>
                     {Number(item?.distance_deviation).toFixed(2)}Miles
                     <Text style={styles.title}> - Map</Text>
@@ -400,31 +403,31 @@ export default function ReportsView({ navigation, route }) {
                 </View>
               </>
             )}
-            {title !== "Schedule Variances" && title !== "Location Variances" && (
+            {title !== 'Schedule Variances' && title !== 'Location Variances' && (
               <>
                 <View style={{ marginVertical: 10 }}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      width: "100%",
-                      justifyContent: "space-between"
+                      flexDirection: 'row',
+                      width: '100%',
+                      justifyContent: 'space-between'
                     }}
                   >
                     <View>
                       <Text style={styles.title}>
-                        {title === "Inspection"
-                          ? "Inspection Report Name:"
-                          : "Total Hours:"}
+                        {title === 'Inspection'
+                          ? 'Inspection Report Name:'
+                          : 'Total Hours:'}
                       </Text>
                       {
                         <Text style={styles.description}>
-                          {title === "Inspection"
+                          {title === 'Inspection'
                             ? item?.name
                             : item?.total_hours}
                         </Text>
                       }
                     </View>
-                    {title === "Inspection" && (
+                    {title === 'Inspection' && (
                       <>
                         {(Number(item?.stats?.SATISFACTORY) > 0 ||
                           Number(item?.stats?.NEEDS_ATTENTION) > 0 ||
@@ -454,27 +457,27 @@ export default function ReportsView({ navigation, route }) {
                 <View style={{ marginVertical: 10 }}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      width: "100%",
-                      justifyContent: "space-between"
+                      flexDirection: 'row',
+                      width: '100%',
+                      justifyContent: 'space-between'
                     }}
                   >
                     <View>
                       <Text style={styles.title}>
-                        {title === "Inspection"
-                          ? "Inspector"
-                          : "Total Compensation:"}
+                        {title === 'Inspection'
+                          ? 'Inspector'
+                          : 'Total Compensation:'}
                       </Text>
                       <Text style={styles.description}>
-                        {title === "Inspection"
+                        {title === 'Inspection'
                           ? item?.inspector
-                          : "$" + item?.earnings}
+                          : '$' + item?.earnings}
                       </Text>
                     </View>
-                    {title === "Inspection" && (
+                    {title === 'Inspection' && (
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate("InspectionDetails", { item })
+                          navigation.navigate('InspectionDetails', { item })
                         }
                       >
                         <Text
@@ -483,7 +486,7 @@ export default function ReportsView({ navigation, route }) {
                             color: Colors.BLUR_TEXT
                           }}
                         >
-                          {"See Report"}
+                          {'See Report'}
                         </Text>
                       </TouchableOpacity>
                     )}
@@ -502,7 +505,7 @@ export default function ReportsView({ navigation, route }) {
       >
         <View style={styles.centerMode}>
           <View style={styles.modal}>
-            <View style={{ alignItems: "flex-end" }}>
+            <View style={{ alignItems: 'flex-end' }}>
               <TouchableOpacity onPress={handleClose}>
                 <Icon name="close" type="antdesign" />
               </TouchableOpacity>
@@ -513,55 +516,55 @@ export default function ReportsView({ navigation, route }) {
 
             <View
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                width: "100%",
-                justifyContent: "space-between"
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '100%',
+                justifyContent: 'space-between'
               }}
             >
-              <View style={{ width: "50%" }}>
+              <View style={{ width: '50%' }}>
                 <PrimaryTextInput
                   dateType={true}
                   text={from}
-                  maxDate={new Date("2050/01/01")}
+                  maxDate={new Date('2050/01/01')}
                   label="From"
                   key="from"
                   placeholder="From"
-                  onChangeText={(text, isValid) => handleChange("from", text)}
+                  onChangeText={(text, isValid) => handleChange('from', text)}
                 />
               </View>
-              <View style={{ width: "50%" }}>
+              <View style={{ width: '50%' }}>
                 <PrimaryTextInput
                   dateType={true}
-                  maxDate={new Date("2050/01/01")}
+                  maxDate={new Date('2050/01/01')}
                   text={to}
                   label="To"
                   key="to"
                   placeholder="To"
-                  onChangeText={(text, isValid) => handleChange("to", text)}
+                  onChangeText={(text, isValid) => handleChange('to', text)}
                 />
               </View>
             </View>
             <Button
-              style={{ height: 40, marginTop: 20, width: "95%" }}
+              style={{ height: 40, marginTop: 20, width: '95%' }}
               onPress={_getReportsByFilter}
               disabled={!from || !to}
               // loading={loadingFeedback}
-              title={"Apply filter"}
+              title={'Apply filter'}
             />
             <Button
               style={{ height: 40 }}
               onPress={handleClose}
               isWhiteBg
               color={Colors.GREEN_COLOR}
-              backgroundColor={"transparent"}
-              title={"Cancel"}
+              backgroundColor={'transparent'}
+              title={'Cancel'}
             />
           </View>
         </View>
       </Modal>
-      {title === "Inspection" && (
-        <Fab onPress={() => navigation.navigate("CreateInspection")} />
+      {title === 'Inspection' && (
+        <Fab onPress={() => navigation.navigate('CreateInspection')} />
       )}
     </View>
   )
@@ -582,25 +585,25 @@ const styles = StyleSheet.create({
     padding: 20
   },
   footerButton: {
-    marginTop: "15%"
+    marginTop: '15%'
   },
   description: {
     ...Fonts.poppinsRegular(14),
     color: Colors.TEXT_COLOR,
-    textAlign: "left",
+    textAlign: 'left',
     marginTop: 2
   },
   centerMode: {
     backgroundColor: Colors.MODAL_BG,
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center"
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   modal: {
     backgroundColor: Colors.WHITE,
     borderRadius: 10,
     padding: 20,
-    width: "90%"
+    width: '90%'
   }
 })

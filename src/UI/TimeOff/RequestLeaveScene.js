@@ -20,7 +20,7 @@ import { updateLeaveRequest } from '../../api/business'
 
 export default class RequestLeaveScene extends BaseScene {
   static contextType = AppContext
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       env: '',
@@ -39,13 +39,8 @@ export default class RequestLeaveScene extends BaseScene {
 
   handleRequest = async () => {
     try {
-      const {
-        title,
-        request_type,
-        from_date,
-        to_date,
-        description
-      } = this.state
+      const { title, request_type, from_date, to_date, description } =
+        this.state
       this.handleChange('loading', true, true)
       const payload = {
         title,
@@ -60,7 +55,7 @@ export default class RequestLeaveScene extends BaseScene {
       this.props.navigation.goBack()
       Toast.show('Leave Request Successfully Sent!')
     } catch (error) {
-      console.warn('error', error)
+      // console.warn('error', error)
       this.handleChange('loading', false, true)
       const errorText = Object.values(error?.response?.data)
       Toast.show(`Error: ${errorText[0]}`)
@@ -90,17 +85,17 @@ export default class RequestLeaveScene extends BaseScene {
           : 'Request has been denied'
       )
     } catch (error) {
-      console.warn('error', error)
+      // console.warn('error', error)
       this.handleChange('loadingApprove', false, true)
       const errorText = Object.values(error?.response?.data)
       Toast.show(`Error: ${errorText[0]}`)
     }
   }
 
-  renderTitleInput () {
+  renderTitleInput() {
     return (
       <PrimaryTextInput
-        ref={o => (this['title'] = o)}
+        ref={o => (this.title = o)}
         label={this.ls('title')}
         onChangeText={(text, isValid) =>
           this.handleChange('title', text, isValid)
@@ -109,10 +104,10 @@ export default class RequestLeaveScene extends BaseScene {
     )
   }
 
-  renderDescription () {
+  renderDescription() {
     return (
       <PrimaryTextInput
-        ref={o => (this['description'] = o)}
+        ref={o => (this.description = o)}
         label={this.ls('description')}
         onChangeText={(text, isValid) =>
           this.handleChange('description', text, isValid)
@@ -123,7 +118,7 @@ export default class RequestLeaveScene extends BaseScene {
     )
   }
 
-  renderDatesInput () {
+  renderDatesInput() {
     const { from_date, to_date } = this.state
     return (
       <View
@@ -140,9 +135,9 @@ export default class RequestLeaveScene extends BaseScene {
             dateType={true}
             text={from_date}
             maxDate={new Date('2050/01/01')}
-            label='From'
-            key='from_date'
-            placeholder='from_date'
+            label="From"
+            key="from_date"
+            placeholder="from_date"
             onChangeText={(text, isValid) =>
               this.handleChange('from_date', text)
             }
@@ -153,9 +148,9 @@ export default class RequestLeaveScene extends BaseScene {
             dateType={true}
             maxDate={new Date('2050/01/01')}
             text={to_date}
-            label='To'
-            key='to_date'
-            placeholder='to_date'
+            label="To"
+            key="to_date"
+            placeholder="to_date"
             onChangeText={(text, isValid) => this.handleChange('to_date', text)}
           />
         </View>
@@ -163,10 +158,10 @@ export default class RequestLeaveScene extends BaseScene {
     )
   }
 
-  renderTypeInput () {
+  renderTypeInput() {
     return (
       <PrimaryTextInput
-        ref={o => (this['leaveType'] = o)}
+        ref={o => (this.leaveType = o)}
         label={this.ls('leaveType')}
         onChangeText={(text, isValid) =>
           this.handleChange('request_type', text, isValid)
@@ -181,15 +176,9 @@ export default class RequestLeaveScene extends BaseScene {
     )
   }
 
-  renderButton () {
-    const {
-      title,
-      loading,
-      request_type,
-      from_date,
-      to_date,
-      description
-    } = this.state
+  renderButton() {
+    const { title, loading, request_type, from_date, to_date, description } =
+      this.state
     return (
       <Button
         title={this.ls('sendReq')}
@@ -203,14 +192,10 @@ export default class RequestLeaveScene extends BaseScene {
     )
   }
 
-  renderContent () {
+  renderContent() {
     const { user, leaveRequest } = this.context
-    const {
-      loadingApprove,
-      admin_note,
-      denyModalVisible,
-      leaveItem
-    } = this.state
+    const { loadingApprove, admin_note, denyModalVisible, leaveItem } =
+      this.state
     if (user?.role !== 'Organization Admin') {
       return (
         <KeyboardAwareScrollView style={styles.childContainer}>
@@ -240,7 +225,7 @@ export default class RequestLeaveScene extends BaseScene {
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <Header

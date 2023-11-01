@@ -9,8 +9,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { deleteEmployee } from '../../api/business'
 import database from '@react-native-firebase/database'
 import AppContext from '../../Utils/Context'
+import { currencyFormatIntl } from '../../Utils/number'
 
-export default function EmployeesView ({ navigation, route }) {
+export default function EmployeesView({ navigation, route }) {
   const item = route?.params?.item
   const { user } = useContext(AppContext)
 
@@ -31,10 +32,10 @@ export default function EmployeesView ({ navigation, route }) {
       const res = await deleteEmployee(item?.id, token)
       handleChange('loading', false)
       navigation.goBack()
-      Toast.show(`Employee has been deleted!`)
+      Toast.show('Employee has been deleted!')
     } catch (error) {
       handleChange('loading', false)
-      console.warn('err', error?.response?.data)
+      // console.warn('err', error?.response?.data)
       const showWError = Object.values(error.response?.data?.error)
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -169,7 +170,7 @@ export default function EmployeesView ({ navigation, route }) {
         <View style={styles.textView}>
           <Text style={styles.job}>Hourly Rate:</Text>
           <Text style={styles.title}>
-            ${item?.work_information?.hourly_rate}/hr
+            {currencyFormatIntl(item?.work_information?.hourly_rate)}/hr
           </Text>
         </View>
         <Button

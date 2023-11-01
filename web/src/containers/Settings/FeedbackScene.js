@@ -33,7 +33,7 @@ export default function Feedback({}) {
     }
     var reader = new FileReader()
     var file = e.target.files[0]
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file)
     reader.onload = e => {
       handleChange("file", e.target.result)
     }
@@ -58,7 +58,7 @@ export default function Feedback({}) {
         }
       })
     } catch (error) {
-      console.warn("error", error)
+      // console.warn("error", error)
       handleChange("loading", false)
       enqueueSnackbar(`Error: ${error.message}`, {
         variant: "success",
