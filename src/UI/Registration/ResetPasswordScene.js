@@ -48,7 +48,7 @@ export default class ResetPasswordScene extends BaseScene {
       await setPassword(payload)
       this.handleChange('loading', false, true)
       this.props.navigation.navigate('registration')
-      Toast.show("Password has been changed")
+      Toast.show('Password has been changed')
     } catch (error) {
       // console.warn("error", error)
       this.handleChange('loading', false, true)
@@ -71,6 +71,11 @@ export default class ResetPasswordScene extends BaseScene {
           ref={o => (this.password = o)}
           label="Create New Password"
           style={{ width: screenWidth }}
+          onPasswordValidationCheck={true}
+          passwordPolicy={true}
+          regex={
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+          }
         />
         <PrimaryTextInput
           onChangeText={(text, isValid) =>
@@ -80,6 +85,8 @@ export default class ResetPasswordScene extends BaseScene {
           label="Confirm New Password"
           correctPassword={this.state.passwordValidation}
           style={{ width: screenWidth }}
+          onPasswordValidationCheck={true}
+          passwordPolicy={true}
         />
       </View>
     )

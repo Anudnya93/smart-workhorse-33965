@@ -46,6 +46,7 @@
     "react-native-dotenv": "^2.5.3",
     "react-native-elements": "^3.3.1",
     "react-native-emoji-picker-staltz": "^1.0.0",
+    "react-native-fast-image": "^8.6.3",
     "react-native-fs": "^2.20.0",
     "react-native-geocoding": "^0.5.0",
     "react-native-gesture-handler": "^1.10.3",

@@ -12,6 +12,7 @@ import {
 import { Fonts, Colors, Images } from '../../res'
 import Icon from '../../UI/Common/Icon'
 import { widthPercentageToDP } from 'react-native-responsive-screen'
+import FastImage from 'react-native-fast-image'
 
 const Countries = [
   {
@@ -174,7 +175,7 @@ const CustomPhoneInput = ({
                     marginVertical: 10
                   }}
                 >
-                  <Image
+                  <FastImage
                     source={item.img}
                     style={{ width: 50, height: 30 }}
                     resizeMode="cover"
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 20,
     alignItems: 'center',
     shadowColor: '#000',
@@ -242,10 +243,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.TEXT_INPUT_BORDER,
     borderRadius: 10,
     borderWidth: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: Platform.OS == 'android' ? 10 : 15,
     marginHorizontal: widthPercentageToDP(5)
   },
   inputStyle: {
-    ...Fonts.poppinsRegular(14)
+    ...Fonts.poppinsRegular(14),
+    height: 50
   }
 })
