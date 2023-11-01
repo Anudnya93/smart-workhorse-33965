@@ -440,6 +440,7 @@ export default function AddEvents({ navigation, route }) {
             />
           </TouchableOpacity>
           <DatePicker
+            theme="light"
             modal
             open={openStart}
             mode={'time'}
@@ -476,6 +477,7 @@ export default function AddEvents({ navigation, route }) {
             />
           </TouchableOpacity>
           <DatePicker
+            theme="light"
             modal
             mode={'time'}
             open={endStart}

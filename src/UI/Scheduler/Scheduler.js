@@ -36,7 +36,11 @@ import DRAFTED from '../../res/Svgs/drafted.svg'
 import { publishAllEvent } from '../../api/business'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from 'react-native-simple-toast'
-import { widthPercentageToDP } from 'react-native-responsive-screen'
+import {
+  heightPercentageToDP,
+  widthPercentageToDP
+} from 'react-native-responsive-screen'
+import FastImage from 'react-native-fast-image'
 
 export default function Scheduler({ navigation }) {
   const { schedules, user, _getAllSchedules } = useContext(AppContext)
@@ -75,44 +79,133 @@ export default function Scheduler({ navigation }) {
     handleChange('visible', false)
   }
 
+  function CustomEvent(props) {
+    const [renderedHeight, setRenderedHeight] = useState(0)
+
+    return (
+      <TouchableOpacity // {...touchableOpacityProps}
+        onLayout={e => {
+          setRenderedHeight(e.nativeEvent.layout.height)
+        }}
+        onPress={() => {
+          props.handleChange('visible', true)
+          props.handleChange('selectedEvent', props.event)
+        }}
+        style={[
+          props.style,
+          {
+            backgroundColor: props.event.color,
+            borderRadius: 5,
+            flexDirection:
+              renderedHeight > 100 || props.mode == 'week' ? 'column' : 'row',
+            alignItems: 'center',
+            paddingHorizontal: 5,
+            justifyContent:
+              renderedHeight < 100 && props.mode == 'day' ? 'center' : undefined
+          }
+        ]}
+      >
+        {props.event?.event_status === 'DRAFT' && (
+          <View
+            style={{
+              width: '90%',
+              alignItems: 'flex-end'
+            }}
+          >
+            <SvgXml xml={DRAFTED} />
+          </View>
+        )}
+        <FastImage
+          source={
+            props.event?.logo
+              ? {
+                  uri: props.event?.logo
+                }
+              : calendarLogo
+          }
+          style={
+            props.mode == 'day'
+              ? {
+                  marginTop: renderedHeight < 50 ? 0 : 10,
+                  width: renderedHeight < 50 ? 30 : 50,
+                  height: renderedHeight < 50 ? 30 : 50,
+                  maxWidth: renderedHeight,
+                  maxHeight: renderedHeight
+                }
+              : props.mode == 'month'
+              ? {
+                  width: 15,
+                  height: 15
+                }
+              : {
+                  width: 15,
+                  height: 15
+                }
+          }
+          resizeMode="contain"
+        />
+        <Text
+          numberOfLines={props.mode == 'week' ? 3 : 1}
+          style={[
+            {
+              ...Fonts.poppinsRegular(props.mode === 'day' ? 14 : 8),
+              color: Colors.BLACK,
+              marginTop: 5,
+              marginLeft: props.mode != 'week' ? 5 : 3,
+              fontSize: renderedHeight < 30 ? renderedHeight / 2.5 : 14
+            },
+            props.mode == 'month' && {
+              marginLeft: 3,
+              fontSize: 10
+            },
+            props.mode == 'week' && {
+              fontSize: 10
+            }
+          ]}
+        >
+          {`${props.event.title}`}
+        </Text>
+        {props.mode != 'month' && renderedHeight > 100 && (
+          <Text
+            numberOfLines={props.mode == 'week' ? 3 : 1}
+            style={[
+              {
+                ...Fonts.poppinsRegular(props.mode === 'day' ? 14 : 8),
+                color: Colors.BLACK,
+                alignSelf: 'center',
+                fontSize: props.mode == 'week' ? 10 : 14,
+                textAlign: 'center'
+              }
+            ]}
+          >
+            {props.mode != 'week'
+              ? `${moment
+                  .utc(props.event.start_time)
+                  .local()
+                  .format('HH:mm')}-${moment
+                  .utc(props.event.end_time)
+                  .local()
+                  .format('HH:mm')}`
+              : `${moment
+                  .utc(props.event.start_time)
+                  .local()
+                  .format('HH:mm')}\n-\n${moment
+                  .utc(props.event.end_time)
+                  .local()
+                  .format('HH:mm')}`}
+          </Text>
+        )}
+      </TouchableOpacity>
+    )
+  }
+
   const renderEvent = (event, touchableOpacityProps) => (
-    <TouchableOpacity
-      // {...touchableOpacityProps}
-      onPress={() => {
-        handleChange('visible', true)
-        handleChange('selectedEvent', event)
-      }}
-      style={[
-        touchableOpacityProps.style,
-        {
-          backgroundColor: event.color,
-          borderRadius: 5,
-          flexDirection: mode === 'month' ? 'row' : 'column',
-          alignItems: 'center'
-        }
-      ]}
-    >
-      {event?.event_status === 'DRAFT' && (
-        <View style={{ width: '90%', alignItems: 'flex-end' }}>
-          <SvgXml xml={DRAFTED} />
-        </View>
-      )}
-      <Image
-        source={event?.logo ? { uri: event?.logo } : calendarLogo}
-        style={{
-          marginTop: mode === 'day' ? 30 : 0,
-          width: mode === 'day' ? 30 : 20,
-          resizeMode: 'contain',
-          height: mode === 'day' ? 30 : 20
-        }}
-      />
-      <Text
-        style={{
-          ...Fonts.poppinsRegular(mode === 'day' ? 14 : 8),
-          color: Colors.BLACK
-        }}
-      >{`${event.title}`}</Text>
-    </TouchableOpacity>
+    <CustomEvent
+      mode={mode}
+      handleChange={handleChange}
+      event={event}
+      style={touchableOpacityProps.style}
+    />
   )
 
   function convertLocalDateToUTCDate(time, toLocal) {
@@ -225,6 +318,7 @@ export default function Scheduler({ navigation }) {
             />
           </TouchableOpacity>
           <DatePicker
+            theme="light"
             modal
             mode={'date'}
             open={openSelect}

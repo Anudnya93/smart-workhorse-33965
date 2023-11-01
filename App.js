@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react"
-import "react-native-gesture-handler"
-import { NavigationContainer } from "@react-navigation/native"
-import { AuthNavigator } from "./src/Navigation/AppNavigation"
-import SplashScreen from "react-native-splash-screen"
-import "./src/protos"
-import AppContext from "./src/Utils/Context"
-import { MenuProvider } from "react-native-popup-menu"
+import React, { useEffect, useState } from 'react'
+import 'react-native-gesture-handler'
+import { NavigationContainer } from '@react-navigation/native'
+import { AuthNavigator } from './src/Navigation/AppNavigation'
+import SplashScreen from 'react-native-splash-screen'
+import './src/protos'
+import AppContext from './src/Utils/Context'
+import { MenuProvider } from 'react-native-popup-menu'
 import {
   getAllSchedules,
   getEarnings,
   getleaveRequest
-} from "./src/api/business"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import Toast from "react-native-simple-toast"
+} from './src/api/business'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Toast from 'react-native-simple-toast'
 import {
   getAllNotifications,
   getCities,
@@ -20,11 +20,13 @@ import {
   getProfile,
   getStates,
   readDevice
-} from "./src/api/auth"
-import { getUpcomingShift, getUpcomingShiftTimes } from "./src/api/employee"
-import { SafeAreaView, View } from "react-native"
-import Colors from "./src/res/Theme/Colors"
-import PushNotification from "react-native-push-notification"
+} from './src/api/auth'
+import { getUpcomingShift, getUpcomingShiftTimes } from './src/api/employee'
+import { SafeAreaView, View } from 'react-native'
+import Colors from './src/res/Theme/Colors'
+import PushNotification from 'react-native-push-notification'
+
+let timeout
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -50,9 +52,9 @@ const App = () => {
 
   const _getCountries = async () => {
     try {
-      const token = await AsyncStorage.getItem("token")
+      const token = await AsyncStorage.getItem('token')
       const countries = await getCountries(token)
-      _getCities("")
+      _getCities('')
       const states = await getStates(token)
       setCountries(countries?.data?.results)
       setCities(cities?.data)
@@ -62,7 +64,7 @@ const App = () => {
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
       } else {
@@ -71,21 +73,35 @@ const App = () => {
     }
   }
 
+  const gettingCities = async payload => {
+    setLoadingCity(true)
+    const body = payload || ''
+    const token = await AsyncStorage.getItem('token')
+    const cities = await getCities(body, token)
+    console.log({ data: cities.data })
+    setCities(cities?.data)
+    setLoadingCity(false)
+  }
+
   const _getCities = async payload => {
     try {
-      setLoadingCity(true)
-      const body = payload || ""
-      const token = await AsyncStorage.getItem("token")
-      const cities = await getCities(body, token)
-      setCities(cities?.data)
-      setLoadingCity(false)
+      if (timeout) {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+          gettingCities(payload)
+        }, 300)
+      } else {
+        timeout = setTimeout(() => {
+          gettingCities(payload)
+        }, 300)
+      }
     } catch (error) {
       setLoadingCity(false)
       const showWError = error.response?.data?.error
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
       } else {
@@ -96,8 +112,8 @@ const App = () => {
 
   const _getAllSchedules = async payload => {
     try {
-      const token = await AsyncStorage.getItem("token")
-      const qs = payload || ""
+      const token = await AsyncStorage.getItem('token')
+      const qs = payload || ''
       const res = await getAllSchedules(qs, token)
       setSchedules(res?.data?.response)
     } catch (error) {
@@ -105,13 +121,13 @@ const App = () => {
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         if (
-          showWError[0] === "Business Subscription currently is not active."
+          showWError[0] === 'Business Subscription currently is not active.'
         ) {
           Toast.show(
-            `Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then`
+            'Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then'
           )
         } else {
           Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -125,8 +141,8 @@ const App = () => {
   const _getEarnings = async payload => {
     try {
       setEarningLoading(true)
-      const qs = payload ? payload : ""
-      const token = await AsyncStorage.getItem("token")
+      const qs = payload ? payload : ''
+      const token = await AsyncStorage.getItem('token')
       const res = await getEarnings(qs, token)
       setEarnings(res?.data)
       setEarningLoading(false)
@@ -136,13 +152,13 @@ const App = () => {
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         if (
-          showWError[0] === "Business Subscription currently is not active."
+          showWError[0] === 'Business Subscription currently is not active.'
         ) {
           Toast.show(
-            `Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then`
+            'Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then'
           )
         } else {
           Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -155,16 +171,16 @@ const App = () => {
 
   const _getleaveRequest = async () => {
     try {
-      const token = await AsyncStorage.getItem("token")
+      const token = await AsyncStorage.getItem('token')
       const res = await getleaveRequest(token)
-      console.log("getleaveRequest", res?.data?.results)
+      console.log('getleaveRequest', res?.data?.results)
       setLeaveRequest(res?.data?.results)
     } catch (error) {
       const showWError = error.response?.data?.error
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError)}`)
       } else {
@@ -175,7 +191,7 @@ const App = () => {
 
   const _getProfile = async () => {
     try {
-      const token = await AsyncStorage.getItem("token")
+      const token = await AsyncStorage.getItem('token')
       const res = await getProfile(token)
       setAdminProfile(res?.data?.response)
     } catch (error) {
@@ -183,7 +199,7 @@ const App = () => {
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
       } else {
@@ -195,10 +211,10 @@ const App = () => {
 
   const _getUpcomingShift = async () => {
     try {
-      const token = await AsyncStorage.getItem("token")
+      const token = await AsyncStorage.getItem('token')
       const res = await getUpcomingShift(token)
       setUpcomingShiftData(res?.data)
-      console.warn("res?.data?.id", res?.data?.id)
+      console.warn('res?.data?.id', res?.data?.id)
       if (res?.data?.id) {
         const res1 = await getUpcomingShiftTimes(
           `?event=${res?.data?.id}`,
@@ -211,7 +227,7 @@ const App = () => {
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
       } else {
@@ -222,14 +238,14 @@ const App = () => {
 
   const _readDevice = async payload => {
     try {
-      const token = await AsyncStorage.getItem("token")
+      const token = await AsyncStorage.getItem('token')
       const res = await readDevice(payload, token)
     } catch (error) {
       const showWError = error.response?.data?.error
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
       } else {
@@ -241,7 +257,7 @@ const App = () => {
 
   const _getNotification = async () => {
     try {
-      const token = await AsyncStorage.getItem("token")
+      const token = await AsyncStorage.getItem('token')
       const res = await getAllNotifications(token)
       setNotifications(res?.data?.results)
     } catch (error) {
@@ -249,7 +265,7 @@ const App = () => {
         ? Object.values(error.response?.data?.error)
         : error.response?.data
         ? Object.values(error.response?.data)
-        : ""
+        : ''
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
       } else {

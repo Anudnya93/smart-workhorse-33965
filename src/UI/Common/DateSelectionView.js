@@ -77,6 +77,7 @@ class DateSelectionView extends BaseComponent {
     return (
       <View style={[styles.textPickerContainer, {}]}>
         <DatePicker
+          theme="light"
           ref={o => (this.toDatePicker = o)}
           style={{ width: '95%', marginLeft: 8 }}
           placeholder={'To'}

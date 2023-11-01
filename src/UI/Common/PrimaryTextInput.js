@@ -115,6 +115,7 @@ class PrimaryTextInput extends Component {
     if (this.props.dateType) {
       return (
         <DatePicker
+          theme="light"
           style={{
             width: '87%',
             top: 5,

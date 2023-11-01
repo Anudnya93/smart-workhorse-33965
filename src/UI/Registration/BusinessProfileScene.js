@@ -126,7 +126,6 @@ export default function BusinessProfileScene({ navigation, route }) {
     })
     return newList
   }
-  console.log({ phone })
 
   const _uploadImage = async type => {
     handleChange('uploading', true)
@@ -253,8 +252,6 @@ export default function BusinessProfileScene({ navigation, route }) {
       }
     })
   }
-
-  console.log({ state })
 
   const getCityValue = value => {
     const filtered = cities?.filter(e => e?.name === value || e?.id === value)
@@ -455,7 +452,7 @@ export default function BusinessProfileScene({ navigation, route }) {
                 key="cityText"
                 label="Enter city name"
                 onChangeText={(text, isValid) => {
-                  _getCities(`?search=${cityText}`)
+                  _getCities(`?search=${text}`)
                   handleChange('cityText', text)
                 }}
               />

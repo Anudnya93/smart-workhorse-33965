@@ -109,12 +109,10 @@ export default function AddEmployeeScene({ navigation, route }) {
     }
     if (name == 'price') {
       if (regexDecimalCheck.test(value) || value === '') {
-        console.log('setting state', value)
         setState(pre => ({ ...pre, [name]: value }))
       }
       return
     }
-    console.log('setting state out here', value)
     setState(pre => ({ ...pre, [name]: value }))
   }
 
@@ -240,7 +238,6 @@ export default function AddEmployeeScene({ navigation, route }) {
       )
     })
   }
-  // console.log({ state })
 
   const renderWorkInfo = () => {
     return Forms?.fields('employeeWorkInfo')?.map(fields => {
@@ -510,7 +507,7 @@ export default function AddEmployeeScene({ navigation, route }) {
                 key="cityText"
                 label="Enter city name"
                 onChangeText={(text, isValid) => {
-                  _getCities(`?search=${cityText}`)
+                  _getCities(`?search=${text}`)
                   handleChange('cityText', text)
                 }}
               />
