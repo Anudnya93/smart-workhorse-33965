@@ -80,6 +80,7 @@ export default function Scheduler({ navigation }) {
   }
 
   function CustomEvent(props) {
+    console.log({ event: props.event })
     const [renderedHeight, setRenderedHeight] = useState(0)
 
     return (
@@ -420,6 +421,7 @@ export default function Scheduler({ navigation }) {
         date={date}
         events={getEvents(schedules)}
         height={600}
+        overlapOffset={0}
       />
       {!isEmp && <Fab onPress={() => navigation.navigate('addEvents')} />}
       <Modal

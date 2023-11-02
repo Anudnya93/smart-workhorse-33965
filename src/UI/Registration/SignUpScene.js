@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Alert } from 'react-native'
 import { BaseScene, Button, Forms, PrimaryTextInput } from '../Common'
 import { Fonts, Colors } from '../../res'
 import { AsyncHelper } from '../../Utils'
@@ -12,6 +12,18 @@ import { Platform } from 'react-native'
 import countryList from '../../constants/countries'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
 
+const MandatoryFields = [
+  'first_name',
+  'last_name',
+  'phone',
+  'email',
+  'password',
+  'business_code'
+]
+
+const emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
 export default class LoginScene extends BaseScene {
   constructor(props) {
     super(props)
@@ -21,7 +33,8 @@ export default class LoginScene extends BaseScene {
       env: '',
       isPassInValid: false,
       validNumber: false,
-      forms: Forms.fields('signUp')
+      forms: Forms.fields('signUp'),
+      errors: {}
     }
     this.isFormValid = this.isFormValid.bind(this)
     this.phoneRef = React.createRef()
@@ -64,7 +77,46 @@ export default class LoginScene extends BaseScene {
   }
 
   onSubmit = () => {
-    const { first_name, last_name, email, password, phone } = this.state
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+      phone,
+      isPassInValid,
+      isFormValid
+    } = this.state
+
+    const disabled =
+      !first_name ||
+      !last_name ||
+      !email ||
+      !password ||
+      !phone ||
+      isPassInValid ||
+      !isFormValid
+
+    const emailCheck = email && emailRegex.test(email)
+
+    const phoneCheck = phone?.startsWith('+91')
+      ? phone?.length == 16
+      : phone?.length == 15
+
+    console.log({ disabled, emailCheck, phoneCheck })
+    if (disabled || !emailCheck || !phoneCheck) {
+      const newErrors = {}
+      MandatoryFields.forEach(field => {
+        if (!this.state[field]) {
+          newErrors[field] = true
+        }
+      })
+      console.log({ newErrors })
+      // Highlight mandatory fields with red border if not filled
+      this.setState(pre => ({ ...pre, errors: newErrors }))
+      Toast.show('Please fill mandatory fields properly to continue')
+      return
+    }
+
     const payload = {
       name: first_name + ' ' + last_name,
       email,
@@ -76,7 +128,37 @@ export default class LoginScene extends BaseScene {
   }
 
   handleSignup = async () => {
+    const disabled =
+      !this.state.first_name ||
+      !this.state.last_name ||
+      !this.state.email ||
+      !this.state.password ||
+      !this.state.phone ||
+      this.state.isPassInValid ||
+      !this.state.business_code
+    const emailCheck = this.state.email && emailRegex.test(this.state.email)
+
+    const phoneCheck = this.state.phone?.startsWith('+91')
+      ? this.state.phone?.length == 16
+      : this.state.phone?.length == 15
     try {
+      console.log({ disabled, emailCheck, phoneCheck })
+      if (disabled || !emailCheck || !phoneCheck) {
+        const newErrors = {}
+        MandatoryFields.forEach(field => {
+          if (!this.state[field]) {
+            newErrors[field] = true
+          }
+        })
+        console.log({ newErrors })
+        // Highlight mandatory fields with red border if not filled
+        this.setState(pre => ({ ...pre, errors: newErrors }))
+        Toast.show('Please fill mandatory fields properly to continue')
+        return
+      } else if (!this.state.termsConditions) {
+        Toast.show('Accept Terms & Conditions and Privacy Policy to continue')
+        return
+      }
       this.handleChange('loading', true, true)
       const {
         first_name,
@@ -121,7 +203,12 @@ export default class LoginScene extends BaseScene {
     if (key === 'password') {
       this.checkPass(value)
     }
-    this.setState(pre => ({ ...pre, [key]: value, isFormValid: isValid }))
+    this.setState(pre => ({
+      ...pre,
+      [key]: value,
+      isFormValid: isValid,
+      errors: { ...this.state.errors, [key]: false }
+    }))
   }
 
   renderTextInput() {
@@ -129,16 +216,24 @@ export default class LoginScene extends BaseScene {
       if (fields?.key === 'phone') {
         return (
           <CustomPhoneInput
-            viewStyle={{
-              marginVertical: 8
-            }}
+            viewStyle={[
+              {
+                marginVertical: 8
+              },
+              this.state.errors[fields.key] && styles.errorBorder
+            ]}
             setter={val => {
               this.setState(pre => ({
                 ...pre,
-                [fields.key]: val
+                [fields.key]: val,
+                errors: { ...this.state.errors, [fields.key]: false }
               }))
             }}
-            placeholder={fields.label}
+            placeholder={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
             val={this.state[fields.key]}
             handleInvalid={() => {
               this.setState(pre => ({
@@ -158,11 +253,19 @@ export default class LoginScene extends BaseScene {
         return (
           <PrimaryTextInput
             {...fields}
-            isPassInValid={this.state.isPassInValid}
+            isPassInValid={
+              fields.key == 'password' ? this.state.isPassInValid : false
+            }
             ref={o => (this[fields.key] = o)}
             key={fields.key}
             onChangeText={(text, isValid) =>
               this.handleChange(fields.key, text, isValid)
+            }
+            inputStyle={[this.state.errors[fields.key] && styles.errorBorder]}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
             }
           />
         )
@@ -177,17 +280,6 @@ export default class LoginScene extends BaseScene {
         onPress={env === 'employee' ? this.handleSignup : this.onSubmit}
         title={env == 'employee' ? this.ls('signUp') : this.ls('next')}
         loading={env == 'employee' && this.state.loading}
-        disabled={
-          // !this.state.isFormValid ||
-          !this.state.first_name ||
-          !this.state.last_name ||
-          !this.state.email ||
-          !this.state.password ||
-          !this.state.phone ||
-          this.state.isPassInValid ||
-          (env === 'employee' &&
-            (!this.state.business_code || !this.state.termsConditions))
-        }
         style={styles.footerButton}
       />
     )
@@ -202,8 +294,7 @@ export default class LoginScene extends BaseScene {
           unfillColor={Colors.WHITE}
           disableBuiltInState
           iconStyle={{
-            borderColor: Colors.BLACK,
-            borderRadius: 1
+            borderRadius: 100
           }}
           style={{ marginRight: -20, marginTop: -3 }}
           onPress={() =>
@@ -301,5 +392,8 @@ const styles = StyleSheet.create({
   linkStyle: {
     ...Fonts.poppinsRegular(12),
     color: Colors.BUTTON_BG
+  },
+  errorBorder: {
+    borderColor: Colors.INVALID_TEXT_INPUT
   }
 })

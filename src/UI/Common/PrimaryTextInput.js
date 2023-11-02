@@ -79,14 +79,9 @@ class PrimaryTextInput extends Component {
 
   onBlur = key => {
     console.log('this.props', this.props.placeholder)
-    if (this.props.placeholder === 'Email Address') {
-      if (!this.props.regex?.test(this.state?.text)) {
-        this.props.onChangeText('', false)
-        Toast.show('Invalid email')
-        this.setState({ isFocused: false, text: '' })
-      }
+    if (this.props.regex?.test(this.state?.text)) {
+      this.setState({ isFocused: false })
     }
-    this.setState({ isFocused: false })
   }
 
   borderColor() {

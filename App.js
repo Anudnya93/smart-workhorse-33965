@@ -115,6 +115,7 @@ const App = () => {
       const token = await AsyncStorage.getItem('token')
       const qs = payload || ''
       const res = await getAllSchedules(qs, token)
+      console.log({ schedules: res })
       setSchedules(res?.data?.response)
     } catch (error) {
       const showWError = error.response?.data?.error

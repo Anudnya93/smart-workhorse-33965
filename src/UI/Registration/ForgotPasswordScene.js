@@ -63,6 +63,9 @@ export default class ForgotPasswordScene extends BaseScene {
           }
           label={this.ls('emailLabel')}
           style={{ width: screenWidth }}
+          regex={
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          }
         />
       </View>
     )
@@ -73,7 +76,7 @@ export default class ForgotPasswordScene extends BaseScene {
       <Button
         onPress={this.handleReset}
         loading={this.state.loading}
-        disabled={!this.state.email}
+        disabled={!this.state.email || !this.state.isFormValid}
         title={this.ls('submit')}
         style={styles.footerButton}
       />

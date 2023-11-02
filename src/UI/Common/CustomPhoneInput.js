@@ -142,7 +142,9 @@ const CustomPhoneInput = ({
             setFocused(true)
           }}
           onBlur={() => {
-            setFocused(false)
+            if (max == value.length) {
+              setFocused(false)
+            }
           }}
           maxLength={max}
           keyboardType="phone-pad"
@@ -150,7 +152,7 @@ const CustomPhoneInput = ({
           {...rest}
         />
         <TouchableOpacity
-          style={{ position: 'absolute', left: 10, zIndex: 1, top: 13 }}
+          style={styles.flagIcon}
           onPress={() => {
             setVisible(true)
           }}
@@ -167,28 +169,14 @@ const CustomPhoneInput = ({
                   onPress={() => {
                     handleSelection(item.code)
                   }}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    width: '100%',
-                    justifyContent: 'space-between',
-                    marginVertical: 10
-                  }}
+                  style={styles.countryItem}
                 >
                   <FastImage
                     source={item.img}
                     style={{ width: 50, height: 30 }}
                     resizeMode="cover"
                   />
-                  <View
-                    style={{
-                      position: 'absolute',
-                      left: '25%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '60%'
-                    }}
-                  >
+                  <View style={styles.countryName}>
                     <Text
                       style={{
                         ...Fonts.poppinsRegular(14),
@@ -250,5 +238,20 @@ const styles = StyleSheet.create({
     ...Fonts.poppinsRegular(14),
     height: 50,
     marginLeft: 25
-  }
+  },
+  countryItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginVertical: 10
+  },
+  countryName: {
+    position: 'absolute',
+    left: '25%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '60%'
+  },
+  flagIcon: { position: 'absolute', left: 10, zIndex: 1, top: 13 }
 })
