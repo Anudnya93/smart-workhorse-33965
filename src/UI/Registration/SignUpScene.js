@@ -29,7 +29,7 @@ export default class LoginScene extends BaseScene {
     super(props)
     this.state = {
       isFormValid: false,
-      termsConditions: false,
+      termsConditions: true,
       env: '',
       isPassInValid: false,
       validNumber: false,

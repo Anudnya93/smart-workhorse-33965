@@ -24,6 +24,16 @@ import PhoneInput from 'react-native-phone-input'
 import countryList from '../../constants/countries'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
 
+const MandatoryFields = [
+  'first_name',
+  'last_name',
+  'date_of_birth',
+  'gender',
+  'first_name1',
+  'last_name1',
+  'phone1'
+]
+
 export default function EmployeeProfileScene({ navigation, route }) {
   const { _getProfile, adminProfile } = useContext(AppContext)
   const userData = route?.params?.userData
@@ -49,6 +59,7 @@ export default function EmployeeProfileScene({ navigation, route }) {
     validNumber: userData?.phone ? true : false,
     loading: false
   })
+  const [errors, setErrors] = useState({})
 
   const {
     loading,
@@ -73,6 +84,7 @@ export default function EmployeeProfileScene({ navigation, route }) {
       }))
     }
     setState(pre => ({ ...pre, [name]: value }))
+    setErrors({ ...errors, [name]: false })
   }
 
   const _uploadImage = async type => {
@@ -114,7 +126,34 @@ export default function EmployeeProfileScene({ navigation, route }) {
   }
 
   const handleProfile = async () => {
+    const disabled =
+      !first_name1 ||
+      !last_name1 ||
+      !phone1 ||
+      !gender ||
+      !first_name ||
+      !last_name ||
+      !date_of_birth
     try {
+      console.log({ disabled, state })
+
+      const phoneCheck = phone1?.startsWith('+91')
+        ? phone1?.length == 16
+        : phone1?.length == 15
+
+      if (disabled || !phoneCheck) {
+        const newErrors = {}
+        MandatoryFields.forEach(field => {
+          if (!state[field]) {
+            newErrors[field] = true
+          }
+        })
+        console.log({ newErrors })
+        // Highlight mandatory fields with red border if not filled
+        setErrors(newErrors)
+        Toast.show('Please fill mandatory fields properly to continue')
+        return
+      }
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
       const formData = {
@@ -153,6 +192,12 @@ export default function EmployeeProfileScene({ navigation, route }) {
           text={state[fields.key]}
           key={fields.key}
           onChangeText={(text, isValid) => handleChange(fields.key, text)}
+          label={
+            MandatoryFields.includes(fields.key)
+              ? fields.label + '*'
+              : fields.label
+          }
+          inputStyle={[errors[fields.key] && styles.errorBorder]}
         />
       )
     })
@@ -163,11 +208,21 @@ export default function EmployeeProfileScene({ navigation, route }) {
       if (fields.key === 'phone1') {
         return (
           <CustomPhoneInput
-            viewStyle={{
-              marginTop: 10
+            viewStyle={[
+              {
+                marginTop: 10
+              },
+              errors[fields.key] && styles.errorBorder
+            ]}
+            setter={val => {
+              setState(pre => ({ ...pre, [fields.key]: val }))
+              setErrors({ ...errors, [fields.key]: false })
             }}
-            setter={val => setState(pre => ({ ...pre, [fields.key]: val }))}
-            placeholder={fields.label}
+            placeholder={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
             val={state[fields.key]}
             handleInvalid={() => {
               setState(pre => ({ ...pre, validNumber: false }))
@@ -184,6 +239,12 @@ export default function EmployeeProfileScene({ navigation, route }) {
             text={state[fields.key]}
             key={fields.key}
             onChangeText={(text, isValid) => handleChange(fields.key, text)}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
+            inputStyle={[errors[fields.key] && styles.errorBorder]}
           />
         )
       }
@@ -194,18 +255,6 @@ export default function EmployeeProfileScene({ navigation, route }) {
     return (
       <Button
         title={Strings.submit}
-        disabled={
-          !first_name1 ||
-          !last_name1 ||
-          !phone1 ||
-          !gender ||
-          !first_name ||
-          !last_name ||
-          // !phone ||
-          !date_of_birth
-          //  ||
-          // !profile_image
-        }
         loading={loading}
         style={styles.footerButton}
         onPress={handleProfile}
@@ -300,5 +349,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.DARK_GREY,
     borderRadius: 10,
     alignSelf: 'center'
+  },
+  errorBorder: {
+    borderColor: Colors.INVALID_TEXT_INPUT
   }
 })

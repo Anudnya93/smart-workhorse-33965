@@ -31,6 +31,18 @@ import { Icon } from 'react-native-elements'
 import countryList from '../../constants/countries'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
 
+const MandatoryFields = [
+  'name',
+  'first_name',
+  'last_name',
+  'phone',
+  'date_of_birth',
+  'address_line_one',
+  'city',
+  'selectedState',
+  'zipcode'
+]
+
 export default function BusinessProfileScene({ navigation, route }) {
   const {
     _getProfile,
@@ -74,6 +86,8 @@ export default function BusinessProfileScene({ navigation, route }) {
     openCity: false
   })
 
+  const [errors, setErrors] = useState({})
+
   const {
     loading,
     name,
@@ -105,6 +119,7 @@ export default function BusinessProfileScene({ navigation, route }) {
       }))
     }
     setState(pre => ({ ...pre, [name]: value }))
+    setErrors({ ...errors, [name]: false })
   }
 
   useEffect(() => {
@@ -167,6 +182,37 @@ export default function BusinessProfileScene({ navigation, route }) {
 
   const handleProfile = async () => {
     try {
+      const disabled =
+        !name ||
+        !first_name ||
+        !last_name ||
+        !phone ||
+        !date_of_birth ||
+        !address_line_one ||
+        !city ||
+        !selectedState ||
+        !zipcode ||
+        !validNumber
+
+      console.log({ disabled, state })
+
+      const phoneCheck = phone?.startsWith('+91')
+        ? phone?.length == 16
+        : phone?.length == 15
+
+      if (disabled || !phoneCheck) {
+        const newErrors = {}
+        MandatoryFields.forEach(field => {
+          if (!state[field]) {
+            newErrors[field] = true
+          }
+        })
+        console.log({ newErrors })
+        // Highlight mandatory fields with red border if not filled
+        setErrors(newErrors)
+        Toast.show('Please fill mandatory fields properly to continue')
+        return
+      }
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
       const formData = {
@@ -221,6 +267,12 @@ export default function BusinessProfileScene({ navigation, route }) {
               text={state[fields.key]}
               key={fields.key}
               onChangeText={(text, isValid) => handleChange(fields.key, text)}
+              inputStyle={[errors[fields.key] && styles.errorBorder]}
+              label={
+                MandatoryFields.includes(fields.key)
+                  ? fields.label + '*'
+                  : fields.label
+              }
             />
           </>
         )
@@ -228,8 +280,16 @@ export default function BusinessProfileScene({ navigation, route }) {
         return (
           <>
             <CustomPhoneInput
-              setter={val => setState(pre => ({ ...pre, phone: val }))}
-              placeholder={fields.label}
+              viewStyle={[errors[fields.key] && styles.errorBorder]}
+              setter={val => {
+                setState(pre => ({ ...pre, phone: val }))
+                setErrors({ ...errors, [fields.key]: false })
+              }}
+              placeholder={
+                MandatoryFields.includes(fields.key)
+                  ? fields.label + '*'
+                  : fields.label
+              }
               val={phone}
               handleInvalid={() => {
                 setState(pre => ({ ...pre, validNumber: false }))
@@ -247,6 +307,12 @@ export default function BusinessProfileScene({ navigation, route }) {
             text={state[fields.key]}
             key={fields.key}
             onChangeText={(text, isValid) => handleChange(fields.key, text)}
+            inputStyle={[errors[fields.key] && styles.errorBorder]}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
           />
         )
       }
@@ -296,7 +362,8 @@ export default function BusinessProfileScene({ navigation, route }) {
                 color: city_name ? Colors.BLACK : Colors.BLUR_TEXT
               }}
             >
-              {city_name || 'City'}
+              {city_name ||
+                ('City' + MandatoryFields.includes(fields.key) ? '*' : '')}
             </Text>
             <Icon
               name="down"
@@ -332,7 +399,8 @@ export default function BusinessProfileScene({ navigation, route }) {
                 color: state_name ? Colors.BLACK : Colors.BLUR_TEXT
               }}
             >
-              {state_name || 'State'}
+              {state_name ||
+                ('State' + MandatoryFields.includes(fields.key) ? '*' : '')}
             </Text>
           </View>
         )
@@ -343,6 +411,12 @@ export default function BusinessProfileScene({ navigation, route }) {
             text={state[fields.key]}
             key={fields.key}
             onChangeText={(text, isValid) => handleChange(fields.key, text)}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
+            inputStyle={[errors[fields.key] && styles.errorBorder]}
           />
         )
       }
@@ -353,21 +427,6 @@ export default function BusinessProfileScene({ navigation, route }) {
     return (
       <Button
         title={Strings.submit}
-        disabled={
-          !name ||
-          // !pay_frequency ||
-          !first_name ||
-          !last_name ||
-          !phone ||
-          !date_of_birth ||
-          !address_line_one ||
-          // !address_line_two ||
-          !city ||
-          !selectedState ||
-          !zipcode ||
-          // !profile_image ||
-          !validNumber
-        }
         loading={loading}
         style={styles.footerButton}
         onPress={handleProfile}
@@ -553,5 +612,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     width: '90%'
+  },
+  errorBorder: {
+    borderColor: Colors.INVALID_TEXT_INPUT
   }
 })

@@ -26,7 +26,7 @@ export default class SignupComplete extends BaseScene {
   constructor(props) {
     super(props)
     this.state = {
-      termsConditions: false,
+      termsConditions: true,
       loading: false,
       employee_types: ''
     }
@@ -123,7 +123,7 @@ export default class SignupComplete extends BaseScene {
           disableBuiltInState
           iconStyle={{
             borderColor: Colors.BLACK,
-            borderRadius: 1
+            borderRadius: 100
           }}
           style={{ marginRight: -20, marginTop: -3 }}
           onPress={() =>

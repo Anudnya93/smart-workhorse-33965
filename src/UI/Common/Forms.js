@@ -167,7 +167,6 @@ const fields = {
     dateType: false,
     label: 'Zip Code',
     placeholder: ''
-    // textInputProps: { maxLength: 4 }
   },
   position: {
     key: 'position',
