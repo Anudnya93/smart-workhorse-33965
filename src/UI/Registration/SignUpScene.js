@@ -102,7 +102,6 @@ export default class LoginScene extends BaseScene {
       ? phone?.length == 16
       : phone?.length == 15
 
-    console.log({ disabled, emailCheck, phoneCheck })
     if (disabled || !emailCheck || !phoneCheck) {
       const newErrors = {}
       MandatoryFields.forEach(field => {
@@ -142,7 +141,6 @@ export default class LoginScene extends BaseScene {
       ? this.state.phone?.length == 16
       : this.state.phone?.length == 15
     try {
-      console.log({ disabled, emailCheck, phoneCheck })
       if (disabled || !emailCheck || !phoneCheck) {
         const newErrors = {}
         MandatoryFields.forEach(field => {
@@ -323,7 +321,6 @@ export default class LoginScene extends BaseScene {
   }
 
   render() {
-    console.log({ state: this.state })
     const { env } = this.state
     return (
       <View style={styles.container}>

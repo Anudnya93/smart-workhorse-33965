@@ -30,15 +30,15 @@ export default function EmployeesView({ navigation, route }) {
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
       const res = await deleteEmployee(item?.id, token)
+      console.log({ resp_of_delete: res })
       handleChange('loading', false)
       navigation.goBack()
       Toast.show('Employee has been deleted!')
     } catch (error) {
       handleChange('loading', false)
       // console.warn('err', error?.response?.data)
-      const showWError = Object.values(error.response?.data?.error)
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+      if (typeof error.response.data.error === 'string') {
+        Toast.show(`Error: ${error?.response?.data.error}`)
       } else {
         Toast.show(`Error: ${JSON.stringify(error)}`)
       }

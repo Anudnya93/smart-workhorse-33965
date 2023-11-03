@@ -194,8 +194,6 @@ export default function BusinessProfileScene({ navigation, route }) {
         !zipcode ||
         !validNumber
 
-      console.log({ disabled, state })
-
       const phoneCheck = phone?.startsWith('+91')
         ? phone?.length == 16
         : phone?.length == 15
@@ -339,22 +337,25 @@ export default function BusinessProfileScene({ navigation, route }) {
         return (
           <TouchableOpacity
             onPress={() => handleChange('openCity', true)}
-            style={{
-              height: 50,
-              width: '90%',
-              paddingTop: 0,
-              marginTop: 5,
-              borderRadius: 10,
-              color: Colors.TEXT_INPUT_COLOR,
-              paddingHorizontal: 15,
-              borderWidth: 1,
-              marginLeft: '5%',
-              backgroundColor: Colors.TEXT_INPUT_BG,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderColor: Colors.TEXT_INPUT_BORDER
-            }}
+            style={[
+              {
+                height: 50,
+                width: '90%',
+                paddingTop: 0,
+                marginTop: 5,
+                borderRadius: 10,
+                color: Colors.TEXT_INPUT_COLOR,
+                paddingHorizontal: 15,
+                borderWidth: 1,
+                marginLeft: '5%',
+                backgroundColor: Colors.TEXT_INPUT_BG,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderColor: Colors.TEXT_INPUT_BORDER
+              },
+              errors[fields.key] && styles.errorBorder
+            ]}
           >
             <Text
               style={{
@@ -363,7 +364,7 @@ export default function BusinessProfileScene({ navigation, route }) {
               }}
             >
               {city_name ||
-                ('City' + MandatoryFields.includes(fields.key) ? '*' : '')}
+                'City' + (MandatoryFields.includes(fields.key) ? '*' : '')}
             </Text>
             <Icon
               name="down"
@@ -377,21 +378,24 @@ export default function BusinessProfileScene({ navigation, route }) {
       } else if (fields.key === 'state') {
         return (
           <View
-            style={{
-              height: 50,
-              width: '90%',
-              paddingTop: 0,
-              borderRadius: 10,
-              marginTop: 10,
-              paddingHorizontal: 15,
-              borderWidth: 1,
-              marginLeft: '5%',
-              backgroundColor: Colors.TEXT_INPUT_BG,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderColor: Colors.TEXT_INPUT_BORDER
-            }}
+            style={[
+              {
+                height: 50,
+                width: '90%',
+                paddingTop: 0,
+                borderRadius: 10,
+                marginTop: 10,
+                paddingHorizontal: 15,
+                borderWidth: 1,
+                marginLeft: '5%',
+                backgroundColor: Colors.TEXT_INPUT_BG,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderColor: Colors.TEXT_INPUT_BORDER
+              },
+              errors.selectedState && styles.errorBorder
+            ]}
           >
             <Text
               style={{
@@ -400,7 +404,8 @@ export default function BusinessProfileScene({ navigation, route }) {
               }}
             >
               {state_name ||
-                ('State' + MandatoryFields.includes(fields.key) ? '*' : '')}
+                'State' +
+                  (MandatoryFields.includes('selectedState') ? '*' : '')}
             </Text>
           </View>
         )
@@ -531,6 +536,11 @@ export default function BusinessProfileScene({ navigation, route }) {
                       handleChange('city_name', item?.name)
                       handleChange('state_name', item?.region?.name)
                       handleChange('selectedState', item?.region?.id)
+                      setErrors(p => ({
+                        ...p,
+                        city: false,
+                        selectedState: false
+                      }))
                     }}
                     key={index}
                     style={{

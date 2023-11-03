@@ -34,6 +34,15 @@ import { widthPercentageToDP } from 'react-native-responsive-screen'
 import countryList from '../../constants/countries'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
 
+const MandatoryFields = [
+  'name',
+  'location',
+  'clear_frequency_by_day',
+  'desired_time',
+  'contact_person_name',
+  'contact_phone_number'
+]
+
 export default function AddWorksiteScene({ navigation, route }) {
   const phoneRef = useRef(null)
   const worksiteData = route?.params?.worksiteData
@@ -68,6 +77,7 @@ export default function AddWorksiteScene({ navigation, route }) {
     openStart: false,
     validNumber: false
   })
+  const [errors, setErrors] = useState({})
 
   const {
     loading,
@@ -99,6 +109,7 @@ export default function AddWorksiteScene({ navigation, route }) {
       }))
     }
     setState(pre => ({ ...pre, [name]: value }))
+    setErrors({ ...errors, [name]: false })
   }
 
   // console.warn('worksiteData', worksiteData)
@@ -109,8 +120,39 @@ export default function AddWorksiteScene({ navigation, route }) {
     }
   }, [worksiteData])
 
+  console.log({ clear_frequency_by_day })
+
   const handleSubmit = async () => {
+    const disabled =
+      !name ||
+      !location ||
+      clear_frequency_by_day.length === 0 ||
+      !desired_time ||
+      !contact_person_name ||
+      !contact_phone_number
+
     try {
+      const phoneCheck = contact_phone_number?.startsWith('+91')
+        ? contact_phone_number?.length == 16
+        : contact_phone_number?.length == 15
+
+      if (disabled || !phoneCheck) {
+        const newErrors = {}
+        MandatoryFields.forEach(field => {
+          if (!state[field]) {
+            newErrors[field] = true
+          }
+          if (Array.isArray(state[field]) && state[field].length == 0) {
+            newErrors[field] = true
+          }
+        })
+        console.log({ newErrors })
+        // Highlight mandatory fields with red border if not filled
+        setErrors(newErrors)
+        Toast.show('Please fill mandatory fields properly to continue')
+        return
+      }
+
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
       const formData = {
@@ -250,7 +292,8 @@ export default function AddWorksiteScene({ navigation, route }) {
                     borderColor: Colors.TEXT_INPUT_BORDER,
                     paddingHorizontal: 15,
                     marginBottom: 10
-                  }
+                  },
+                  errors[fields.key] && styles.errorBorder
                 ]}
               >
                 <View
@@ -269,7 +312,7 @@ export default function AddWorksiteScene({ navigation, route }) {
                   >
                     {clear_frequency_by_day?.length > 0
                       ? clear_frequency_by_day?.toString()
-                      : Strings.cleaningFreq}
+                      : Strings.cleaningFreq + '*'}
                   </Text>
                 </View>
                 <Icon
@@ -335,7 +378,10 @@ export default function AddWorksiteScene({ navigation, route }) {
         return (
           <View style={styles.dateInput}>
             <TouchableOpacity
-              style={styles.inputStyle}
+              style={[
+                styles.inputStyle,
+                errors[fields.key] && styles.errorBorder
+              ]}
               onPress={() => handleChange('openStart', true)}
             >
               <Text
@@ -346,7 +392,7 @@ export default function AddWorksiteScene({ navigation, route }) {
                   }
                 ]}
               >
-                {desired_time || 'Designated Start Time'}
+                {desired_time || 'Designated Start Time*'}
               </Text>
               <Icon
                 name={'time-outline'}
@@ -378,6 +424,12 @@ export default function AddWorksiteScene({ navigation, route }) {
             text={state[fields.key]}
             key={fields.key}
             onChangeText={(text, isValid) => handleChange(fields.key, text)}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
+            inputStyle={[errors[fields.key] && styles.errorBorder]}
           />
         )
       }
@@ -389,8 +441,15 @@ export default function AddWorksiteScene({ navigation, route }) {
       if (fields.key === 'contact_phone_number') {
         return (
           <CustomPhoneInput
-            setter={val => setState(pre => ({ ...pre, [fields.key]: val }))}
-            placeholder={fields.label}
+            setter={val => {
+              setState(pre => ({ ...pre, [fields.key]: val }))
+              setErrors({ ...errors, [fields.key]: false })
+            }}
+            placeholder={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
             val={state[fields.key]}
             handleInvalid={() => {
               setState(pre => ({ ...pre, validNumber: false }))
@@ -398,6 +457,7 @@ export default function AddWorksiteScene({ navigation, route }) {
             handleValid={() => {
               setState(pre => ({ ...pre, validNumber: true }))
             }}
+            viewStyle={[errors[fields.key] && styles.errorBorder]}
           />
         )
       } else {
@@ -407,6 +467,12 @@ export default function AddWorksiteScene({ navigation, route }) {
             text={state[fields.key]}
             key={fields.key}
             onChangeText={(text, isValid) => handleChange(fields.key, text)}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
+            inputStyle={[errors[fields.key] && styles.errorBorder]}
           />
         )
       }
@@ -472,21 +538,6 @@ export default function AddWorksiteScene({ navigation, route }) {
         /> */}
         <Button
           onPress={handleSubmit}
-          disabled={
-            !name ||
-            !location ||
-            // !description ||
-            // !notes ||
-            // !monthly_rates ||
-            clear_frequency_by_day.length === 0 ||
-            !desired_time ||
-            // !number_of_workers_needed ||
-            // !supplies_needed ||
-            !contact_person_name ||
-            !contact_phone_number
-            // ||
-            // (!worksiteData?.logo && !logo)
-          }
           loading={loading}
           style={styles.footerButton}
           title={worksiteData ? Strings.update : Strings.save}
@@ -638,5 +689,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.DARK_GREY,
     borderRadius: 10,
     alignSelf: 'center'
+  },
+  errorBorder: {
+    borderColor: Colors.INVALID_TEXT_INPUT
   }
 })

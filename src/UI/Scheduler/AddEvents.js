@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useReducer, useRef, useState } from 'react'
 import { ActivityIndicator, Modal, StyleSheet, Text, View } from 'react-native'
 import Colors from '../../res/Theme/Colors'
 import { Fonts } from '../../res/Theme'
@@ -30,9 +30,24 @@ import { FlatList } from 'react-native'
 import { Image } from 'react-native'
 import userProfile from '../../res/Images/common/sample.png'
 
+const MandatoryFields = [
+  'start_date',
+  'start_time',
+  'start_time_text',
+  'end_date',
+  'end_time',
+  'end_time_text',
+  'frequency',
+  'event_status',
+  'employees',
+  'selected_tasks',
+  'worksite'
+]
+
 export default function AddEvents({ navigation, route }) {
   const selectedEvent = route?.params?.selectedEvent
   const { schedules } = useContext(AppContext)
+  const scrollViewRef = useRef()
   const [state, setState] = useState({
     mode: 'week',
     worksite: '',
@@ -66,6 +81,7 @@ export default function AddEvents({ navigation, route }) {
     deleteThis: true,
     deleteFollowing: false
   })
+  const [errors, setErrors] = useState({})
   const {
     end_date,
     worksite,
@@ -115,6 +131,7 @@ export default function AddEvents({ navigation, route }) {
 
   const handleChange = (key, value) => {
     setState(pre => ({ ...pre, [key]: value }))
+    setErrors({ ...errors, [key]: false })
   }
 
   useFocusEffect(
@@ -153,7 +170,43 @@ export default function AddEvents({ navigation, route }) {
   }
 
   const handleSubmit = async () => {
+    const disabled =
+      !start_date ||
+      !start_time ||
+      !start_time_text ||
+      !end_date ||
+      !end_time ||
+      !end_time_text ||
+      !frequency ||
+      !event_status ||
+      !worksite ||
+      employees.length === 0 ||
+      selected_tasks.length === 0
+
+    const checkEventStatus =
+      event_status == 'DRAFT' && publishing_reminder == ''
+
     try {
+      if (disabled || checkEventStatus) {
+        const newErrors = {}
+        MandatoryFields.forEach(field => {
+          if (!state[field]) {
+            newErrors[field] = true
+          }
+          if (Array.isArray(state[field]) && state[field].length == 0) {
+            newErrors[field] = true
+          }
+          if (event_status == 'DRAFT' && publishing_reminder == '') {
+            newErrors.publishing_reminder = true
+          }
+        })
+        console.log({ newErrors })
+        // Highlight mandatory fields with red border if not filled
+        setErrors(newErrors)
+        Toast.show('Please fill mandatory fields properly to continue')
+        return
+      }
+
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
       const payload = {
@@ -358,8 +411,10 @@ export default function AddEvents({ navigation, route }) {
     )
   }
 
+
   return (
     <KeyboardAwareScrollView
+      ref={scrollViewRef}
       style={styles.container}
       contentContainerStyle={{ alignItems: 'center' }}
     >
@@ -373,10 +428,11 @@ export default function AddEvents({ navigation, route }) {
         dropdown={true}
         text={getWorksiteText(worksite)}
         items={worksiteOptions}
-        label={getWorksiteText(worksite) || 'Worksite'}
+        label={getWorksiteText(worksite) || 'Worksite*'}
         key="worksite"
         // placeholder='worksite'
         onChangeText={(text, isValid) => handleChange('worksite', text)}
+        inputStyle={[errors.worksite && styles.errorBorder]}
       />
       <View
         style={{
@@ -391,10 +447,11 @@ export default function AddEvents({ navigation, route }) {
             dateType={true}
             text={start_date}
             maxDate={new Date('2050/01/01')}
-            label="From"
+            label="From*"
             key="start_date"
             placeholder="start_date"
             onChangeText={(text, isValid) => handleChange('start_date', text)}
+            inputStyle={[errors.start_date && styles.errorBorder]}
           />
         </View>
         <View style={{ width: '50%' }}>
@@ -402,10 +459,11 @@ export default function AddEvents({ navigation, route }) {
             dateType={true}
             maxDate={new Date('2050/01/01')}
             text={end_date}
-            label="To"
+            label="To*"
             key="end_date"
             placeholder="end_date"
             onChangeText={(text, isValid) => handleChange('end_date', text)}
+            inputStyle={[errors.end_date && styles.errorBorder]}
           />
         </View>
       </View>
@@ -420,7 +478,10 @@ export default function AddEvents({ navigation, route }) {
       >
         <View style={{ width: '48%' }}>
           <TouchableOpacity
-            style={styles.inputStyle}
+            style={[
+              styles.inputStyle,
+              errors.start_time_text && styles.errorBorder
+            ]}
             onPress={() => handleChange('openStart', true)}
           >
             <Text
@@ -431,7 +492,7 @@ export default function AddEvents({ navigation, route }) {
                 }
               ]}
             >
-              {start_time_text || 'From'}
+              {start_time_text || 'From*'}
             </Text>
             <Icon
               name={'time-outline'}
@@ -457,7 +518,10 @@ export default function AddEvents({ navigation, route }) {
         </View>
         <View style={{ width: '47%' }}>
           <TouchableOpacity
-            style={styles.inputStyle}
+            style={[
+              styles.inputStyle,
+              errors.end_time_text && styles.errorBorder
+            ]}
             onPress={() => handleChange('endStart', true)}
           >
             <Text
@@ -468,7 +532,7 @@ export default function AddEvents({ navigation, route }) {
                 }
               ]}
             >
-              {end_time_text || 'To'}
+              {end_time_text || 'To*'}
             </Text>
             <Icon
               name={'time-outline'}
@@ -502,10 +566,11 @@ export default function AddEvents({ navigation, route }) {
           { label: 'MONTHLY', value: 'MONTHLY' },
           { label: 'YEARLY', value: 'YEARLY' }
         ]}
-        label="Frequency of event"
+        label="Frequency of event*"
         key="frequency"
         placeholder="frequency"
         onChangeText={(text, isValid) => handleChange('frequency', text)}
+        inputStyle={[errors.frequency && styles.errorBorder]}
       />
       {frequency !== '' && frequency && (
         <PrimaryTextInput
@@ -594,7 +659,21 @@ export default function AddEvents({ navigation, route }) {
         />
         <Text style={styles.inputText}>Scheduled inspection</Text>
       </View>
-      <Text style={styles.title}>Tasks </Text>
+      <Text
+        style={[styles.title, errors.selected_tasks && { marginBottom: 0 }]}
+      >
+        Tasks*
+      </Text>
+      {errors.selected_tasks && (
+        <View
+          style={[
+            {
+              width: 58
+            },
+            styles.errorUnderline
+          ]}
+        />
+      )}
       <View
         style={{
           flexDirection: 'row',
@@ -685,7 +764,19 @@ export default function AddEvents({ navigation, route }) {
             </Text>
           </View>
         ))}
-      <Text style={styles.title}>{'Assign Employees'}</Text>
+      <Text style={[styles.title, errors.employees && { marginBottom: 0 }]}>
+        {'Assign Employees*'}
+      </Text>
+      {errors.employees && (
+        <View
+          style={[
+            {
+              width: 182
+            },
+            styles.errorUnderline
+          ]}
+        />
+      )}
       <FlatList
         data={allEmployee}
         style={{ width: '90%', marginTop: 20 }}
@@ -744,7 +835,19 @@ export default function AddEvents({ navigation, route }) {
           </View>
         )}
       />
-      <Text style={styles.title}>{'Event Status'}</Text>
+      <Text style={[styles.title, errors.event_status && { marginBottom: 0 }]}>
+        {'Event Status*'}
+      </Text>
+      {errors.event_status && (
+        <View
+          style={[
+            {
+              width: 123
+            },
+            styles.errorUnderline
+          ]}
+        />
+      )}
       <View
         style={{
           flexDirection: 'row',
@@ -771,6 +874,7 @@ export default function AddEvents({ navigation, route }) {
               handleChange('event_status', '')
             } else {
               handleChange('event_status', 'DRAFT')
+              scrollViewRef.current.scrollToEnd()
             }
           }}
           isChecked={event_status === 'DRAFT'}
@@ -810,20 +914,47 @@ export default function AddEvents({ navigation, route }) {
         />
         <Text style={styles.inputText}>Published</Text>
       </View>
-      <Text style={[styles.title, { ...Fonts.poppinsMedium(18) }]}>
-        Reminder for publishing draft event
-      </Text>
-      <PrimaryTextInput
-        dropdown={true}
-        text={getReminderListText(publishing_reminder)}
-        items={reminderList}
-        label="Reminder of event"
-        key="publishing_reminder"
-        placeholder="publishing_reminder"
-        onChangeText={(text, isValid) =>
-          handleChange('publishing_reminder', text)
-        }
-      />
+      {event_status == 'DRAFT' ? (
+        <>
+          <Text
+            style={[
+              styles.title,
+              { ...Fonts.poppinsMedium(18) },
+              errors.publishing_reminder && { marginBottom: 0 }
+            ]}
+          >
+            Reminder for publishing draft event*
+          </Text>
+          {errors.publishing_reminder && (
+            <View
+              style={[
+                {
+                  width: 327
+                },
+                styles.errorUnderline
+              ]}
+            />
+          )}
+          <PrimaryTextInput
+            dropdown={true}
+            text={getReminderListText(publishing_reminder)}
+            items={reminderList}
+            label="Reminder of event*"
+            key="publishing_reminder"
+            placeholder="publishing_reminder"
+            onChangeText={(text, isValid) =>
+              handleChange('publishing_reminder', text)
+            }
+            inputStyle={[errors.publishing_reminder && styles.errorBorder]}
+          />
+        </>
+      ) : (
+        <View
+          style={{
+            marginBottom: 20
+          }}
+        />
+      )}
       <View style={{ width: '100%', marginBottom: 20 }}>
         {selectedEvent && (
           <Button
@@ -845,20 +976,6 @@ export default function AddEvents({ navigation, route }) {
           backgroundColor={Colors.BACKGROUND_BG}
           style={{ height: 40 }}
           loading={loading}
-          disabled={
-            // !frequency ||
-            // !description ||
-            !start_date ||
-            !start_time ||
-            !start_time_text ||
-            !end_date ||
-            !end_time ||
-            !end_time_text ||
-            !frequency ||
-            !event_status ||
-            employees.length === 0 ||
-            selected_tasks.length === 0
-          }
           onPress={() =>
             event_status === 'PUBLISHED'
               ? handleChange('visible1', true)
@@ -1120,5 +1237,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     width: '90%'
+  },
+  errorBorder: {
+    borderColor: Colors.INVALID_TEXT_INPUT
+  },
+  errorUnderline: {
+    backgroundColor: Colors.INVALID_TEXT_INPUT,
+    height: 1,
+    marginBottom: 30,
+    marginLeft: 20,
+    marginTop: -10,
+    alignSelf: 'flex-start'
   }
 })

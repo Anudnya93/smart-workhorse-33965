@@ -203,7 +203,7 @@ class PrimaryTextInput extends Component {
           //     backgroundColor: 'transparent'
           //   }
           // }}
-          style={[styles.inputStyle, { paddingTop: 0 }]}
+          style={[styles.inputStyle, { paddingTop: 0 }, this.props.inputStyle]}
         >
           <MenuTrigger
             customStyles={{

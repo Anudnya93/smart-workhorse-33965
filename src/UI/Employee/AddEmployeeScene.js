@@ -31,6 +31,19 @@ import { TextInput } from 'react-native-gesture-handler'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
 
 const regexDecimalCheck = /^\d+(\.\d{0,2})?$/
+const emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+const MandatoryFields = [
+  'first_name',
+  'last_name',
+  'date_of_birth',
+  'mobile',
+  'email',
+  'address_line_one',
+  'city',
+  'selectedState'
+]
 
 export default function AddEmployeeScene({ navigation, route }) {
   const item = route?.params?.item
@@ -67,6 +80,7 @@ export default function AddEmployeeScene({ navigation, route }) {
     cityText: '',
     openCity: false
   })
+  const [errors, setErrors] = useState({})
 
   useEffect(() => {
     _getCountries()
@@ -114,6 +128,8 @@ export default function AddEmployeeScene({ navigation, route }) {
       return
     }
     setState(pre => ({ ...pre, [name]: value }))
+    console.log('setting errors')
+    setErrors({ ...errors, [name]: false })
   }
 
   useEffect(() => {
@@ -161,7 +177,36 @@ export default function AddEmployeeScene({ navigation, route }) {
   }
 
   const handleSubmit = async () => {
+    const disabled =
+      !first_name ||
+      !last_name ||
+      !date_of_birth ||
+      !email ||
+      !mobile ||
+      !address_line_one ||
+      !city ||
+      !selectedState
+
     try {
+      const emailCheck = email && emailRegex.test(email)
+
+      const phoneCheck = mobile?.startsWith('+91')
+        ? mobile?.length == 16
+        : mobile?.length == 15
+
+      if (disabled || !emailCheck || !phoneCheck) {
+        const newErrors = {}
+        MandatoryFields.forEach(field => {
+          if (!state[field]) {
+            newErrors[field] = true
+          }
+        })
+        console.log({ newErrors })
+        // Highlight mandatory fields with red border if not filled
+        setErrors(newErrors)
+        Toast.show('Please fill mandatory fields properly to continue')
+        return
+      }
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
       const formData = {
@@ -234,6 +279,12 @@ export default function AddEmployeeScene({ navigation, route }) {
           // ref={o => (this[fields.key] = o)}
           key={fields.key}
           onChangeText={(text, isValid) => handleChange(fields.key, text)}
+          label={
+            MandatoryFields.includes(fields.key)
+              ? fields.label + '*'
+              : fields.label
+          }
+          inputStyle={[errors[fields.key] && styles.errorBorder]}
         />
       )
     })
@@ -279,9 +330,19 @@ export default function AddEmployeeScene({ navigation, route }) {
       if (fields.key === 'mobile' || fields.key === 'phone') {
         return (
           <CustomPhoneInput
-            viewStyle={fields.key == 'phone' ? { marginTop: 8 } : {}}
-            setter={val => setState(pre => ({ ...pre, [fields.key]: val }))}
-            placeholder={fields.label}
+            viewStyle={[
+              fields.key == 'phone' ? { marginTop: 8 } : {},
+              errors[fields.key] && styles.errorBorder
+            ]}
+            setter={val => {
+              setState(pre => ({ ...pre, [fields.key]: val }))
+              setErrors({ ...errors, [fields.key]: false })
+            }}
+            placeholder={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
             val={state[fields.key]}
             handleInvalid={() => {
               setState(pre => {
@@ -315,6 +376,12 @@ export default function AddEmployeeScene({ navigation, route }) {
             // ref={o => (this[fields.key] = o)}
             key={fields.key}
             onChangeText={(text, isValid) => handleChange(fields.key, text)}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
+            inputStyle={[errors[fields.key] && styles.errorBorder]}
           />
         )
       }
@@ -340,21 +407,24 @@ export default function AddEmployeeScene({ navigation, route }) {
         return (
           <TouchableOpacity
             onPress={() => handleChange('openCity', true)}
-            style={{
-              height: 50,
-              width: '90%',
-              paddingTop: 0,
-              borderRadius: 10,
-              color: Colors.TEXT_INPUT_COLOR,
-              paddingHorizontal: 15,
-              borderWidth: 1,
-              marginLeft: '5%',
-              backgroundColor: Colors.TEXT_INPUT_BG,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderColor: Colors.TEXT_INPUT_BORDER
-            }}
+            style={[
+              {
+                height: 50,
+                width: '90%',
+                paddingTop: 0,
+                borderRadius: 10,
+                color: Colors.TEXT_INPUT_COLOR,
+                paddingHorizontal: 15,
+                borderWidth: 1,
+                marginLeft: '5%',
+                backgroundColor: Colors.TEXT_INPUT_BG,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderColor: Colors.TEXT_INPUT_BORDER
+              },
+              errors[fields.key] && styles.errorBorder
+            ]}
           >
             <Text
               style={{
@@ -362,7 +432,8 @@ export default function AddEmployeeScene({ navigation, route }) {
                 color: city_name ? Colors.BLACK : Colors.BLUR_TEXT
               }}
             >
-              {city_name || 'City'}
+              {city_name ||
+                'City' + (MandatoryFields.includes(fields.key) ? '*' : '')}
             </Text>
             <Icon
               name="down"
@@ -376,21 +447,24 @@ export default function AddEmployeeScene({ navigation, route }) {
       } else if (fields.key === 'state') {
         return (
           <View
-            style={{
-              height: 50,
-              width: '90%',
-              paddingTop: 0,
-              borderRadius: 10,
-              marginTop: 10,
-              paddingHorizontal: 15,
-              borderWidth: 1,
-              marginLeft: '5%',
-              backgroundColor: Colors.TEXT_INPUT_BG,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderColor: Colors.TEXT_INPUT_BORDER
-            }}
+            style={[
+              {
+                height: 50,
+                width: '90%',
+                paddingTop: 0,
+                borderRadius: 10,
+                marginTop: 10,
+                paddingHorizontal: 15,
+                borderWidth: 1,
+                marginLeft: '5%',
+                backgroundColor: Colors.TEXT_INPUT_BG,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderColor: Colors.TEXT_INPUT_BORDER
+              },
+              errors.selectedState && styles.errorBorder
+            ]}
           >
             <Text
               style={{
@@ -398,7 +472,9 @@ export default function AddEmployeeScene({ navigation, route }) {
                 color: state_name ? Colors.BLACK : Colors.BLUR_TEXT
               }}
             >
-              {state_name || 'State'}
+              {state_name ||
+                'State' +
+                  (MandatoryFields.includes('selectedState') ? '*' : '')}
             </Text>
           </View>
         )
@@ -410,6 +486,12 @@ export default function AddEmployeeScene({ navigation, route }) {
             // ref={o => (this[fields.key] = o)}
             key={fields.key}
             onChangeText={(text, isValid) => handleChange(fields.key, text)}
+            label={
+              MandatoryFields.includes(fields.key)
+                ? fields.label + '*'
+                : fields.label
+            }
+            inputStyle={[errors[fields.key] && styles.errorBorder]}
           />
         )
       }
@@ -421,23 +503,6 @@ export default function AddEmployeeScene({ navigation, route }) {
       <Button
         title={item ? Strings.update : Strings.submit}
         style={styles.footerButton}
-        disabled={
-          // !photo ||
-          !first_name ||
-          !last_name ||
-          !date_of_birth ||
-          // !gender ||
-          !email ||
-          !mobile ||
-          // !phone ||
-          !address_line_one ||
-          // !address_line_two ||
-          !city ||
-          !selectedState
-          // ||
-          // !position ||
-          // !price
-        }
         loading={loading}
         onPress={handleSubmit}
       />
@@ -527,6 +592,11 @@ export default function AddEmployeeScene({ navigation, route }) {
                       handleChange('city_name', item?.name)
                       handleChange('selectedState', item?.region?.id)
                       handleChange('state_name', item?.region?.name)
+                      setErrors(p => ({
+                        ...p,
+                        city: false,
+                        selectedState: false
+                      }))
                     }}
                     key={index}
                     style={{
@@ -607,5 +677,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     width: '90%'
+  },
+  errorBorder: {
+    borderColor: Colors.INVALID_TEXT_INPUT
   }
 })

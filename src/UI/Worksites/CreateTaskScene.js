@@ -22,6 +22,8 @@ import {
   updateTask
 } from '../../api/business'
 
+const MandatoryFields = ['name', 'frequency_of_task']
+
 export default function CreateTaskScene({ navigation, route }) {
   const worksiteData = route?.params?.worksiteData
   const task = route?.params?.task
@@ -38,6 +40,8 @@ export default function CreateTaskScene({ navigation, route }) {
     loadingDeleteMedia: false,
     photos: []
   })
+
+  const [errors, setErrors] = useState({})
 
   const {
     loading,
@@ -61,6 +65,7 @@ export default function CreateTaskScene({ navigation, route }) {
 
   const handleChange = (name, value) => {
     setState(pre => ({ ...pre, [name]: value }))
+    setErrors({ ...errors, [name]: false })
   }
 
   const _getTask = async () => {
@@ -126,7 +131,22 @@ export default function CreateTaskScene({ navigation, route }) {
   }
 
   const handleSubmit = async () => {
+    const disabled = !name || !frequency_of_task
+
     try {
+      if (disabled) {
+        const newErrors = {}
+        MandatoryFields.forEach(field => {
+          if (!state[field]) {
+            newErrors[field] = true
+          }
+        })
+        console.log({ newErrors })
+        // Highlight mandatory fields with red border if not filled
+        setErrors(newErrors)
+        Toast.show('Please fill mandatory fields properly to continue')
+        return
+      }
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
       const formData = {
@@ -205,6 +225,12 @@ export default function CreateTaskScene({ navigation, route }) {
           text={state[fields.key]}
           key={fields.key}
           onChangeText={(text, isValid) => handleChange(fields.key, text)}
+          label={
+            MandatoryFields.includes(fields.key)
+              ? fields.label + '*'
+              : fields.label
+          }
+          inputStyle={[errors[fields.key] && styles.errorBorder]}
         />
       )
     })
@@ -245,15 +271,6 @@ export default function CreateTaskScene({ navigation, route }) {
           style={styles.footerButton}
           loading={loading}
           onPress={handleSubmit}
-          disabled={
-            !name ||
-            // !description ||
-            // !criticality ||
-            // !notes ||
-            !frequency_of_task
-            // ||
-            // (!task && photos.length === 0)
-          }
           title={task ? 'Update' : Strings.create}
         />
       </View>
@@ -363,5 +380,8 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 1,
     borderColor: Colors.BUTTON_BG
+  },
+  errorBorder: {
+    borderColor: Colors.INVALID_TEXT_INPUT
   }
 })

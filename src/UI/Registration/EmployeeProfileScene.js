@@ -135,8 +135,6 @@ export default function EmployeeProfileScene({ navigation, route }) {
       !last_name ||
       !date_of_birth
     try {
-      console.log({ disabled, state })
-
       const phoneCheck = phone1?.startsWith('+91')
         ? phone1?.length == 16
         : phone1?.length == 15
