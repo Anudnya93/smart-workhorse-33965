@@ -189,13 +189,9 @@ export default function AddWorksiteScene({ navigation, route }) {
       handleChange('loading', false)
     } catch (error) {
       handleChange('loading', false)
-      // console.warn('err', error?.response?.data)
-      const showWError = Object.values(error.response?.data?.error)
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      const showWError =
+        error?.response?.data[Object.keys(error.response?.data)[0]]
+      Toast.show(`Error: ${showWError}`)
     }
   }
 
