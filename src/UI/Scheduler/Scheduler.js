@@ -116,11 +116,14 @@ export default function Scheduler({ navigation }) {
             <SvgXml xml={DRAFTED} />
           </View>
         )}
+        {console.log({
+          logo: props.event?.selected_tasks?.[0]?.worksite?.logo
+        })}
         <FastImage
           source={
-            props.event?.logo
+            props.event?.selected_tasks?.[0]?.worksite?.logo
               ? {
-                  uri: props.event?.logo
+                  uri: props.event?.selected_tasks?.[0]?.worksite?.logo
                 }
               : calendarLogo
           }
