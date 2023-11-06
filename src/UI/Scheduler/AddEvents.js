@@ -1,5 +1,12 @@
 import React, { useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, Modal, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import Colors from '../../res/Theme/Colors'
 import { Fonts } from '../../res/Theme'
 import Header from '../Common/Header'
@@ -410,7 +417,6 @@ export default function AddEvents({ navigation, route }) {
       </View>
     )
   }
-
 
   return (
     <KeyboardAwareScrollView
@@ -1246,7 +1252,7 @@ const styles = StyleSheet.create({
     height: 1,
     marginBottom: 30,
     marginLeft: 20,
-    marginTop: -10,
+    marginTop: Platform.OS == 'ios' ? -5 : -10,
     alignSelf: 'flex-start'
   }
 })
