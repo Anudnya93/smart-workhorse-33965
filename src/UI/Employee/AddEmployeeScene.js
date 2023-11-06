@@ -247,16 +247,8 @@ export default function AddEmployeeScene({ navigation, route }) {
     } catch (error) {
       handleChange('loading', false)
       // console.warn('err', error?.response?.data)
-      const showWError =
-        error.response?.data?.error &&
-        Object.values(error.response?.data?.error)
-      if (error?.response?.data?.subscription) {
-        Toast.show(`Error: ${error?.response?.data?.subscription}`)
-      } else if (showWError?.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      const showWError = error.response?.data
+      Toast.show(`Error: ${error.response?.data[Object.keys(showWError)[0]]}`)
     }
   }
 
