@@ -115,3 +115,7 @@ export const deleteAccount = token => {
 export const appFeedback = (payload, token) => {
   return API.post("api/v1/app_feedback/", payload, token)
 }
+
+export const checkEmailAvailability = (payload) => {
+  return API.post("api/v1/check-email-existence/", payload)
+}

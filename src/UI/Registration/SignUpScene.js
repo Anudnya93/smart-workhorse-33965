@@ -5,7 +5,7 @@ import { Fonts, Colors } from '../../res'
 import { AsyncHelper } from '../../Utils'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
-import { signupUser } from '../../api/auth'
+import { checkEmailAvailability, signupUser } from '../../api/auth'
 import Toast from 'react-native-simple-toast'
 import PhoneInput from 'react-native-phone-input'
 import { Platform } from 'react-native'
@@ -34,7 +34,8 @@ export default class LoginScene extends BaseScene {
       isPassInValid: false,
       validNumber: false,
       forms: Forms.fields('signUp'),
-      errors: {}
+      errors: {},
+      checking: false
     }
     this.isFormValid = this.isFormValid.bind(this)
     this.phoneRef = React.createRef()
@@ -124,6 +125,31 @@ export default class LoginScene extends BaseScene {
     }
     console.log(payload)
     this.props.navigation.navigate('signupComplete', { values: payload })
+  }
+
+  onNext = () => {
+    this.setState(p => ({
+      ...p,
+      checking: true
+    }))
+    checkEmailAvailability({
+      email: this.state.email
+    })
+      .then(res => {
+        this.onSubmit()
+      })
+      .catch(e => {
+        console.log({ err: e.response })
+        Toast.show(
+          "Email Already Exists. Please try with different Email Address !"
+        )
+      })
+      .finally(() => {
+        this.setState(p => ({
+          ...p,
+          checking: false
+        }))
+      })
   }
 
   handleSignup = async () => {
@@ -275,9 +301,9 @@ export default class LoginScene extends BaseScene {
     const { env } = this.state
     return (
       <Button
-        onPress={env === 'employee' ? this.handleSignup : this.onSubmit}
+        onPress={env === 'employee' ? this.handleSignup : this.onNext}
         title={env == 'employee' ? this.ls('signUp') : this.ls('next')}
-        loading={env == 'employee' && this.state.loading}
+        loading={env == 'employee' ? this.state.loading : this.state.checking}
         style={styles.footerButton}
       />
     )
