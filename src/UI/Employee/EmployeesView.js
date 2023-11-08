@@ -10,6 +10,7 @@ import { deleteEmployee } from '../../api/business'
 import database from '@react-native-firebase/database'
 import AppContext from '../../Utils/Context'
 import { currencyFormatIntl } from '../../Utils/number'
+import ConfirmPopUp from '../Common/ConfirmPopUp'
 
 export default function EmployeesView({ navigation, route }) {
   const item = route?.params?.item
@@ -18,6 +19,7 @@ export default function EmployeesView({ navigation, route }) {
   const [state, setState] = useState({
     loading: false
   })
+  const [visible, setVisible] = useState(false)
 
   const { loading } = state
 
@@ -26,6 +28,7 @@ export default function EmployeesView({ navigation, route }) {
   }
 
   const handleSubmit = async () => {
+    setVisible(false)
     try {
       handleChange('loading', true)
       const token = await AsyncStorage.getItem('token')
@@ -43,6 +46,10 @@ export default function EmployeesView({ navigation, route }) {
         Toast.show(`Error: ${JSON.stringify(error)}`)
       }
     }
+  }
+
+  const handleDelete = () => {
+    setVisible(true)
   }
 
   const createMessageList = item => {
@@ -204,7 +211,7 @@ export default function EmployeesView({ navigation, route }) {
         <Button
           style={[styles.footerWhiteButton, { marginBottom: 30 }]}
           title={'Delete Employee'}
-          onPress={handleSubmit}
+          onPress={handleDelete}
           loading={loading}
           icon={'delete'}
           iconStyle={{
@@ -217,6 +224,14 @@ export default function EmployeesView({ navigation, route }) {
           color={Colors.GREEN_COLOR}
         />
       </ScrollView>
+      <ConfirmPopUp
+        visible={visible}
+        setVisible={setVisible}
+        title={'Delete Employee'}
+        desc={'Are you sure you want delete this employee ?'}
+        confirmText={'Yes'}
+        confirmHandler={handleSubmit}
+      />
     </View>
   )
 }

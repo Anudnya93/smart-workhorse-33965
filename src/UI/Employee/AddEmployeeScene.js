@@ -270,7 +270,7 @@ export default function AddEmployeeScene({ navigation, route }) {
         }
         setVisible(true)
       } else {
-        Toast.show(`Error: ${error.response?.data[Object.keys(showWError)[0]]}`)
+        Toast.show(`Error: ${showWError.error}`)
       }
     }
   }
