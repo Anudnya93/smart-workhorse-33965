@@ -3,80 +3,70 @@ import {
   StyleSheet,
   View,
   Modal,
-  Image,
   TouchableOpacity,
   Text,
   Dimensions
 } from 'react-native'
+import { Button } from '../Common'
 import { Colors, Images, Fonts } from '../../res'
-import { Button, BaseComponent } from '../Common'
+import { heightPercentageToDP } from 'react-native-responsive-screen'
+
 const { width, height } = Dimensions.get('window')
 
-class DeleteModal extends BaseComponent {
-  constructor(props) {
-    super()
-    this.state = {
-      visible: true
-    }
+const ConfirmPopUp = ({
+  visible,
+  setVisible,
+  title,
+  desc,
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
+  cancelHandler = () => {},
+  confirmHandler = () => {}
+}) => {
+  const handleCancel = () => {
+    setVisible(false)
+    cancelHandler()
   }
-
-  componentDidMount() {}
-
-  renderSeparator() {
-    return <View style={styles.separator} />
-  }
-
-  renderButton() {
+  const renderButton = () => {
     return (
       <View style={styles.footerButtonsContainer}>
         <Button
           style={styles.footerSkipButton}
-          onPress={this.props.logout}
-          loading={this.props.loading}
-          title={'Yes'}
+          onPress={confirmHandler}
+          title={confirmText}
         />
       </View>
     )
   }
 
-  renderCancelButton() {
+  const renderCancelButton = () => {
     return (
       <TouchableOpacity
         style={{
           justifyContent: 'center',
           alignItems: 'center'
         }}
-        onPress={this.props.onCancel}
+        onPress={handleCancel}
       >
-        <Text style={styles.cancelText}>{this.ls('cancel')}</Text>
+        <Text style={styles.cancelText}>{cancelText}</Text>
       </TouchableOpacity>
     )
   }
-
-  render() {
-    return (
-      <Modal
-        visible={this.props.visible}
-        transparent
-        onRequestClose={this.props.onRequestClose}
-      >
-        <TouchableOpacity
-          disabled
-          style={styles.container}
-          onPress={this.props.onRequestClose}
-        >
-          <View style={styles.modalView}>
-            <Text style={styles.title}>
-              {'Are you sure you want to delete account?'}
-            </Text>
-            {this.renderButton()}
-            {this.renderCancelButton()}
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    )
-  }
+  return (
+    <Modal visible={visible} transparent>
+      <TouchableOpacity style={styles.container}>
+        <View style={styles.modalView}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.desc}>{desc}</Text>
+          {renderButton()}
+          {renderCancelButton()}
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  )
 }
+
+export default ConfirmPopUp
 
 const styles = StyleSheet.create({
   container: {
@@ -96,6 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
+    paddingVertical: 40,
     position: 'absolute',
     justifyContent: 'center'
   },
@@ -104,8 +95,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.BLACK
   },
-  cancelText: {
+  desc: {
     ...Fonts.poppinsRegular(14),
+    textAlign: 'center',
+    color: Colors.BLACK,
+    marginTop: 20
+  },
+  cancelText: {
+    ...Fonts.poppinsMedium(14),
     color: Colors.BUTTON_BG
   },
   footerButtonsContainer: {
@@ -118,4 +115,3 @@ const styles = StyleSheet.create({
     width: '100%'
   }
 })
-export default DeleteModal

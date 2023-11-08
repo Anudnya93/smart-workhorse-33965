@@ -10,7 +10,8 @@ import {
   Image,
   Modal,
   ActivityIndicator,
-  FlatList
+  FlatList,
+  Linking
 } from 'react-native'
 import { Header, PrimaryTextInput, Forms, Button } from '../Common'
 import { Fonts, Colors, Images } from '../../res'
@@ -29,6 +30,7 @@ import { Icon } from 'react-native-elements'
 import countryList from '../../constants/countries'
 import { TextInput } from 'react-native-gesture-handler'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
+import ConfirmPopUp from '../Common/ConfirmPopUp'
 
 const regexDecimalCheck = /^\d+(\.\d{0,2})?$/
 const emailRegex =
@@ -81,6 +83,8 @@ export default function AddEmployeeScene({ navigation, route }) {
     openCity: false
   })
   const [errors, setErrors] = useState({})
+  const [visible, setVisible] = useState(false)
+  const popUpRef = useRef({})
 
   useEffect(() => {
     _getCountries()
@@ -246,9 +250,28 @@ export default function AddEmployeeScene({ navigation, route }) {
       navigation.navigate('home')
     } catch (error) {
       handleChange('loading', false)
-      // console.warn('err', error?.response?.data)
-      const showWError = error.response?.data
-      Toast.show(`Error: ${error.response?.data[Object.keys(showWError)[0]]}`)
+      console.warn('err', error?.response?.data)
+      const showWError = error?.response?.data
+      if (showWError?.error && showWError?.error?.[0]?.includes('remain')) {
+        popUpRef.current = {
+          title: 'Limit Reached!',
+          desc: 'Looks like your business is growing! You\nhave maxed out the number of employees\nfor your current subscription, please click\nthe button below to adjust your plan in\norder to add more employees, congrats on\nyour success.',
+          confirmText: 'Upgrade Subscription'
+        }
+        setVisible(true)
+      } else if (
+        showWError?.detail &&
+        showWError?.detail?.includes('not active')
+      ) {
+        popUpRef.current = {
+          title: 'Not Subscribed!',
+          desc: 'In order to add employees,\nyou need to subscribe first.',
+          confirmText: 'Subscribe'
+        }
+        setVisible(true)
+      } else {
+        Toast.show(`Error: ${error.response?.data[Object.keys(showWError)[0]]}`)
+      }
     }
   }
 
@@ -614,6 +637,19 @@ export default function AddEmployeeScene({ navigation, route }) {
           </View>
         </View>
       </Modal>
+      <ConfirmPopUp
+        visible={visible}
+        setVisible={setVisible}
+        desc={popUpRef.current.desc}
+        title={popUpRef.current.title}
+        confirmText={popUpRef.current.confirmText}
+        confirmHandler={() => {
+          Linking.openURL('https://www.cleanr.pro')
+        }}
+        cancelHandler={() => {
+          navigation.goBack()
+        }}
+      />
     </KeyboardAvoidingView>
   )
 }

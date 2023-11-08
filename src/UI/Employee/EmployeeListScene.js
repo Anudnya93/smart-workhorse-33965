@@ -1,24 +1,34 @@
 import React from 'react'
-import { ScrollView, View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { BaseScene, Header, Fab } from '../Common'
 import { Fonts, Colors } from '../../res'
 import EmployeesList from './EmployeesList'
 
 export default class EmployeeListScene extends BaseScene {
-  constructor (props) {
+  constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      empty: true
+    }
   }
 
-  renderContent () {
+  renderContent() {
+    const { empty } = this.state
+    console.log({ empty })
     return (
-      <ScrollView nestedScrollEnabled={false} style={styles.childContainer}>
-        <EmployeesList navigation={this.props.navigation} />
-      </ScrollView>
+      <View style={styles.childContainer}>
+        <EmployeesList
+          navigation={this.props.navigation}
+          callback={() => {
+            this.setState(p => ({ ...p, empty: false }))
+          }}
+        />
+      </View>
     )
   }
 
-  render () {
+  render() {
+    const { empty } = this.state
     return (
       <View style={styles.container}>
         <Header
@@ -28,7 +38,9 @@ export default class EmployeeListScene extends BaseScene {
           onLeftPress={() => this.props.navigation.goBack()}
         />
         {this.renderContent()}
-        <Fab onPress={() => this.props.navigation.navigate('addEmployee')} />
+        {!empty && (
+          <Fab onPress={() => this.props.navigation.navigate('addEmployee')} />
+        )}
       </View>
     )
   }
