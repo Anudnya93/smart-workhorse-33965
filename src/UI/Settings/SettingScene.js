@@ -40,12 +40,12 @@ export default class SettingScene extends BaseScene {
         {
           icon: 'terms',
           screen: 'termsPrivacy',
-          // link: "https://cleanr.pro/privacy-policy",
+          link: 'https://cleanrnow.com/terms-and-conditions',
           title: 'Terms & Conditions'
         },
         {
           icon: 'privacy',
-          link: 'https://www.cleanr.pro/privacy-policy',
+          link: 'https://cleanrnow.com/privacy-policy',
           screen: 'privacyPolicy',
           title: 'Privacy Policy'
         },
