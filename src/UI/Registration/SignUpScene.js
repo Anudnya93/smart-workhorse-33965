@@ -141,7 +141,7 @@ export default class LoginScene extends BaseScene {
       .catch(e => {
         console.log({ err: e.response })
         Toast.show(
-          "Email Already Exists. Please try with different Email Address !"
+          'Email Already Exists. Please try with different Email Address !'
         )
       })
       .finally(() => {
@@ -330,14 +330,14 @@ export default class LoginScene extends BaseScene {
           {'I have read '}
           <Text
             style={styles.linkStyle}
-            onPress={() => this.props.navigation.navigate('termsPrivacy')}
+            onPress={() => this.props.onTermsPress()}
           >
             {'Terms & Conditions'}
           </Text>
           <Text style={styles.textStyle}>{' and '}</Text>
           <Text
             style={styles.linkStyle}
-            onPress={() => this.props.navigation.navigate('privacyPolicy')}
+            onPress={() => this.props.onPrivacyPress()}
           >
             {'Privacy Policy'}
           </Text>

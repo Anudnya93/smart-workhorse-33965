@@ -7,7 +7,8 @@ import {
   Image,
   Animated,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking
 } from 'react-native'
 import { BaseScene, PrimaryTextInput, Button, Forms, Header } from '../Common'
 import { Fonts, Colors, Images } from '../../res'
@@ -142,14 +143,18 @@ export default class SignupComplete extends BaseScene {
           {'I have read '}
           <Text
             style={styles.linkStyle}
-            onPress={() => this.props.navigation.navigate('termsPrivacy')}
+            onPress={() =>
+              Linking.openURL('https://cleanrnow.com/terms-and-conditions')
+            }
           >
             {'Terms & Conditions'}
           </Text>
           <Text style={styles.textStyle}>{' and '}</Text>
           <Text
             style={styles.linkStyle}
-            onPress={() => this.props.navigation.navigate('privacyPolicy')}
+            onPress={() =>
+              Linking.openURL('https://cleanrnow.com/privacy-policy')
+            }
           >
             {'Privacy Policy'}
           </Text>
