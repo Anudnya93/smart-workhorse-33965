@@ -133,7 +133,7 @@ export default function ReportsView() {
         var dateB = new Date(b.updated_at || b?.created_at).getTime()
         return dateA > dateB ? 1 : -1
       })
-      console.warn("sorted", sorted)
+      // console.warn("sorted", sorted)
       handleChange("reportsFiltered", sorted)
     }
   }

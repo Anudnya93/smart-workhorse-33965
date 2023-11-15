@@ -13,20 +13,20 @@ import { Button, BaseComponent } from '../Common'
 const { width, height } = Dimensions.get('window')
 
 class LogoutModal extends BaseComponent {
-  constructor (props) {
+  constructor(props) {
     super()
     this.state = {
       visible: true
     }
   }
 
-  componentDidMount () {}
+  componentDidMount() {}
 
-  renderSeparator () {
+  renderSeparator() {
     return <View style={styles.separator} />
   }
 
-  renderQueue () {
+  renderQueue() {
     let mins = Math.floor(120 / 60)
     let minutes = mins == 1 ? ' min' : ' mins'
     return (
@@ -43,7 +43,7 @@ class LogoutModal extends BaseComponent {
     )
   }
 
-  renderButton () {
+  renderButton() {
     return (
       <View style={styles.footerButtonsContainer}>
         <Button
@@ -55,7 +55,7 @@ class LogoutModal extends BaseComponent {
     )
   }
 
-  renderCancelButton () {
+  renderCancelButton() {
     return (
       <TouchableOpacity
         style={{
@@ -69,7 +69,7 @@ class LogoutModal extends BaseComponent {
     )
   }
 
-  render () {
+  render() {
     return (
       <Modal
         visible={this.props.visible}
@@ -77,6 +77,7 @@ class LogoutModal extends BaseComponent {
         onRequestClose={this.props.onRequestClose}
       >
         <TouchableOpacity
+          disabled
           style={styles.container}
           onPress={this.props.onRequestClose}
         >

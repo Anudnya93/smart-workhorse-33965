@@ -18,14 +18,14 @@ import AppContext from '../../Utils/Context'
 import { useContext } from 'react'
 import { getAllWorksitesEmp } from '../../api/employee'
 
-export default function AllWorksiteScene ({ navigation }) {
+export default function AllWorksiteScene({ navigation }) {
   const { adminProfile } = useContext(AppContext)
   const [state, setState] = useState({
     loading: false,
     allWorksites: []
   })
   const { loading, allWorksites } = state
-
+  console.log({ allWorksites })
   const handleChange = (key, value) => {
     setState(pre => ({ ...pre, [key]: value }))
   }

@@ -42,6 +42,7 @@ export const formatError = responseError => {
 }
 
 export const makeRequest = async request => {
+  console.log({ request })
   const requestConfig = buildRequest(request)
   return new Promise((resolve, reject) => {
     const axiosRequest = axios(requestConfig)

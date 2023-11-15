@@ -13,20 +13,20 @@ import { Button, BaseComponent } from '../Common'
 const { width, height } = Dimensions.get('window')
 
 class DeleteModal extends BaseComponent {
-  constructor (props) {
+  constructor(props) {
     super()
     this.state = {
       visible: true
     }
   }
 
-  componentDidMount () {}
+  componentDidMount() {}
 
-  renderSeparator () {
+  renderSeparator() {
     return <View style={styles.separator} />
   }
 
-  renderButton () {
+  renderButton() {
     return (
       <View style={styles.footerButtonsContainer}>
         <Button
@@ -39,7 +39,7 @@ class DeleteModal extends BaseComponent {
     )
   }
 
-  renderCancelButton () {
+  renderCancelButton() {
     return (
       <TouchableOpacity
         style={{
@@ -53,7 +53,7 @@ class DeleteModal extends BaseComponent {
     )
   }
 
-  render () {
+  render() {
     return (
       <Modal
         visible={this.props.visible}
@@ -61,6 +61,7 @@ class DeleteModal extends BaseComponent {
         onRequestClose={this.props.onRequestClose}
       >
         <TouchableOpacity
+          disabled
           style={styles.container}
           onPress={this.props.onRequestClose}
         >

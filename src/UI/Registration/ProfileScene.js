@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform
-} from "react-native"
+} from 'react-native'
 import {
   BaseScene,
   Header,
@@ -14,8 +14,8 @@ import {
   Forms,
   AvatarView,
   Button
-} from "../Common"
-import { Fonts, Colors } from "../../res"
+} from '../Common'
+import { Fonts, Colors } from '../../res'
 
 export default class ProfileScene extends BaseScene {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class ProfileScene extends BaseScene {
   }
 
   setForms(field) {
-    this.forms = Forms.fields("profile")
+    this.forms = Forms.fields('profile')
   }
 
   renderTextInput() {
@@ -45,7 +45,7 @@ export default class ProfileScene extends BaseScene {
   }
 
   renderEmergencyTextInput() {
-    return Forms.fields("emergencyContact").map(fields => {
+    return Forms.fields('emergencyContact').map(fields => {
       return (
         <PrimaryTextInput
           {...fields}
@@ -60,7 +60,7 @@ export default class ProfileScene extends BaseScene {
   renderFooterButton() {
     return (
       <Button
-        title={this.ls("submit")}
+        title={this.ls('submit')}
         style={styles.footerButton}
         onPress={() => this.onSubmit()}
       />
@@ -72,9 +72,9 @@ export default class ProfileScene extends BaseScene {
       <ScrollView style={{ flex: 1, paddingBottom: 30 }}>
         <View style={styles.childContainer}>
           <AvatarView />
-          <Text style={styles.title}>{this.ls("personalInfo")}</Text>
+          <Text style={styles.title}>{this.ls('personalInfo')}</Text>
           {this.renderTextInput()}
-          <Text style={styles.title}>{this.ls("emergencyContact")}</Text>
+          <Text style={styles.title}>{this.ls('emergencyContact')}</Text>
           {this.renderEmergencyTextInput()}
           {this.renderFooterButton()}
         </View>
@@ -86,10 +86,10 @@ export default class ProfileScene extends BaseScene {
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : null}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
         <View style={styles.container}>
-          <Header title={"Create Profile"} leftButton />
+          <Header title={'Create Profile'} leftButton />
           {this.renderContent()}
         </View>
       </KeyboardAvoidingView>
@@ -111,12 +111,12 @@ const styles = StyleSheet.create({
     flex: 1
   },
   footerButton: {
-    marginTop: "5%"
+    marginTop: '5%'
   },
   description: {
     ...Fonts.poppinsRegular(14),
     color: Colors.TEXT_COLOR,
-    textAlign: "left",
+    textAlign: 'left',
     marginTop: 20,
     lineHeight: 24
   }

@@ -7,7 +7,7 @@ import Toast from 'react-native-simple-toast'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default class ChangePassword extends BaseScene {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       oldPassword: '',
@@ -19,11 +19,11 @@ export default class ChangePassword extends BaseScene {
     this.isFormValid = this.isFormValid.bind(this)
   }
 
-  setForms (field) {
+  setForms(field) {
     this.forms = Forms.fields('changePassword')
   }
 
-  isFormValid (text, key) {
+  isFormValid(text, key) {
     this.handleChange(key, text)
     let error = null
     this.forms.map(i => {
@@ -57,16 +57,16 @@ export default class ChangePassword extends BaseScene {
       await _changePassword(payload, token)
       this.handleChange('loading', false, true)
       this.props.navigation.goBack()
-      Toast.show(`Password has been changed`)
+      Toast.show('Password has been changed')
     } catch (error) {
-      console.warn('error', error)
+      // console.warn('error', error)
       this.handleChange('loading', false, true)
       const errorText = Object.values(error?.response?.data)
       Toast.show(`Error: ${errorText[0]}`)
     }
   }
 
-  renderCancelButton () {
+  renderCancelButton() {
     return (
       <TouchableOpacity
         style={{
@@ -81,18 +81,16 @@ export default class ChangePassword extends BaseScene {
     )
   }
 
-  renderTextInput () {
+  renderTextInput() {
     return (
       <View>
         <PrimaryTextInput
           ref={o => (this.confirmPassword = o)}
-          label='Current Password'
+          label="Current Password"
           correctPassword={this.state.passwordValidation}
           onChangeText={text => this.setState({ oldPassword: text })}
           passwordPolicy={true}
-          regex={
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
-          }
+          maxLength={40}
           onPasswordValidationCheck={true}
         />
         {this.forms.map(item => {
@@ -101,6 +99,7 @@ export default class ChangePassword extends BaseScene {
               {...item}
               onChangeText={text => this.isFormValid(text, 'password')}
               ref={o => (this[item.key] = o)}
+              maxLength={40}
             />
           )
         })}
@@ -108,18 +107,16 @@ export default class ChangePassword extends BaseScene {
           onChangeText={text => this.isFormValid(text, 'confirmPassword')}
           ref={o => (this.confirmPassword = o)}
           passwordPolicy={true}
-          label='Confirm Password'
-          regex={
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
-          }
+          label="Confirm Password"
           correctPassword={this.state.passwordValidation}
           onPasswordValidationCheck={true}
+          maxLength={40}
         />
       </View>
     )
   }
 
-  renderFooterButton () {
+  renderFooterButton() {
     return (
       <Button
         title={this.ls('changePassword')}
@@ -134,7 +131,7 @@ export default class ChangePassword extends BaseScene {
       />
     )
   }
-  renderHeader () {
+  renderHeader() {
     return (
       <Header
         title={this.ls('changePassword')}
@@ -145,7 +142,7 @@ export default class ChangePassword extends BaseScene {
     )
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         {this.renderHeader()}

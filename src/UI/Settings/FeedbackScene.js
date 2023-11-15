@@ -1,18 +1,18 @@
-import React, { useState } from "react"
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
-import { Button, PrimaryTextInput, Header } from "../Common"
-import { Fonts, Colors, Images } from "../../res"
-import Toast from "react-native-simple-toast"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import ImagePicker from "react-native-image-crop-picker"
-import Strings, { submit } from "../../res/Strings"
-import { appFeedback } from "../../api/auth"
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { Button, PrimaryTextInput, Header } from '../Common'
+import { Fonts, Colors, Images } from '../../res'
+import Toast from 'react-native-simple-toast'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import ImagePicker from 'react-native-image-crop-picker'
+import Strings, { submit } from '../../res/Strings'
+import { appFeedback } from '../../api/auth'
 
 export default function FeedbackScene({ navigation }) {
   const [state, setState] = useState({
-    email: "",
-    message: "",
-    file: "",
+    email: '',
+    message: '',
+    file: '',
     loading: false
   })
   const { email, message, file, loading } = state
@@ -21,11 +21,11 @@ export default function FeedbackScene({ navigation }) {
     setState(pre => ({ ...pre, [name]: value }))
   }
   const _uploadImage = async type => {
-    handleChange("uploading", true)
+    handleChange('uploading', true)
     let OpenImagePicker =
-      type == "camera"
+      type == 'camera'
         ? ImagePicker.openCamera
-        : type == ""
+        : type == ''
         ? ImagePicker.openPicker
         : ImagePicker.openPicker
     OpenImagePicker({
@@ -34,35 +34,35 @@ export default function FeedbackScene({ navigation }) {
     })
       .then(async response => {
         if (!response.path) {
-          handleChange("uploading", false)
+          handleChange('uploading', false)
         } else {
-          handleChange("file", response.data)
-          handleChange("uploading", false)
-          Toast.show("Media Add Successfully")
+          handleChange('file', response.data)
+          handleChange('uploading', false)
+          Toast.show('Media Add Successfully')
         }
       })
       .catch(err => {
-        handleChange("showAlert", false)
-        handleChange("uploading", false)
+        handleChange('showAlert', false)
+        handleChange('uploading', false)
       })
   }
 
   const onSubmit = async () => {
     try {
-      const token = await AsyncStorage.getItem("token")
-      handleChange("loading", true)
+      const token = await AsyncStorage.getItem('token')
+      handleChange('loading', true)
       const payload = {
         email,
         message,
         files: { file01: file }
       }
       await appFeedback(payload, token)
-      handleChange("loading", false)
+      handleChange('loading', false)
       navigation.goBack()
-      Toast.show(`App feedback submitted`)
+      Toast.show("App feedback submitted")
     } catch (error) {
-      console.warn("error", error)
-      handleChange("loading", false)
+      // console.warn("error", error)
+      handleChange('loading', false)
       const errorText = Object.values(error?.response?.data)
       Toast.show(`Error: ${errorText[0]}`)
     }
@@ -72,8 +72,8 @@ export default function FeedbackScene({ navigation }) {
     return (
       <TouchableOpacity
         style={{
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
           paddingVertical: 20
         }}
         onPress={() => navigation.goBack()}
@@ -87,12 +87,12 @@ export default function FeedbackScene({ navigation }) {
     return (
       <View>
         <PrimaryTextInput
-          onChangeText={text => handleChange("email", text)}
+          onChangeText={text => handleChange('email', text)}
           label="Email address"
           value={email}
         />
         <PrimaryTextInput
-          onChangeText={text => handleChange("message", text)}
+          onChangeText={text => handleChange('message', text)}
           label="Message"
           value={message}
           inputStyle={{ height: 100 }}
@@ -111,10 +111,10 @@ export default function FeedbackScene({ navigation }) {
           width: 20,
           height: 20,
           tintColor: Colors.GREEN_COLOR,
-          resizeMode: "contain"
+          resizeMode: 'contain'
         }}
         color={Colors.GREEN_COLOR}
-        icon={"upload"}
+        icon={'upload'}
         title={Strings.uploadMedia}
         onPress={_uploadImage}
       />
@@ -135,7 +135,7 @@ export default function FeedbackScene({ navigation }) {
   function renderHeader() {
     return (
       <Header
-        title={"Send App Feedback"}
+        title={'Send App Feedback'}
         leftButton
         leftIcon={Images.leftArrow}
         onLeftPress={() => navigation.goBack()}
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
   title: {
     ...Fonts.poppinsRegular(28),
     color: Colors.BLACK,
-    textAlign: "center",
-    marginTop: "20%"
+    textAlign: 'center',
+    marginTop: '20%'
   },
   description: {
     ...Fonts.poppinsRegular(14),
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
     marginVertical: 10
   },
   footerButton: {
-    marginTop: "15%",
-    width: "90%"
+    marginTop: '15%',
+    width: '90%'
   },
   forgotPwdText: {
     ...Fonts.poppinsRegular(14),
@@ -186,9 +186,9 @@ const styles = StyleSheet.create({
     color: Colors.BUTTON_BG
   },
   footerWhiteButton: {
-    marginTop: "5%",
-    width: "90%",
-    backgroundColor: "red",
+    marginTop: '5%',
+    width: '90%',
+    backgroundColor: 'red',
     borderWidth: 1,
     borderColor: Colors.BUTTON_BG
   }
