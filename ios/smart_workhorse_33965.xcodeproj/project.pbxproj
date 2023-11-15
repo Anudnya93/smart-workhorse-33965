@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* smart_workhorse_33965Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* smart_workhorse_33965Tests.m */; };
-		049C9C88295D376800369437 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 049C9C87295D376700369437 /* GoogleService-Info.plist */; };
 		049C9C8F295D3FD900369437 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C9C8E295D3FD900369437 /* File.swift */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		90FB67332AEA4C5800C85B77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90FB67322AEA4C5800C85B77 /* GoogleService-Info.plist */; };
 		9BA363E5B0D0A1C7DCE588EB /* libPods-smart_workhorse_33965-smart_workhorse_33965Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 262BFADD37989C49D42DC342 /* libPods-smart_workhorse_33965-smart_workhorse_33965Tests.a */; };
 		A9979C849BE3E5B0D0BE0AC4 /* libPods-smart_workhorse_33965.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A2DE352C3C49C604917F403 /* libPods-smart_workhorse_33965.a */; };
 		CF85DD7F2848D1F600BB7287 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF85DD782848D1F500BB7287 /* Poppins-Medium.ttf */; };
@@ -39,7 +39,6 @@
 		00E356EE1AD99517003FC87E /* smart_workhorse_33965Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = smart_workhorse_33965Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* smart_workhorse_33965Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = smart_workhorse_33965Tests.m; sourceTree = "<group>"; };
-		049C9C87295D376700369437 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../clear/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		049C9C89295D3C5B00369437 /* smart_workhorse_33965-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "smart_workhorse_33965-Bridging-Header.h"; sourceTree = "<group>"; };
 		049C9C8E295D3FD900369437 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		04B4279C290B318600719A59 /* smart_workhorse_33965.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = smart_workhorse_33965.entitlements; path = smart_workhorse_33965/smart_workhorse_33965.entitlements; sourceTree = "<group>"; };
@@ -61,6 +60,7 @@
 		70DFCFEA1D4E4775BAF993DD /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = smart_workhorse_33965/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8C35346FC37CCE1BB8A50AC8 /* Pods-smart_workhorse_33965.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-smart_workhorse_33965.debug.xcconfig"; path = "Target Support Files/Pods-smart_workhorse_33965/Pods-smart_workhorse_33965.debug.xcconfig"; sourceTree = "<group>"; };
+		90FB67322AEA4C5800C85B77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Project Documents/Cleanr/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9A8047CE662164A861BE424C /* Pods-smart_workhorse_33965-smart_workhorse_33965Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-smart_workhorse_33965-smart_workhorse_33965Tests.release.xcconfig"; path = "Target Support Files/Pods-smart_workhorse_33965-smart_workhorse_33965Tests/Pods-smart_workhorse_33965-smart_workhorse_33965Tests.release.xcconfig"; sourceTree = "<group>"; };
 		A28408CB779546F78C7FEF3B /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		A8EFB64937A44288A5DF79C5 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
@@ -122,13 +122,13 @@
 		13B07FAE1A68108700A75B9A /* smart_workhorse_33965 */ = {
 			isa = PBXGroup;
 			children = (
+				90FB67322AEA4C5800C85B77 /* GoogleService-Info.plist */,
 				04B4279C290B318600719A59 /* smart_workhorse_33965.entitlements */,
 				CF85DD772848D1F500BB7287 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				049C9C87295D376700369437 /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				049C9C89295D3C5B00369437 /* smart_workhorse_33965-Bridging-Header.h */,
@@ -327,7 +327,7 @@
 				CF85DD832848D1F600BB7287 /* Poppins-Black.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				CF85DD842848D1F600BB7287 /* Poppins-Thin.ttf in Resources */,
-				049C9C88295D376800369437 /* GoogleService-Info.plist in Resources */,
+				90FB67332AEA4C5800C85B77 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				CF85DD812848D1F600BB7287 /* Poppins-Regular.ttf in Resources */,
 			);
@@ -552,17 +552,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = smart_workhorse_33965/smart_workhorse_33965.entitlements;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BT2PTR3XT2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = smart_workhorse_33965/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ClearR;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -584,16 +585,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = smart_workhorse_33965/smart_workhorse_33965.entitlements;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BT2PTR3XT2;
 				INFOPLIST_FILE = smart_workhorse_33965/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ClearR;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -640,7 +642,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -656,14 +658,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -705,7 +706,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -714,14 +715,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;

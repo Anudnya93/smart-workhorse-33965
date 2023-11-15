@@ -93,7 +93,7 @@ export default function ShiftView() {
     upcomingShiftTimesData,
     shiftNeedClose
   } = state
-  console.warn("upcomingShiftData", upcomingShiftData?.status)
+  // console.warn("upcomingShiftData", upcomingShiftData?.status)
 
   const handleChange = (name, value) => {
     setState(pre => ({ ...pre, [name]: value }))
@@ -280,7 +280,7 @@ export default function ShiftView() {
 
   }
 
-  console.warn('upcomingShiftData',upcomingShiftData?.status);
+  // console.warn('upcomingShiftData',upcomingShiftData?.status);
 
   const renderClockButton = () => {
     return (

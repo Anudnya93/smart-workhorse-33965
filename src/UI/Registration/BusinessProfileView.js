@@ -19,7 +19,7 @@ import { useContext } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
 
-export default function BusinessProfileView ({ navigation }) {
+export default function BusinessProfileView({ navigation }) {
   const { _getCountries, cities, states, adminProfile } = useContext(AppContext)
   const [state, setState] = useState({
     loading: false
@@ -49,10 +49,10 @@ export default function BusinessProfileView ({ navigation }) {
       const res = await deleteEmployee(adminProfile?.id, token)
       handleChange('loading', false)
       navigation.goBack()
-      Toast.show(`Employee has been deleted!`)
+      Toast.show('Employee has been deleted!')
     } catch (error) {
       handleChange('loading', false)
-      console.warn('err', error?.response?.data)
+      // console.warn('err', error?.response?.data)
       const showWError = Object.values(error.response?.data?.error)
       if (showWError.length > 0) {
         Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
@@ -62,7 +62,7 @@ export default function BusinessProfileView ({ navigation }) {
     }
   }
 
-  console.warn('user', adminProfile)
+  // console.warn('user', adminProfile)
 
   return (
     <View style={styles.container}>

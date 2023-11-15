@@ -55,7 +55,7 @@ export default function ChangePassword({}) {
         }
       })
     } catch (error) {
-      console.warn("error", error)
+      // console.warn("error", error)
       handleChange("loading", false)
       enqueueSnackbar(`Error: ${error.message}`, {
         variant: "success",

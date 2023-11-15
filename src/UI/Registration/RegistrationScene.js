@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import {
   View,
   Text,
@@ -7,21 +7,22 @@ import {
   Image,
   Animated,
   Dimensions,
-  TouchableOpacity
-} from "react-native"
-import { BaseScene, Button } from "../Common"
-import { Fonts, Colors } from "../../res"
-import LoginScene from "./LoginScene"
-import SignUpScene from "./SignUpScene"
-import { Icon } from "react-native-elements"
+  TouchableOpacity,
+  Linking
+} from 'react-native'
+import { BaseScene, Button } from '../Common'
+import { Fonts, Colors } from '../../res'
+import LoginScene from './LoginScene'
+import SignUpScene from './SignUpScene'
+import { Icon } from 'react-native-elements'
 
-const screenWidth = Dimensions.get("window").width
+const screenWidth = Dimensions.get('window').width
 
 export default class RegistrationScene extends BaseScene {
   constructor(props) {
     super(props)
     this.state = {
-      slideValues: ["login", "signUp"],
+      slideValues: ['login', 'signUp'],
       selectedIndex: 0
     }
     this.onSegmentedChange = this.onSegmentedChange.bind(this)
@@ -34,13 +35,13 @@ export default class RegistrationScene extends BaseScene {
 
   onSegmentedChange(index) {
     this.setState({ selectedIndex: index })
-    this.slidePane(index == 0 ? "left" : "right", index)
+    this.slidePane(index == 0 ? 'left' : 'right', index)
   }
 
   slidePane(direction, index) {
     let theLeftMargin
-    if (direction === "right") {
-      theLeftMargin = parseInt("-" + screenWidth) * index
+    if (direction === 'right') {
+      theLeftMargin = parseInt('-' + screenWidth) * index
       Animated.timing(this.animatedLeftMargin, {
         toValue: theLeftMargin,
         duration: 500
@@ -76,7 +77,7 @@ export default class RegistrationScene extends BaseScene {
               { opacity: this.state.selectedIndex != 0 ? 0.5 : 1 }
             ]}
           >
-            {this.ls("signIn")}
+            {this.ls('signIn')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -93,7 +94,7 @@ export default class RegistrationScene extends BaseScene {
               { opacity: this.state.selectedIndex != 1 ? 0.5 : 1 }
             ]}
           >
-            {this.ls("signUp")}
+            {this.ls('signUp')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -111,20 +112,22 @@ export default class RegistrationScene extends BaseScene {
         <View style={styles.childContainerStyle}>
           <LoginScene
             navigation={this.props.navigation}
-            onForgotPwd={() => this.props.navigation.navigate("forgotPwd")}
+            onForgotPwd={() => this.props.navigation.navigate('forgotPwd')}
           />
         </View>
         <View style={styles.childContainerStyle}>
           <SignUpScene
             onSuccessful={() => {
-              this.props.navigation.navigate("Home")
+              this.props.navigation.navigate('Home')
               this.setState({ selectedIndex: 2 })
             }}
             navigation={this.props.navigation}
             onPrivacyPress={() =>
-              this.props.navigation.navigate("privacyPolicy")
+              Linking.openURL('https://cleanrnow.com/privacy-policy')
             }
-            onTermsPress={() => this.props.navigation.navigate("termsPrivacy")}
+            onTermsPress={() =>
+              Linking.openURL('https://cleanrnow.com/terms-and-conditions')
+            }
           />
         </View>
       </Animated.View>
@@ -134,16 +137,16 @@ export default class RegistrationScene extends BaseScene {
   render() {
     return (
       <ImageBackground
-        source={this.images("splashBg").source}
+        source={this.images('splashBg').source}
         style={{ flex: 1 }}
       >
         <View style={styles.container}>
           <View
             style={{
-              width: "90%",
-              marginLeft: "5%",
+              width: '90%',
+              marginLeft: '5%',
               marginTop: -25,
-              alignItems: "flex-start"
+              alignItems: 'flex-start'
             }}
           >
             <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
@@ -151,8 +154,8 @@ export default class RegistrationScene extends BaseScene {
             </TouchableOpacity>
           </View>
           <Image
-            source={this.images("appLogo").source}
-            style={{ height: 30, alignSelf: "center" }}
+            source={this.images('appLogo').source}
+            style={{ height: 30, alignSelf: 'center' }}
             resizeMode="contain"
           />
           {this.renderSlider()}
@@ -170,16 +173,16 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Fonts.poppinsRegular(18),
-    color: "white",
-    textAlign: "center",
+    color: 'white',
+    textAlign: 'center',
     marginVertical: 10
   },
   sliderContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     width: screenWidth,
-    justifyContent: "space-around",
-    marginTop: "10%",
-    alignItems: "center"
+    justifyContent: 'space-around',
+    marginTop: '10%',
+    alignItems: 'center'
   },
   touchable: {
     borderBottomColor: Colors.WHITE,
@@ -188,11 +191,11 @@ const styles = StyleSheet.create({
   },
   childContainerStyle: {
     width: screenWidth,
-    height: "100%"
+    height: '100%'
   },
   animatedViewStyle: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     width: screenWidth * 2,
     flex: 1,
     marginTop: 2,

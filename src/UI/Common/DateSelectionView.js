@@ -1,8 +1,8 @@
-import React, { Component } from "react"
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native"
-import DatePicker from "react-native-datepicker"
-import { Colors, Fonts } from "../../res"
-import BaseComponent from "./BaseComponent"
+import React, { Component } from 'react'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import DatePicker from 'react-native-datepicker'
+import { Colors, Fonts } from '../../res'
+import BaseComponent from './BaseComponent'
 
 class DateSelectionView extends BaseComponent {
   constructor(props) {
@@ -20,31 +20,31 @@ class DateSelectionView extends BaseComponent {
       <TouchableOpacity
         style={[styles.rightInputView, { top: 15 }]}
         onPress={() =>
-          type == "From"
+          type == 'From'
             ? this.fromDatePicker.onPressDate()
             : this.toDatePicker.onPressDate()
         }
       >
-        <Image {...this.images("calendar")} />
+        <Image {...this.images('calendar')} />
       </TouchableOpacity>
     )
   }
 
   getProps() {
     return {
-      format: "MM/DD/YYYY",
-      display: "default",
+      format: 'MM/DD/YYYY',
+      display: 'default',
       showIcon: false,
-      confirmBtnText: "Confirm",
-      cancelBtnText: "Cancel",
+      confirmBtnText: 'Confirm',
+      cancelBtnText: 'Cancel',
       date: this.state.fromDate,
       maxDate: new Date(),
-      mode: "date",
-      androidMode: "spinner",
+      mode: 'date',
+      androidMode: 'spinner',
       customStyles: {
         dateInput: styles.dateInputStyles,
         dateText: styles.dateInputText,
-        datePicker: { justifyContent: "center" },
+        datePicker: { justifyContent: 'center' },
         placeholderText: { ...styles.dateInputText, opacity: 0.3 }
       }
     }
@@ -54,10 +54,11 @@ class DateSelectionView extends BaseComponent {
     return (
       <View style={styles.textPickerContainer}>
         <DatePicker
+          theme="light"
           ref={o => (this.fromDatePicker = o)}
-          style={{ width: "95%" }}
-          placeholder={"From"}
-          androidMode={"spinner"}
+          style={{ width: '95%' }}
+          placeholder={'From'}
+          androidMode={'spinner'}
           {...this.getProps()}
           date={this.state.fromDate}
           maxDate={this.state.fromDate ? this.state.fromDate : new Date()}
@@ -67,7 +68,7 @@ class DateSelectionView extends BaseComponent {
             this.setState({ fromDate: text })
           }}
         />
-        {this.renderIcon("From")}
+        {this.renderIcon('From')}
       </View>
     )
   }
@@ -76,9 +77,10 @@ class DateSelectionView extends BaseComponent {
     return (
       <View style={[styles.textPickerContainer, {}]}>
         <DatePicker
+          theme="light"
           ref={o => (this.toDatePicker = o)}
-          style={{ width: "95%", marginLeft: 8 }}
-          placeholder={"To"}
+          style={{ width: '95%', marginLeft: 8 }}
+          placeholder={'To'}
           {...this.getProps()}
           date={this.state.toDate}
           minDate={this.state.fromDate}
@@ -92,7 +94,7 @@ class DateSelectionView extends BaseComponent {
           style={[styles.rightInputView, { top: 15, right: 10 }]}
           onPress={() => this.toDatePicker.onPressDate()}
         >
-          <Image {...this.images("calendar")} />
+          <Image {...this.images('calendar')} />
         </TouchableOpacity>
       </View>
     )
@@ -109,16 +111,16 @@ class DateSelectionView extends BaseComponent {
 }
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     paddingTop: 10,
     paddingBottom: 15,
 
-    flexDirection: "row",
-    justifyContent: "center",
-    alignSelf: "center"
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center'
   },
   textPickerContainer: {
-    width: "45%"
+    width: '45%'
   },
   dateText: {
     ...Fonts.poppinsRegular(14),
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: Colors.TEXT_INPUT_BG,
     borderColor: Colors.TEXT_INPUT_BORDER,
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
     padding: 10,
     borderRadius: 10,
     marginTop: 5,
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     color: Colors.TEXT_INPUT_COLOR
   },
   rightInputView: {
-    position: "absolute",
+    position: 'absolute',
     right: 20
   }
 })
