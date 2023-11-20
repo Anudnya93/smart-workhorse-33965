@@ -331,12 +331,24 @@ class PrimaryTextInput extends Component {
           { borderColor: this.borderColor() },
           this.props.inputStyle
         ]}
-        ref={ref =>
-          ref &&
-          ref.setNativeProps({
-            style: { ...Fonts.poppinsRegular(14) }
-          })
-        }
+        ref={ref => {
+          if (ref?.value) {
+            return (
+              ref &&
+              ref.value &&
+              ref.setNativeProps({
+                style: { ...Fonts.poppinsRegular(14) }
+              })
+            )
+          } else {
+            return (
+              ref &&
+              ref.setNativeProps({
+                style: { ...Fonts.poppinsRegular(14) }
+              })
+            )
+          }
+        }}
         placeholder={!this.props.dropdown ? this.props.label : ''}
         textAlignVertical="top"
         multiline={this.props.multiline}
