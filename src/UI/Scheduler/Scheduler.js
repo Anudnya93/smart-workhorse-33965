@@ -139,11 +139,13 @@ export default function Scheduler({ navigation }) {
               : props.mode == 'month'
               ? {
                   width: 15,
-                  height: 15
+                  height: 15,
+                  marginTop: 3
                 }
               : {
                   width: 15,
-                  height: 15
+                  height: 15,
+                  marginTop: 5
                 }
           }
           resizeMode="contain"

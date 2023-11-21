@@ -31,7 +31,8 @@ const common = {
   GREEN_COLOR: greenColor,
   LIGHT_TEXT_COLOR: '#787878',
   HOME_DES: '#818080',
-  PAYMENT_CELL_BORDER: '#E3E1D8'
+  PAYMENT_CELL_BORDER: '#E3E1D8',
+  TEXT_INPUT_COLOR: black
 }
 
 module.exports = {

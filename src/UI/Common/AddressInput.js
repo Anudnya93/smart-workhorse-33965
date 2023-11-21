@@ -123,7 +123,10 @@ const AddressInput = ({ callback, style, address, handlesave }) => {
         style={[styles.inputStyle, style]}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.text} numberOfLines={1}>
+        <Text
+          style={[styles.text, !selectedAddress && { color: '#666' }]}
+          numberOfLines={1}
+        >
           {selectedAddress ? selectedAddress : Strings.addressLine1 + '*'}
         </Text>
       </TouchableOpacity>
@@ -223,7 +226,8 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   text: {
-    ...Fonts.poppinsRegular(14)
+    ...Fonts.poppinsRegular(14),
+    color: Colors.TEXT_INPUT_COLOR
   },
   save: {
     position: 'absolute',

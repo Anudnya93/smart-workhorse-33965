@@ -73,24 +73,24 @@ export default function AllWorksiteScene({ navigation }) {
           </View>
         )}
         {allWorksites?.map(item => (
-          <View style={styles.cellContainer}>
-            <View>
-              <Text style={styles.cellTitle}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(
+                isEmp ? 'WorksiteMapScene' : 'worksiteDetail',
+                { item }
+              )
+            }
+            style={styles.cellContainer}
+          >
+            <View style={{ maxWidth: '75%' }}>
+              <Text numberOfLines={1} style={styles.cellTitle}>
                 {isEmp ? item?.worksite_name : item?.personal_information?.name}
               </Text>
-              <Text style={styles.description}>
+              <Text numberOfLines={1} style={styles.description}>
                 {isEmp ? item?.location : item?.personal_information?.location}
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate(
-                  isEmp ? 'WorksiteMapScene' : 'worksiteDetail',
-                  { item }
-                )
-              }
-              style={{ justifyContent: 'flex-end' }}
-            >
+            <View style={{ justifyContent: 'flex-end' }}>
               <Text
                 style={[
                   styles.cellTitle,
@@ -99,8 +99,8 @@ export default function AllWorksiteScene({ navigation }) {
               >
                 {isEmp ? 'Map view' : 'View Details'}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     )
