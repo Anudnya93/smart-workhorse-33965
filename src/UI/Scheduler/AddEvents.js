@@ -51,6 +51,15 @@ const MandatoryFields = [
   'worksite'
 ]
 
+const frequencyTypes = [
+  { name: 'Every Time', value: 'EVERY_TIME' },
+  { name: 'Weekly', value: 'WEEKLY' },
+  { name: 'Semi-Weekly', value: 'SEMI_WEEKLY' },
+  { name: 'Monthly', value: 'MONTHLY' },
+  { name: 'Quarterly', value: 'QUARTERLY' },
+  { name: 'Semi-Annually', value: 'SEMI_ANNUALLY' }
+]
+
 export default function AddEvents({ navigation, route }) {
   const selectedEvent = route?.params?.selectedEvent
   const { schedules } = useContext(AppContext)
@@ -418,6 +427,10 @@ export default function AddEvents({ navigation, route }) {
     )
   }
 
+  const availableTasks = () => {
+    return getWorksiteTask(worksite)
+  }
+
   return (
     <KeyboardAwareScrollView
       ref={scrollViewRef}
@@ -722,54 +735,55 @@ export default function AddEvents({ navigation, route }) {
         />
         <Text style={styles.inputText}>Select all</Text>
       </View>
-      <Text style={styles.title}>Every Time</Text>
-      {getWorksiteTask(worksite)?.length > 0 &&
-        getWorksiteTask(worksite)?.map((task, index) => (
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '90%',
-              marginVertical: 10,
-              alignItems: 'center',
-              paddingBottom: 8,
-              borderBottomColor: Colors.TEXT_INPUT_BORDER,
-              borderBottomWidth: 1
-            }}
-          >
-            <BouncyCheckbox
-              size={20}
-              fillColor={Colors.BACKGROUND_BG}
-              disableBuiltInState
-              innerIconStyle={{
-                borderColor: Colors.BLUR_TEXT,
-                borderRadius: 5,
-                marginBottom: 2
-              }}
-              iconStyle={{
-                borderColor: Colors.BLUR_TEXT,
-                borderRadius: 5,
-                marginBottom: 2
-              }}
-              onPress={() => {
-                if (selected_tasks?.includes(Number(task?.id))) {
-                  const removed = selected_tasks?.filter(
-                    e => e !== Number(task?.id)
-                  )
-                  handleChange('selected_tasks', removed)
-                } else {
-                  handleChange('selected_tasks', [
-                    ...selected_tasks,
-                    Number(task?.id)
-                  ])
-                }
-              }}
-              isChecked={selected_tasks?.includes(Number(task?.id))}
-            />
-            <Text style={[styles.inputText, { width: '90%' }]}>
-              {task?.name}
-            </Text>
-          </View>
-        ))}
+      {console.log({ tasks: JSON.stringify(getWorksiteTask(worksite)) })}
+      {frequencyTypes.map(item => {
+        return (
+          availableTasks()?.filter(t => t?.frequency_of_task == item?.value)
+            .length > 0 && (
+            <>
+              <Text style={styles.title}>{item.name}</Text>
+              {availableTasks()
+                ?.filter(t => t?.frequency_of_task == item?.value)
+                ?.map((task, index) => (
+                  <View style={styles.worksiteView}>
+                    <BouncyCheckbox
+                      size={20}
+                      fillColor={Colors.BACKGROUND_BG}
+                      disableBuiltInState
+                      innerIconStyle={{
+                        borderColor: Colors.BLUR_TEXT,
+                        borderRadius: 5,
+                        marginBottom: 2
+                      }}
+                      iconStyle={{
+                        borderColor: Colors.BLUR_TEXT,
+                        borderRadius: 5,
+                        marginBottom: 2
+                      }}
+                      onPress={() => {
+                        if (selected_tasks?.includes(Number(task?.id))) {
+                          const removed = selected_tasks?.filter(
+                            e => e !== Number(task?.id)
+                          )
+                          handleChange('selected_tasks', removed)
+                        } else {
+                          handleChange('selected_tasks', [
+                            ...selected_tasks,
+                            Number(task?.id)
+                          ])
+                        }
+                      }}
+                      isChecked={selected_tasks?.includes(Number(task?.id))}
+                    />
+                    <Text style={[styles.inputText, { width: '90%' }]}>
+                      {task?.name}
+                    </Text>
+                  </View>
+                ))}
+            </>
+          )
+        )
+      })}
       <Text style={[styles.title, errors.employees && { marginBottom: 0 }]}>
         {'Assign Employees*'}
       </Text>
@@ -1254,5 +1268,14 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: Platform.OS == 'ios' ? -5 : -10,
     alignSelf: 'flex-start'
+  },
+  worksiteView: {
+    flexDirection: 'row',
+    width: '90%',
+    marginVertical: 10,
+    alignItems: 'center',
+    paddingBottom: 8,
+    borderBottomColor: Colors.TEXT_INPUT_BORDER,
+    borderBottomWidth: 1
   }
 })

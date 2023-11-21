@@ -33,10 +33,16 @@ import { useEffect } from 'react'
 import { widthPercentageToDP } from 'react-native-responsive-screen'
 import countryList from '../../constants/countries'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
+import AddressInput from '../Common/AddressInput'
+import CityInput from '../Common/CityInput'
 
 const MandatoryFields = [
   'name',
   'location',
+  'city',
+  'state',
+  'city',
+  'zipcode',
   'clear_frequency_by_day',
   'desired_time',
   'contact_person_name',
@@ -75,9 +81,19 @@ export default function AddWorksiteScene({ navigation, route }) {
     opened: false,
     desired_time_text: new Date(),
     openStart: false,
-    validNumber: false
+    validNumber: false,
+    city: worksiteData?.personal_information?.city || '',
+    state: worksiteData?.personal_information?.state || '',
+    zipcode: worksiteData?.personal_information?.zipcode || '',
+    latitude: worksiteData?.personal_information?.latitude || '',
+    longitude: worksiteData?.personal_information?.longitude || '',
+    country: worksiteData?.personal_information?.country || '',
+    address_line_two: worksiteData?.personal_information?.address_line_two || ''
   })
+  // console.log({ state })
+  // console.log({ worksiteData })
   const [errors, setErrors] = useState({})
+  const [disabledList, setDisabledList] = useState([])
 
   const {
     loading,
@@ -99,7 +115,13 @@ export default function AddWorksiteScene({ navigation, route }) {
     desired_time_text,
     openStart,
     validNumber,
-    upload_instruction_video_link
+    upload_instruction_video_link,
+    city,
+    zipcode,
+    latitude,
+    longitude,
+    country,
+    address_line_two
   } = state
   const handleChange = (name, value) => {
     if (name === 'contact_phone_number') {
@@ -129,8 +151,12 @@ export default function AddWorksiteScene({ navigation, route }) {
       clear_frequency_by_day.length === 0 ||
       !desired_time ||
       !contact_person_name ||
-      !contact_phone_number
+      !contact_phone_number ||
+      city == '' ||
+      state == '' ||
+      zipcode == ''
 
+    // console.log({ disabled })
     try {
       const phoneCheck = contact_phone_number?.startsWith('+91')
         ? contact_phone_number?.length == 16
@@ -165,7 +191,13 @@ export default function AddWorksiteScene({ navigation, route }) {
           clear_frequency_by_day,
           desired_time,
           number_of_workers_needed: number_of_workers_needed || '1',
-          supplies_needed
+          supplies_needed,
+          zipcode,
+          city,
+          state: state.state,
+          // country,
+          address_line_one: location,
+          address_line_two
         },
         contact_person: {
           contact_person_name,
@@ -189,6 +221,7 @@ export default function AddWorksiteScene({ navigation, route }) {
       handleChange('loading', false)
     } catch (error) {
       handleChange('loading', false)
+      console.log(JSON.stringify(error.response))
       const showWError =
         error?.response?.data[Object.keys(error.response?.data)[0]]
       Toast.show(`Error: ${showWError}`)
@@ -413,6 +446,102 @@ export default function AddWorksiteScene({ navigation, route }) {
             />
           </View>
         )
+      } else if (fields.key === 'city') {
+        return (
+          <>
+            <CityInput
+              viewStyle={{ marginBottom: 5 }}
+              state={city}
+              disabled={
+                disabledList.includes('city') || (latitude && longitude)
+              }
+              text={
+                city ||
+                'City' + (MandatoryFields.includes(fields.key) ? '*' : '')
+              }
+              error={errors.state && styles.errorBorder}
+              onSelection={item => {
+                handleChange('city', item?.name)
+                handleChange('state', item?.region?.name)
+                setErrors(p => ({
+                  ...p,
+                  city: false
+                }))
+              }}
+            />
+          </>
+        )
+      } else if (fields.key === 'state') {
+        return (
+          <View
+            style={[
+              styles.stateView,
+              errors.selectedState && styles.errorBorder
+            ]}
+          >
+            <Text
+              style={{
+                ...Fonts.poppinsRegular(14),
+                color:
+                  disabledList.includes('state') || (latitude && longitude)
+                    ? Colors.BUTTON_BG1
+                    : state.state
+                    ? Colors.BLACK
+                    : Colors.BLUR_TEXT
+              }}
+            >
+              {state.state ||
+                'State' + (MandatoryFields.includes('state') ? '*' : '')}
+            </Text>
+          </View>
+        )
+      } else if (fields.key === 'location') {
+        return (
+          <AddressInput
+            style={{
+              marginTop: 5
+            }}
+            address={location}
+            callback={data => {
+              console.log({ data })
+              setState(p => ({
+                ...p,
+                location: data.lineOne,
+                city: data.city,
+                state: data.state,
+                zipcode: data.zipcode,
+                latitude: data.lat,
+                longitude: data.long,
+                country: data.country
+              }))
+              const keys = []
+              if (data.city) {
+                keys.push('city')
+              }
+              if (data.state) {
+                keys.push('state')
+              }
+              if (data.zipcode) {
+                keys.push('zipcode')
+              }
+              setDisabledList(keys)
+            }}
+            handlesave={val => {
+              console.log({ val })
+              setState(p => ({
+                ...p,
+                location: val,
+                country: '',
+                latitude: '',
+                longitude: '',
+                city: '',
+                state: '',
+                zipcode: ''
+              }))
+              setDisabledList([])
+            }}
+          />
+        )
       } else {
         return (
           <PrimaryTextInput
@@ -426,6 +555,14 @@ export default function AddWorksiteScene({ navigation, route }) {
                 : fields.label
             }
             inputStyle={[errors[fields.key] && styles.errorBorder]}
+            textInputProps={{
+              ...fields.textInputProps,
+              editable:
+                fields.key == 'zipcode' &&
+                (disabledList.includes('zipcode') || (latitude && longitude))
+                  ? false
+                  : true
+            }}
           />
         )
       }
@@ -688,5 +825,21 @@ const styles = StyleSheet.create({
   },
   errorBorder: {
     borderColor: Colors.INVALID_TEXT_INPUT
+  },
+  stateView: {
+    height: 50,
+    width: '90%',
+    paddingTop: 0,
+    borderRadius: 10,
+    marginTop: 10,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    marginLeft: '5%',
+    backgroundColor: Colors.TEXT_INPUT_BG,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: Colors.TEXT_INPUT_BORDER,
+    marginBottom: 5
   }
 })

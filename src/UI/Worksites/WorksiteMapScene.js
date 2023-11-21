@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -8,34 +8,34 @@ import {
   Platform,
   TouchableOpacity,
   Linking
-} from "react-native"
-import { Header } from "../Common"
-import { Colors, Fonts } from "../../res"
-import Strings from "../../res/Strings"
-import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from "react-native-maps"
-import Geolocation from "@react-native-community/geolocation"
-import Geocoder from "react-native-geocoding"
-import haversine from "haversine"
-import { useFocusEffect } from "@react-navigation/native"
+} from 'react-native'
+import { Header } from '../Common'
+import { Colors, Fonts } from '../../res'
+import Strings from '../../res/Strings'
+import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps'
+import Geolocation from '@react-native-community/geolocation'
+import Geocoder from 'react-native-geocoding'
+import haversine from 'haversine'
+import { useFocusEffect } from '@react-navigation/native'
 
-Geocoder.init("AIzaSyCndwU13bTZ8w_yhP4ErbFGE1Wr9oiro8Q")
+Geocoder.init('AIzaSyCndwU13bTZ8w_yhP4ErbFGE1Wr9oiro8Q')
 
-const { width, height } = Dimensions.get("window")
+const { width, height } = Dimensions.get('window')
 const mapStyle = [
   {
-    featureType: "poi.business",
+    featureType: 'poi.business',
     stylers: [
       {
-        visibility: "off"
+        visibility: 'off'
       }
     ]
   },
   {
-    featureType: "poi.park",
-    elementType: "labels.text",
+    featureType: 'poi.park',
+    elementType: 'labels.text',
     stylers: [
       {
-        visibility: "off"
+        visibility: 'off'
       }
     ]
   }
@@ -49,6 +49,7 @@ export default function WorksiteMapScene({ navigation, route }) {
   // Geolocation.setRNConfiguration({
   //   skipPermissionRequests: false
   // })
+  console.log({ worksiteData })
   var mapRef = useRef(null)
   const [state, setState] = useState({
     loading: false,
@@ -75,7 +76,7 @@ export default function WorksiteMapScene({ navigation, route }) {
       .then(json => {
         var addressComponent = json.results[0].geometry.location
         console.log(addressComponent)
-        handleChange("pinLocation", {
+        handleChange('pinLocation', {
           latitude: addressComponent.lat,
           longitude: addressComponent.lng
         })
@@ -102,21 +103,21 @@ export default function WorksiteMapScene({ navigation, route }) {
 
   async function requestGeolocationPermission() {
     try {
-      if (Platform.OS === "ios") {
+      if (Platform.OS === 'ios') {
         getCurrentLocation()
         return
       }
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-          title: "CleanR Geolocation Permission",
-          message: "CleanR needs access to your current location."
+          title: 'CleanR Geolocation Permission',
+          message: 'CleanR needs access to your current location.'
         }
       )
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         getCurrentLocation()
       } else {
-        console.log("Geolocation permission denied")
+        console.log('Geolocation permission denied')
       }
     } catch (err) {
       console.warn(err)
@@ -135,12 +136,13 @@ export default function WorksiteMapScene({ navigation, route }) {
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA
         }
-        handleChange("currentLocation", region)
+        console.log({ region })
+        handleChange('currentLocation', region)
         // mapRef && mapRef?.current?.animateToRegion(region)
       },
-      error => console.log("Error", JSON.stringify(error)),
-      Platform.OS !== "ios" && {
-        enableHighAccuracy: Platform.OS === "ios" ? false : true,
+      error => console.log('Error', JSON.stringify(error)),
+      Platform.OS !== 'ios' && {
+        enableHighAccuracy: Platform.OS === 'ios' ? false : true,
         timeout: 20000,
         maximumAge: 1000
       }
@@ -160,13 +162,13 @@ export default function WorksiteMapScene({ navigation, route }) {
   }
 
   const openMap = () => {
-    const latitude = pinLocation?.latitude || "40.7127753"
-    const longitude = pinLocation?.longitude || "-74.0059728"
-    const label = worksiteData?.location || "New York, NY, USA"
+    const latitude = pinLocation?.latitude || '40.7127753'
+    const longitude = pinLocation?.longitude || '-74.0059728'
+    const label = worksiteData?.location || 'New York, NY, USA'
 
     const url = Platform.select({
-      ios: "maps:" + latitude + "," + longitude + "?q=" + label,
-      android: "geo:" + latitude + "," + longitude + "?q=" + label
+      ios: 'maps:' + latitude + ',' + longitude + '?q=' + label,
+      android: 'geo:' + latitude + ',' + longitude + '?q=' + label
     })
 
     Linking.canOpenURL(url).then(supported => {
@@ -174,11 +176,11 @@ export default function WorksiteMapScene({ navigation, route }) {
         return Linking.openURL(url)
       } else {
         const browser_url =
-          "https://www.google.de/maps/@" +
+          'https://www.google.de/maps/@' +
           latitude +
-          "," +
+          ',' +
           longitude +
-          "?q=" +
+          '?q=' +
           label
         return Linking.openURL(browser_url)
       }
@@ -192,7 +194,7 @@ export default function WorksiteMapScene({ navigation, route }) {
         title={Strings.worksites}
         leftButton
       />
-      <View style={{ width: "100%", height: "75%" }}>
+      <View style={{ width: '100%', height: '73%' }}>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
@@ -207,21 +209,21 @@ export default function WorksiteMapScene({ navigation, route }) {
               : currentLocation
           }
           // onPress={props => onMapPress(props.nativeEvent.coordinate)}
-          onRegionChange={() => console.log("")}
+          onRegionChange={() => console.log('')}
           ref={mapRef}
         >
           {pinLocation && (
             <Marker
-              title={"Worksite Location"}
-              style={{ alignItems: "center" }}
+              title={'Worksite Location'}
+              style={{ alignItems: 'center' }}
               // onPress={() => handleClickFood(truck)}
               coordinate={pinLocation}
             />
           )}
           {currentLocation && (
             <Marker
-              title={"My Location"}
-              style={{ alignItems: "center" }}
+              title={'My Location'}
+              style={{ alignItems: 'center' }}
               // onPress={() => handleClickFood(truck)}
               coordinate={currentLocation}
             />
@@ -236,17 +238,13 @@ export default function WorksiteMapScene({ navigation, route }) {
           )}
         </MapView>
       </View>
-      <View style={{ height: "20%", width: "100%", padding: 20 }}>
-        <TouchableOpacity onPress={openMap}>
-          <Text
-            style={{ ...Fonts.poppinsRegular(14), color: Colors.BLUR_TEXT }}
-          >
-            Street Address:{" "}
-            <Text style={{ color: Colors.TEXT_COLOR }}>
-              {worksiteData?.location}
-            </Text>
+      <View style={{ height: '20%', width: '100%', padding: 20 }}>
+        <Text style={{ ...Fonts.poppinsRegular(14), color: Colors.BLUR_TEXT }}>
+          Street Address:{' '}
+          <Text style={{ color: Colors.TEXT_COLOR }}>
+            {worksiteData?.location}
           </Text>
-        </TouchableOpacity>
+        </Text>
         <Text
           style={{
             marginTop: 5,
@@ -254,11 +252,16 @@ export default function WorksiteMapScene({ navigation, route }) {
             color: Colors.BLUR_TEXT
           }}
         >
-          Distance:{" "}
+          Distance:{' '}
           <Text style={{ color: Colors.TEXT_COLOR }}>
-            {calcDistance()?.toFixed(2) + " mi"}
+            {calcDistance()?.toFixed(2) + ' mi'}
           </Text>
         </Text>
+        <TouchableOpacity onPress={openMap} style={styles.navigate}>
+          <Text style={{ color: 'white', ...Fonts.poppinsMedium(16) }}>
+            Navigate
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -266,9 +269,9 @@ export default function WorksiteMapScene({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
     backgroundColor: Colors.WHITE
   },
   title: {
@@ -278,35 +281,43 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   childContainer: {
-    width: "90%"
+    width: '90%'
   },
   footerButton: {
-    marginTop: "5%",
-    width: "100%"
+    marginTop: '5%',
+    width: '100%'
   },
   footerWhiteButton: {
-    marginTop: "5%",
-    width: "100%",
-    backgroundColor: "red",
+    marginTop: '5%',
+    width: '100%',
+    backgroundColor: 'red',
     borderWidth: 1,
     borderColor: Colors.BUTTON_BG
   },
   description: {
     ...Fonts.poppinsRegular(12),
-    color: "#818080",
-    textAlign: "left",
+    color: '#818080',
+    textAlign: 'left',
     marginTop: 10
   },
   cellContainer: {
     marginVertical: 10,
-    width: "100%"
+    width: '100%'
   },
   cellTitle: {
     ...Fonts.poppinsRegular(14),
     color: Colors.TEXT_COLOR
   },
   map: {
-    height: "100%",
+    height: '100%',
     ...StyleSheet.absoluteFillObject
+  },
+  navigate: {
+    backgroundColor: Colors.BUTTON_BG,
+    padding: 8,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10
   }
 })
