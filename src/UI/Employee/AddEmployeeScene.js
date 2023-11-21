@@ -260,8 +260,8 @@ export default function AddEmployeeScene({ navigation, route }) {
         }
         setVisible(true)
       } else if (
-        showWError?.detail &&
-        showWError?.detail?.includes('not active')
+        showWError?.error &&
+        showWError?.error?.includes('not active')
       ) {
         popUpRef.current = {
           title: 'Not Subscribed!',

@@ -70,7 +70,6 @@ export default function EmployeeListScene({ navigation, callback }) {
       )}
       {ApiCalled && (
         <FlatList
-          scrollEnabled={false}
           style={{ width: '100%' }}
           data={allEmployee}
           ListEmptyComponent={() => (

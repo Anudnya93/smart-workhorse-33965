@@ -166,7 +166,8 @@ const fields = {
     key: 'zipcode',
     dateType: false,
     label: 'Zip Code',
-    placeholder: ''
+    placeholder: '',
+    textInputProps: { maxLength: 5, keyboardType: 'number-pad' }
   },
   position: {
     key: 'position',

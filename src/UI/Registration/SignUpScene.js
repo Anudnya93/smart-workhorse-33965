@@ -128,6 +128,44 @@ export default class LoginScene extends BaseScene {
   }
 
   onNext = () => {
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+      phone,
+      isPassInValid,
+      isFormValid
+    } = this.state
+
+    const disabled =
+      !first_name ||
+      !last_name ||
+      !email ||
+      !password ||
+      !phone ||
+      isPassInValid ||
+      !isFormValid
+
+    const emailCheck = email && emailRegex.test(email)
+
+    const phoneCheck = phone?.startsWith('+91')
+      ? phone?.length == 16
+      : phone?.length == 15
+
+    if (disabled || !emailCheck || !phoneCheck) {
+      const newErrors = {}
+      MandatoryFields.forEach(field => {
+        if (!this.state[field]) {
+          newErrors[field] = true
+        }
+      })
+      console.log({ newErrors })
+      // Highlight mandatory fields with red border if not filled
+      this.setState(pre => ({ ...pre, errors: newErrors }))
+      Toast.show('Please fill mandatory fields properly to continue')
+      return
+    }
     this.setState(p => ({
       ...p,
       checking: true

@@ -30,6 +30,7 @@ import Autocomplete from 'react-native-autocomplete-input'
 import { Icon } from 'react-native-elements'
 import countryList from '../../constants/countries'
 import CustomPhoneInput from '../Common/CustomPhoneInput'
+import AddressInput from '../Common/AddressInput'
 
 const MandatoryFields = [
   'name',
@@ -56,7 +57,7 @@ export default function BusinessProfileScene({ navigation, route }) {
   const phoneRef = useRef(null)
   const userData = route?.params?.userData
   // State
-  // console.warn("userData", userData)
+  console.log({ adminProfile })
   const [state, setState] = useState({
     name: adminProfile?.business_information?.name || '',
     pay_frequency: adminProfile?.business_information?.pay_frequency || '',
@@ -83,10 +84,15 @@ export default function BusinessProfileScene({ navigation, route }) {
     loading: false,
     validNumber: userData?.phone ? true : false,
     cityText: '',
-    openCity: false
+    openCity: false,
+    latitude: adminProfile?.business_address?.latitude || '',
+    longitude: adminProfile?.business_address?.longitude || ''
   })
 
+  console.log({ state })
+
   const [errors, setErrors] = useState({})
+  const [disabledList, setDisabledList] = useState([])
 
   const {
     loading,
@@ -108,7 +114,9 @@ export default function BusinessProfileScene({ navigation, route }) {
     cityText,
     openCity,
     state_name,
-    city_name
+    city_name,
+    latitude,
+    longitude
   } = state
 
   const handleChange = (name, value) => {
@@ -182,6 +190,7 @@ export default function BusinessProfileScene({ navigation, route }) {
 
   const handleProfile = async () => {
     try {
+      console.log({ city, selectedState })
       const disabled =
         !name ||
         !first_name ||
@@ -193,6 +202,19 @@ export default function BusinessProfileScene({ navigation, route }) {
         !selectedState ||
         !zipcode ||
         !validNumber
+
+      console.log({
+        name,
+        first_name,
+        last_name,
+        phone,
+        date_of_birth,
+        address_line_one,
+        city,
+        selectedState,
+        zipcode,
+        validNumber
+      })
 
       const phoneCheck = phone?.startsWith('+91')
         ? phone?.length == 16
@@ -231,7 +253,8 @@ export default function BusinessProfileScene({ navigation, route }) {
           address_line_two,
           city: city,
           state: selectedState,
-          zipcode
+          zipcode,
+          country: country == '' ? null : country
         }
       }
       photo && (formData.business_information.profile_image = photo)
@@ -242,6 +265,7 @@ export default function BusinessProfileScene({ navigation, route }) {
       navigation.navigate('AuthLoading')
       Toast.show('Your profile has been updated!')
     } catch (error) {
+      console.log({ err: error.response?.data })
       handleChange('loading', false)
       if (error.response?.data?.detail) {
         Toast.show(`Error: ${JSON.stringify(error.response?.data?.detail)}`)
@@ -356,11 +380,19 @@ export default function BusinessProfileScene({ navigation, route }) {
               },
               errors[fields.key] && styles.errorBorder
             ]}
+            disabled={
+              disabledList.includes('city_name') || (latitude && longitude)
+            }
           >
             <Text
               style={{
                 ...Fonts.poppinsRegular(14),
-                color: city_name ? Colors.BLACK : Colors.BLUR_TEXT
+                color:
+                  disabledList.includes('city_name') || (latitude && longitude)
+                    ? Colors.BUTTON_BG1
+                    : city_name
+                    ? Colors.BLACK
+                    : Colors.BLUR_TEXT
               }}
             >
               {city_name ||
@@ -400,7 +432,12 @@ export default function BusinessProfileScene({ navigation, route }) {
             <Text
               style={{
                 ...Fonts.poppinsRegular(14),
-                color: state_name ? Colors.BLACK : Colors.BLUR_TEXT
+                color:
+                  disabledList.includes('state_name') || (latitude && longitude)
+                    ? Colors.BUTTON_BG1
+                    : state_name
+                    ? Colors.BLACK
+                    : Colors.BLUR_TEXT
               }}
             >
               {state_name ||
@@ -408,6 +445,57 @@ export default function BusinessProfileScene({ navigation, route }) {
                   (MandatoryFields.includes('selectedState') ? '*' : '')}
             </Text>
           </View>
+        )
+      } else if (fields.key === 'address_line_one') {
+        return (
+          <AddressInput
+            style={{
+              marginBottom: 5
+            }}
+            address={state.address_line_one}
+            callback={data => {
+              console.log({ data })
+              setState(p => ({
+                ...p,
+                city_name: data.city,
+                city: data.city,
+                selectedState: data.state,
+                state_name: data.state,
+                zipcode: data.zipcode,
+                address_line_one: data.lineOne,
+                latitude: data.lat,
+                longitude: data.long,
+                country: data.country
+              }))
+              const keys = []
+              if (data.city) {
+                keys.push('city_name')
+              }
+              if (data.state) {
+                keys.push('state_name')
+              }
+              if (data.zipcode) {
+                keys.push('zipcode')
+              }
+              setDisabledList(keys)
+            }}
+            handlesave={val => {
+              console.log({ val })
+              setState(p => ({
+                ...p,
+                address_line_one: val,
+                country: '',
+                latitude: '',
+                longitude: '',
+                city_name: '',
+                state_name: '',
+                city: '',
+                state: '',
+                selectedState: ''
+              }))
+              setDisabledList([])
+            }}
+          />
         )
       } else {
         return (
@@ -422,11 +510,21 @@ export default function BusinessProfileScene({ navigation, route }) {
                 : fields.label
             }
             inputStyle={[errors[fields.key] && styles.errorBorder]}
+            textInputProps={{
+              ...fields.textInputProps,
+              editable:
+                fields.key == 'zipcode' &&
+                (disabledList.includes('zipcode') || (latitude && longitude))
+                  ? false
+                  : true
+            }}
+            override={fields.key == 'zipcode' ? true : false}
           />
         )
       }
     })
   }
+  console.log({ latitude, longitude })
 
   const renderFooterButton = () => {
     return (
