@@ -518,6 +518,7 @@ export default function BusinessProfileScene({ navigation, route }) {
                   ? false
                   : true
             }}
+            override={fields.key == 'zipcode' ? true : false}
           />
         )
       }

@@ -357,7 +357,11 @@ class PrimaryTextInput extends Component {
         onBlur={() => this.onBlur(this.props.key)}
         maxLength={this.props.maxLength}
         onChangeText={text => this.onChangeText(text)}
-        value={this.state.text || this.props.text}
+        value={
+          this.props.override
+            ? this.props.text
+            : this.state.text || this.props.text
+        }
         secureTextEntry={
           (this.state.text !== '' || this.props.text !== '') &&
           !this.state.isPwdVisible &&
