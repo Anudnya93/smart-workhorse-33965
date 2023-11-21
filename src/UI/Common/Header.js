@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import {
   StyleSheet,
   View,
@@ -7,19 +7,20 @@ import {
   Text,
   Platform,
   Dimensions
-} from "react-native"
+} from 'react-native'
 
-import { Colors, Images, Fonts } from "../../res"
-const { height, width } = Dimensions.get("window")
+import { Colors, Images, Fonts } from '../../res'
+import FastImage from 'react-native-fast-image'
+const { height, width } = Dimensions.get('window')
 
 class Header extends Component {
   renderLeft() {
-    const { source, style } = !!this.props.leftIcon
+    const { source, style } = this.props.leftIcon
       ? this.props.leftIcon
       : Images.arrowLeft
     return (
       <TouchableOpacity
-        style={[styles.headerCommon, { width: "15%" }]}
+        style={[styles.headerCommon, { width: '15%' }]}
         hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
         onPress={this.props.onLeftPress}
       >
@@ -29,20 +30,21 @@ class Header extends Component {
   }
 
   isIphoneX() {
-    return Platform.OS === "ios" && (height >= 812 || width >= 812)
+    return Platform.OS === 'ios' && (height >= 812 || width >= 812)
   }
 
   renderRight() {
     return (
       <TouchableOpacity
-        style={[styles.headerCommon, { width: "15%" }]}
+        style={[styles.headerCommon, { width: '15%' }]}
         hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
         onPress={this.props.onRightPress}
       >
         {!!this.props.rightIcon && (
-          <Image
+          <FastImage
             source={this.props.rightIcon.source}
             style={{ height: 20, width: 20 }}
+            resizeMode="contain"
           />
         )}
       </TouchableOpacity>
@@ -62,7 +64,7 @@ class Header extends Component {
           styles.container,
           {
             backgroundColor: this.props.transparent
-              ? "transparent"
+              ? 'transparent'
               : Colors.HEADER_BG
           }
         ]}
@@ -82,32 +84,32 @@ const HEADER_HEIGHT = 56
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     height: HEADER_HEIGHT,
     backgroundColor: Colors.HEADER_BG,
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   logo: {
-    alignSelf: "center",
-    marginLeft: "auto",
-    marginRight: "auto"
+    alignSelf: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   },
   titleText: {
     color: Colors.WHITE,
     ...Fonts.poppinsMedium(18),
-    alignSelf: "center",
-    width: "70%",
-    textAlign: "center"
+    alignSelf: 'center',
+    width: '70%',
+    textAlign: 'center'
   },
   headerCommon: {
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   imageLogo: {
     height: 300,
     width: 128,
-    resizeMode: "contain"
+    resizeMode: 'contain'
   }
 })
 
