@@ -251,9 +251,9 @@ export default function Scheduler({ navigation }) {
       handleChange('loadingPublish', false)
     } catch (error) {
       handleChange('loadingPublish', false)
-      const showWError = Object.values(error.response?.data?.error)
+      const showWError = error.response?.data?.error
       if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+        Toast.show(`Error: ${showWError}`)
       } else {
         Toast.show(`Error: ${JSON.stringify(error)}`)
       }

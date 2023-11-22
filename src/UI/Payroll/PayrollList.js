@@ -23,6 +23,7 @@ import { Modal } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Strings from '../../res/Strings'
 import PrimaryTextInput from '../Common/PrimaryTextInput'
+import { currencyFormatIntl } from '../../Utils/number'
 
 export default function EmployeeListScene({ navigation }) {
   const { earnings, earningLoading, _getEarnings } = useContext(AppContext)
@@ -40,29 +41,9 @@ export default function EmployeeListScene({ navigation }) {
     setState(pre => ({ ...pre, [key]: value }))
   }
 
-  const _getAllEmployee = async () => {
-    try {
-      handleChange('loading', true)
-      const token = await AsyncStorage.getItem('token')
-      const res = await getAllEmployee(token)
-      handleChange('loading', false)
-      handleChange('allEmployee', res?.data?.results)
-    } catch (error) {
-      handleChange('loading', false)
-      // console.warn("err", error?.response?.data)
-      const showWError = Object.values(error.response?.data?.error)
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
-    }
-  }
-
   useFocusEffect(
     useCallback(() => {
       _getEarnings('')
-      _getAllEmployee()
     }, [])
   )
 
@@ -161,7 +142,9 @@ export default function EmployeeListScene({ navigation }) {
                 <Text style={styles.job}>{item?.employee_position}</Text>
                 <Text
                   style={styles.location}
-                >{`Hourly rate: $${item?.employee_hourly_rate}/hr`}</Text>
+                >{`Hourly rate: ${currencyFormatIntl(
+                  item?.employee_hourly_rate
+                )}/hr`}</Text>
               </View>
             </View>
             <View
@@ -182,7 +165,9 @@ export default function EmployeeListScene({ navigation }) {
                   {item?.employee_hours + 'h'}
                 </Text>
                 <Text style={styles.title}>
-                  {!isDisplay ? 'N/A' : '$' + item?.employee_earnings}
+                  {!isDisplay
+                    ? 'N/A'
+                    : currencyFormatIntl(item?.employee_earnings)}
                 </Text>
               </View>
               {/* <Text style={styles.message}>View Details</Text> */}

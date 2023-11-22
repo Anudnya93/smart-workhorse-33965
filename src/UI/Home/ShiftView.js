@@ -30,6 +30,7 @@ import PrimaryTextInput from '../Common/PrimaryTextInput'
 import moment from 'moment-timezone'
 import { SvgXml } from 'react-native-svg'
 import ClockINOUT from './ClockINOUT'
+import { checkError } from '../../../App'
 
 export default function ShiftView() {
   const navigation = useNavigation()
@@ -200,14 +201,7 @@ export default function ShiftView() {
     } catch (error) {
       console.log(JSON.stringify(error.response))
       handleChange('loadingSubmit', false)
-      const showWError = Object.values(
-        error.response?.data || error.response?.data?.error
-      )
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 

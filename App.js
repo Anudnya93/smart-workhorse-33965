@@ -28,6 +28,25 @@ import PushNotification from 'react-native-push-notification'
 
 let timeout
 
+const checkError = error => {
+  const showWError = error.response?.data?.error
+    ? error.response?.data?.error
+    : error.response?.data
+    ? Object.values(error.response?.data)
+    : ''
+  if (showWError.length > 0) {
+    if (showWError.includes('not active')) {
+      Toast.show(
+        'Please visit https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then'
+      )
+    } else {
+      Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+    }
+  } else {
+    Toast.show(`Error: ${JSON.stringify(error)}`)
+  }
+}
+
 const App = () => {
   const [user, setUser] = useState(null)
   const [adminProfile, setAdminProfile] = useState(null)
@@ -60,16 +79,7 @@ const App = () => {
       setCities(cities?.data)
       setStates(states?.data?.results)
     } catch (error) {
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -97,16 +107,7 @@ const App = () => {
       }
     } catch (error) {
       setLoadingCity(false)
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -118,24 +119,7 @@ const App = () => {
       // console.log({ schedules: res })
       setSchedules(res?.data?.response)
     } catch (error) {
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        if (
-          showWError[0] === 'Business Subscription currently is not active.'
-        ) {
-          Toast.show(
-            'Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then'
-          )
-        } else {
-          Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-        }
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -149,24 +133,7 @@ const App = () => {
       setEarningLoading(false)
     } catch (error) {
       setEarningLoading(false)
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        if (
-          showWError[0] === 'Business Subscription currently is not active.'
-        ) {
-          Toast.show(
-            'Please visit Https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then'
-          )
-        } else {
-          Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-        }
-      } else {
-        Toast.show(`ErrorF  : ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -177,16 +144,7 @@ const App = () => {
       console.log('getleaveRequest', res?.data?.results)
       setLeaveRequest(res?.data?.results)
     } catch (error) {
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError)}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -196,17 +154,7 @@ const App = () => {
       const res = await getProfile(token)
       setAdminProfile(res?.data?.response)
     } catch (error) {
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        alert(error)
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -224,16 +172,7 @@ const App = () => {
         setupcomingShiftTimesDataList(res1?.data)
       }
     } catch (error) {
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -242,17 +181,7 @@ const App = () => {
       const token = await AsyncStorage.getItem('token')
       const res = await readDevice(payload, token)
     } catch (error) {
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        // Toast.show(`Error: ${JSON.stringify(error)}`)
-        Toast.show(`Error: ${error?.response?.data?.detail}`)
-      }
+      checkError(error)
     }
   }
 
@@ -262,16 +191,7 @@ const App = () => {
       const res = await getAllNotifications(token)
       setNotifications(res?.data?.results)
     } catch (error) {
-      const showWError = error.response?.data?.error
-        ? Object.values(error.response?.data?.error)
-        : error.response?.data
-        ? Object.values(error.response?.data)
-        : ''
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -318,3 +238,5 @@ const App = () => {
 }
 
 export default App
+
+export { checkError }
