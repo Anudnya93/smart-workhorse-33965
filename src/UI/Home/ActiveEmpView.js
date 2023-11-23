@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   View,
   Text,
@@ -6,11 +6,12 @@ import {
   Image,
   FlatList,
   TouchableOpacity
-} from "react-native"
-import { BaseScene, Button } from "../Common"
-import { Fonts, Colors } from "../../res"
-import AppContext from "../../Utils/Context"
-import userProfile from "../../res/Images/common/sample.png"
+} from 'react-native'
+import { BaseScene, Button } from '../Common'
+import { Fonts, Colors } from '../../res'
+import AppContext from '../../Utils/Context'
+import userProfile from '../../res/Images/common/sample.png'
+import Icon from '../Common/Icon'
 
 export default class ActiveEmpView extends BaseScene {
   static contextType = AppContext
@@ -27,7 +28,7 @@ export default class ActiveEmpView extends BaseScene {
 
   renderEmployeeCell(item) {
     return (
-      <View style={{ padding: 20, flexDirection: "row", alignItems: "center" }}>
+      <View style={{ padding: 20, flexDirection: 'row', alignItems: 'center' }}>
         <Image
           source={
             item?.profile_image ? { uri: item?.profile_image } : userProfile
@@ -37,7 +38,7 @@ export default class ActiveEmpView extends BaseScene {
             height: 50,
             borderRadius: 8,
             marginRight: 10,
-            resizeMode: "cover"
+            resizeMode: 'cover'
           }}
         />
         <View>
@@ -52,19 +53,18 @@ export default class ActiveEmpView extends BaseScene {
     const { isActive } = this.state
     return (
       <TouchableOpacity
-        onPress={() => this.handleChange("isActive", !isActive)}
+        onPress={() => this.handleChange('isActive', !isActive)}
         style={styles.upperView}
       >
-        <Text style={styles.title}>{this.ls("activeEmployees")}</Text>
-        <Image
-          {...this.images("arrowDown")}
-          style={[
-            this.images("arrowDown").style,
-            {
-              tintColor: "black",
-              transform: [{ rotate: isActive ? "180deg" : "0deg" }]
-            }
-          ]}
+        <Text style={styles.title}>{this.ls('activeEmployees')}</Text>
+        <Icon
+          name={isActive ? 'angle-up' : 'angle-down'}
+          family="font-awesome"
+          style={{
+            position: 'absolute',
+            right: 20
+          }}
+          size={30}
         />
       </TouchableOpacity>
     )
@@ -74,7 +74,7 @@ export default class ActiveEmpView extends BaseScene {
     return (
       <View style={styles.bottomView}>
         <Text style={styles.title}>
-          {this.ls("payPeriod")} {upcomingShiftData?.total_hours || 0}h
+          {this.ls('payPeriod')} {upcomingShiftData?.total_hours || 0}h
         </Text>
       </View>
     )
@@ -106,36 +106,36 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 20,
     borderWidth: 0.5,
-    borderColor: "#bfefec"
+    borderColor: '#bfefec'
   },
   upperView: {
-    backgroundColor: "#dedede",
+    backgroundColor: '#dedede',
     borderRadius: 10,
     height: 80,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 20
   },
   bottomView: {
-    backgroundColor: "#dedede",
+    backgroundColor: '#dedede',
     borderRadius: 10,
     marginBottom: 40,
     height: 80,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 20
   },
   title: {
     ...Fonts.poppinsMedium(22),
     color: Colors.TEXT_COLOR
   },
   footerButton: {
-    marginTop: "15%"
+    marginTop: '15%'
   },
   description: {
     ...Fonts.poppinsRegular(14),
     color: Colors.TEXT_COLOR,
-    textAlign: "left",
+    textAlign: 'left',
     marginTop: 10
   },
   image: {

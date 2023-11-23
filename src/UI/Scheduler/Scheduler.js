@@ -60,6 +60,8 @@ export default function Scheduler({ navigation }) {
     }, [])
   )
 
+  console.log({ schedules })
+
   const {
     mode,
     date_text,
@@ -80,7 +82,6 @@ export default function Scheduler({ navigation }) {
   }
 
   function CustomEvent(props) {
-    console.log({ event: props.event })
     const [renderedHeight, setRenderedHeight] = useState(0)
 
     return (
@@ -116,9 +117,6 @@ export default function Scheduler({ navigation }) {
             <SvgXml xml={DRAFTED} />
           </View>
         )}
-        {console.log({
-          logo: props.event?.selected_tasks?.[0]?.worksite?.logo
-        })}
         <FastImage
           source={
             props.event?.selected_tasks?.[0]?.worksite?.logo
