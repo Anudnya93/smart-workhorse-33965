@@ -728,7 +728,7 @@ export default function AddEvents({ navigation, route }) {
         />
         <Text style={styles.inputText}>Select all</Text>
       </View>
-      {console.log({ tasks: JSON.stringify(getWorksiteTask(worksite)) })}
+      {/* {console.log({ tasks: JSON.stringify(getWorksiteTask(worksite)) })} */}
       {frequencyTypes.map(item => {
         return (
           availableTasks()?.filter(t => t?.frequency_of_task == item?.value)
