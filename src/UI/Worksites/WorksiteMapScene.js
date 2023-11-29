@@ -17,8 +17,9 @@ import Geolocation from '@react-native-community/geolocation'
 import Geocoder from 'react-native-geocoding'
 import haversine from 'haversine'
 import { useFocusEffect } from '@react-navigation/native'
+import { GEOCODE } from '../../../env'
 
-Geocoder.init('AIzaSyCndwU13bTZ8w_yhP4ErbFGE1Wr9oiro8Q')
+Geocoder.init(GEOCODE)
 
 const { width, height } = Dimensions.get('window')
 const mapStyle = [
@@ -194,7 +195,7 @@ export default function WorksiteMapScene({ navigation, route }) {
         title={Strings.worksites}
         leftButton
       />
-      <View style={{ width: '100%', height: '73%' }}>
+      <View style={{ width: '100%', height: '100%' }}>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
@@ -238,9 +239,17 @@ export default function WorksiteMapScene({ navigation, route }) {
           )}
         </MapView>
       </View>
-      <View style={{ height: '20%', width: '100%', padding: 20 }}>
+      <View
+        style={{
+          position: 'absolute',
+          width: '100%',
+          bottom: 0,
+          padding: 20,
+          backgroundColor: '#fff'
+        }}
+      >
         <Text style={{ ...Fonts.poppinsRegular(14), color: Colors.BLUR_TEXT }}>
-          Street Address:{' '}
+          Worksite Location:{' '}
           <Text style={{ color: Colors.TEXT_COLOR }}>
             {worksiteData?.location}
           </Text>
@@ -272,7 +281,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
-    backgroundColor: Colors.WHITE
+    backgroundColor: Colors.WHITE,
+    position: 'relative'
   },
   title: {
     ...Fonts.poppinsMedium(22),

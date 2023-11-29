@@ -36,6 +36,7 @@ import { useCallback } from 'react'
 import { FlatList } from 'react-native'
 import { Image } from 'react-native'
 import userProfile from '../../res/Images/common/sample.png'
+import { checkError } from '../../../App'
 
 const MandatoryFields = [
   'start_date',
@@ -259,15 +260,7 @@ export default function AddEvents({ navigation, route }) {
       navigation.goBack()
     } catch (error) {
       handleChange('loading', false)
-      const showWError = Object.values(error.response?.data)
-      const showWError1 = Object.values(error.response?.data?.error)
-      if (showWError1?.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError1[0])}`)
-      } else if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
 
@@ -735,7 +728,7 @@ export default function AddEvents({ navigation, route }) {
         />
         <Text style={styles.inputText}>Select all</Text>
       </View>
-      {console.log({ tasks: JSON.stringify(getWorksiteTask(worksite)) })}
+      {/* {console.log({ tasks: JSON.stringify(getWorksiteTask(worksite)) })} */}
       {frequencyTypes.map(item => {
         return (
           availableTasks()?.filter(t => t?.frequency_of_task == item?.value)

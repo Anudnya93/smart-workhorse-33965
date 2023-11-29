@@ -252,7 +252,7 @@ export default function AddEmployeeScene({ navigation, route }) {
       handleChange('loading', false)
       console.warn('err', error?.response?.data)
       const showWError = error?.response?.data
-      if (showWError?.error && showWError?.error?.[0]?.includes('remain')) {
+      if (showWError?.error && showWError?.error?.includes('max')) {
         popUpRef.current = {
           title: 'Limit Reached!',
           desc: 'Looks like your business is growing! You\nhave maxed out the number of employees\nfor your current subscription, please click\nthe button below to adjust your plan in\norder to add more employees, congrats on\nyour success.',

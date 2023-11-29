@@ -120,7 +120,7 @@ const AddressInput = ({ callback, style, address, handlesave }) => {
   return (
     <View>
       <TouchableOpacity
-        style={[styles.inputStyle, style]}
+        style={[styles.inputStyle, { paddingTop: 15 }, style]}
         onPress={() => setModalVisible(true)}
       >
         <Text
@@ -138,10 +138,12 @@ const AddressInput = ({ callback, style, address, handlesave }) => {
           onRequestClose={() => setModalVisible(false)}
         >
           <>
-            <View style={{ marginTop: 22 }}>
+            <View style={{ marginTop: Platform.OS == 'ios' ? 50 : 25 }}>
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(false)
+                  searchRef.current = ''
+                  handleClose()
                 }}
                 style={styles.close}
               >

@@ -10,7 +10,8 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  Linking
 } from 'react-native'
 import Toast from 'react-native-simple-toast'
 import { getAllEmployee } from '../../api/business'
@@ -18,6 +19,13 @@ import { Fonts, Colors } from '../../res'
 import Sample from '../../res/Images/common/sample.png'
 import { currencyFormatIntl } from '../../Utils/number'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import ConfirmPopUp from '../Common/ConfirmPopUp'
+
+const popupdetails = {
+  title: 'Not Subscribed!',
+  desc: 'In order to add employees,\nyou need to subscribe first.',
+  confirmText: 'Subscribe'
+}
 
 export default function EmployeeListScene({ navigation, callback }) {
   const [state, setState] = useState({
@@ -26,6 +34,8 @@ export default function EmployeeListScene({ navigation, callback }) {
     ApiCalled: false
   })
   const { loading, allEmployee, ApiCalled } = state
+  const [visible, setVisible] = useState(false)
+  const [noSub, setNoSub] = useState(false)
 
   const handleChange = (key, value) => {
     setState(pre => ({ ...pre, [key]: value }))
@@ -50,12 +60,15 @@ export default function EmployeeListScene({ navigation, callback }) {
       handleChange('loading', false)
       handleChange('ApiCalled', true)
       handleChange('allEmployee', res?.data?.results)
+      if (noSub) {
+        setNoSub(false)
+      }
     } catch (error) {
       handleChange('loading', false)
       handleChange('ApiCalled', true)
-      Toast.show(
-        `Error: ${error.response?.data[Object.keys(error.response?.data)[0]]}`
-      )
+      if (error?.response?.data?.error?.includes('not active')) {
+        setNoSub(true)
+      }
     }
   }
   return (
@@ -70,6 +83,7 @@ export default function EmployeeListScene({ navigation, callback }) {
       )}
       {ApiCalled && (
         <FlatList
+          showsVerticalScrollIndicator={false}
           style={{ width: '100%' }}
           data={allEmployee}
           ListEmptyComponent={() => (
@@ -89,7 +103,11 @@ export default function EmployeeListScene({ navigation, callback }) {
               <TouchableOpacity
                 style={styles.Add}
                 onPress={() => {
-                  navigation.navigate('addEmployee')
+                  if (noSub) {
+                    setVisible(true)
+                  } else {
+                    navigation.navigate('addEmployee')
+                  }
                 }}
               >
                 <Text
@@ -155,6 +173,16 @@ export default function EmployeeListScene({ navigation, callback }) {
           )}
         />
       )}
+      <ConfirmPopUp
+        visible={visible}
+        setVisible={setVisible}
+        desc={popupdetails.desc}
+        title={popupdetails.title}
+        confirmText={popupdetails.confirmText}
+        confirmHandler={() => {
+          Linking.openURL('https://www.cleanr.pro')
+        }}
+      />
     </View>
   )
 }
