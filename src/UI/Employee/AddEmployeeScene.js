@@ -62,7 +62,7 @@ export default function AddEmployeeScene({ navigation, route }) {
     phone: item?.contact?.phone || '',
     mobile: item?.contact?.mobile || '',
     email: item?.contact?.email || '',
-    date_of_birth: item?.personal_information?.date_of_birth || '',
+    date_of_birth: item?.personal_information?.date_of_birth ? moment(item?.personal_information?.date_of_birth).format('MM/DD/YYYY') : '',
     address_line_one: item?.address_information?.address_line_one || '',
     address_line_two: item?.address_information?.address_line_two || '',
     city: item?.address_information?.city || '',

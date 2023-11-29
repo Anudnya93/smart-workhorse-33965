@@ -125,7 +125,7 @@ class PrimaryTextInput extends Component {
           showIcon={false}
           confirmBtnText={'Confirm'}
           cancelBtnText={'Cancel'}
-          format=" MM/DD/YYYY"
+          format="MM/DD/YYYY"
           date={new Date(this.props.text ? this.props.text : Date.now())}
           maxDate={this.props.maxDate || new Date()}
           minDate={this.props.minDate || new Date('1900/01/01')}
