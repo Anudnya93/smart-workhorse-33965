@@ -54,14 +54,14 @@ const ConfirmPopUp = ({
   }
   return (
     <Modal visible={visible} transparent>
-      <TouchableOpacity style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.modalView}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.desc}>{desc}</Text>
           {renderButton()}
           {renderCancelButton()}
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   )
 }

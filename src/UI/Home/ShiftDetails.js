@@ -24,8 +24,10 @@ import Header from '../Common/Header'
 import Geolocation from '@react-native-community/geolocation'
 import Geocoder from 'react-native-geocoding'
 import moment from 'moment-timezone'
+import { checkError } from '../../../App'
+import { GEOCODE } from '../../../env'
 
-Geocoder.init('AIzaSyCndwU13bTZ8w_yhP4ErbFGE1Wr9oiro8Q')
+Geocoder.init(GEOCODE)
 const { width, height } = Dimensions.get('window')
 const ASPECT_RATIO = width / height
 let LATITUDE_DELTA = 0.0922
@@ -150,12 +152,7 @@ export default function ShiftDetails({ navigation }) {
       navigation.goBack()
     } catch (error) {
       handleChange('loading', false)
-      const showWError = Object.values(error.response?.data)
-      if (showWError.length > 0) {
-        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
-      } else {
-        Toast.show(`Error: ${JSON.stringify(error)}`)
-      }
+      checkError(error)
     }
   }
   const renderClockButton = () => {

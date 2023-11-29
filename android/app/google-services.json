@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "987250699049",
+    "firebase_url": "https://cleanr-1e54f-default-rtdb.firebaseio.com",
     "project_id": "cleanr-1e54f",
     "storage_bucket": "cleanr-1e54f.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "987250699049-p777np89bet8j0esn6jg4bos41djtlre.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "987250699049-7fakavb2qgkpq4up5uk5s7aod09rk0j3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pro.cleanr.cleanrapp"
+              }
             }
           ]
         }
