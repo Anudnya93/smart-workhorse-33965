@@ -260,7 +260,15 @@ export default function AddEvents({ navigation, route }) {
       navigation.goBack()
     } catch (error) {
       handleChange('loading', false)
-      checkError(error)
+      const showWError = Object.values(error.response?.data)
+      const showWError1 = Object.values(error.response?.data?.error)
+      if (showWError1?.length > 0) {
+        Toast.show(`Error: ${JSON.stringify(showWError1[0])}`)
+      } else if (showWError.length > 0) {
+        Toast.show(`Error: ${JSON.stringify(showWError[0])}`)
+      } else {
+        Toast.show(`Error: ${JSON.stringify(error)}`)
+      }
     }
   }
 

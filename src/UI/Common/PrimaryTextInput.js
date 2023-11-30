@@ -142,9 +142,13 @@ class PrimaryTextInput extends Component {
               }
             ],
             dateText: styles.dateText,
-            datePicker: { justifyContent: 'center' }
+            datePicker: { justifyContent: 'center' },
+            disabled: {
+              backgroundColor: 'transparent'
+            }
           }}
           onDateChange={text => this.onChangeText(text)}
+          disabled={this.props.disabled || false}
         />
       )
     }

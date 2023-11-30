@@ -34,7 +34,10 @@ const checkError = error => {
     : error.response?.data
     ? Object.values(error.response?.data)
     : ''
-  if (showWError.length > 0) {
+
+  if (error?.response?.data?.error?.['start time & end time']) {
+    Toast.show(`Error: ${error?.response?.data['start time & end time']}`)
+  } else if (showWError.length > 0) {
     if (showWError.includes('not active')) {
       Toast.show(
         'Please visit https://www.cleanr.pro to finalize your business subscription - most functionality will be limited until then'
@@ -119,6 +122,7 @@ const App = () => {
       // console.log({ schedules: res })
       setSchedules(res?.data?.response)
     } catch (error) {
+      console.log(error)
       checkError(error)
     }
   }
@@ -132,6 +136,7 @@ const App = () => {
       setEarnings(res?.data)
       setEarningLoading(false)
     } catch (error) {
+      console.log(error)
       setEarningLoading(false)
       checkError(error)
     }

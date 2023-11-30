@@ -248,10 +248,19 @@ export default class LoginScene extends BaseScene {
       })
       Toast.show('Signed up Successfully, Please verify your account!')
     } catch (error) {
-      // console.warn("error", error)
+      console.log('error', JSON.stringify(error?.response?.data))
       this.handleChange('loading', false, true)
-      const errorText = Object.values(error?.response?.data)
-      Toast.show(`Error: ${errorText[0]}`)
+      const errorText = error?.response?.data
+      if (
+        typeof errorText === 'string' &&
+        errorText.includes('Phone number is not correct')
+      ) {
+        Toast.show("Error: Phone number is not correct")
+      } else if (error?.response?.data?.email) {
+        Toast.show(`Error: ${error?.response?.data?.email}`)
+      } else {
+        Toast.show(`Error: ${JSON.stringify(errorText)}`)
+      }
     }
   }
 
