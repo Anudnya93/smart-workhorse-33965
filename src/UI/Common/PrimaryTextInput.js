@@ -228,7 +228,11 @@ class PrimaryTextInput extends Component {
             >
               <Text
                 style={{
-                  color: !this.state.text ? Colors.BLUR_TEXT : Colors.BLACK,
+                  color: !this.state.text
+                    ? Platform.OS == 'ios'
+                      ? '#bbb'
+                      : '#666'
+                    : Colors.BLACK,
                   ...Fonts.poppinsRegular(14),
                   textTransform: 'capitalize'
                 }}

@@ -335,7 +335,9 @@ export default function AddWorksiteScene({ navigation, route }) {
                       color:
                         clear_frequency_by_day?.length > 0
                           ? Colors.BLACK
-                          : Colors.BLUR_TEXT
+                          : Platform.OS == 'ios'
+                          ? '#bbb'
+                          : '#666'
                     }}
                   >
                     {clear_frequency_by_day?.length > 0
@@ -404,7 +406,7 @@ export default function AddWorksiteScene({ navigation, route }) {
         )
       } else if (fields.key === 'desired_time') {
         return (
-          <View style={styles.dateInput}>
+          <View style={[styles.dateInput, { marginTop: 5, marginBottom: 10 }]}>
             <TouchableOpacity
               style={[
                 styles.inputStyle,
@@ -416,7 +418,11 @@ export default function AddWorksiteScene({ navigation, route }) {
                 style={[
                   styles.inputText,
                   {
-                    color: desired_time ? Colors.TEXT_COLOR : Colors.BLUR_TEXT
+                    color: desired_time
+                      ? Colors.TEXT_COLOR
+                      : Platform.OS == 'ios'
+                      ? '#bbb'
+                      : '#666'
                   }
                 ]}
               >
@@ -486,7 +492,9 @@ export default function AddWorksiteScene({ navigation, route }) {
                     ? Colors.BUTTON_BG1
                     : state.state
                     ? Colors.BLACK
-                    : Colors.BLUR_TEXT
+                    : Platform.OS == 'ios'
+                    ? '#bbb'
+                    : '#666'
               }}
             >
               {state.state ||

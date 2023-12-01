@@ -33,6 +33,7 @@ import PrimaryTextInput from '../Common/PrimaryTextInput'
 import Toast from 'react-native-simple-toast'
 import { Platform } from 'react-native'
 import { Image } from 'react-native'
+import { widthPercentageToDP } from 'react-native-responsive-screen'
 
 export default function CreateInspection({ navigation, route }) {
   const [state, setState] = useState({
@@ -164,7 +165,7 @@ export default function CreateInspection({ navigation, route }) {
       handleChange('tasks', [])
       handleChange('areas', [])
       handleChange('photo', '')
-      Toast.show("Inspection report has been created")
+      Toast.show('Inspection report has been created')
       navigation.goBack()
     } catch (error) {
       handleChange('loadingCreate', false)
@@ -262,8 +263,13 @@ export default function CreateInspection({ navigation, route }) {
             >
               <Text
                 style={{
-                  ...Fonts.poppinsRegular(12),
-                  color: tasks?.length > 0 ? Colors.BLACK : Colors.BLUR_TEXT
+                  ...Fonts.poppinsRegular(14),
+                  color:
+                    tasks?.length > 0
+                      ? Colors.BLACK
+                      : Platform.OS == 'ios'
+                      ? '#bbb'
+                      : '#666'
                 }}
               >
                 {tasks?.length > 0
@@ -281,7 +287,15 @@ export default function CreateInspection({ navigation, route }) {
               />
             </View>
           </MenuTrigger>
-          <MenuOptions style={{ width: '100%' }}>
+          <MenuOptions
+            optionsContainerStyle={{
+              width: '90%',
+              marginLeft: 20,
+              marginTop: 60,
+              borderRadius: 8
+            }}
+            style={{ width: '100%' }}
+          >
             {worksiteTasks?.map(item => {
               const isSelected = tasks?.some(e => e === item?.value)
               return (

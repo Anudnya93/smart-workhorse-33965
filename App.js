@@ -91,7 +91,7 @@ const App = () => {
     const body = payload || ''
     const token = await AsyncStorage.getItem('token')
     const cities = await getCities(body, token)
-    console.log({ data: cities.data })
+    // console.log({ data: cities.data })
     setCities(cities?.data)
     setLoadingCity(false)
   }
@@ -122,7 +122,7 @@ const App = () => {
       // console.log({ schedules: res })
       setSchedules(res?.data?.response)
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       checkError(error)
     }
   }
@@ -136,7 +136,7 @@ const App = () => {
       setEarnings(res?.data)
       setEarningLoading(false)
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       setEarningLoading(false)
       checkError(error)
     }
@@ -146,7 +146,7 @@ const App = () => {
     try {
       const token = await AsyncStorage.getItem('token')
       const res = await getleaveRequest(token)
-      console.log('getleaveRequest', res?.data?.results)
+      // console.log('getleaveRequest', res?.data?.results)
       setLeaveRequest(res?.data?.results)
     } catch (error) {
       checkError(error)

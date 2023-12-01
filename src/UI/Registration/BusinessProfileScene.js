@@ -396,7 +396,9 @@ export default function BusinessProfileScene({ navigation, route }) {
                     ? Colors.BUTTON_BG1
                     : city_name
                     ? Colors.BLACK
-                    : Colors.BLUR_TEXT
+                    : Platform.OS == 'ios'
+                    ? '#aaa'
+                    : '#666'
               }}
             >
               {city_name ||
@@ -441,7 +443,9 @@ export default function BusinessProfileScene({ navigation, route }) {
                     ? Colors.BUTTON_BG1
                     : state_name
                     ? Colors.BLACK
-                    : Colors.BLUR_TEXT
+                    : Platform.OS == 'ios'
+                    ? '#bbb'
+                    : '#666'
               }}
             >
               {state_name ||

@@ -62,7 +62,9 @@ export default function AddEmployeeScene({ navigation, route }) {
     phone: item?.contact?.phone || '',
     mobile: item?.contact?.mobile || '',
     email: item?.contact?.email || '',
-    date_of_birth: item?.personal_information?.date_of_birth ? moment(item?.personal_information?.date_of_birth).format('MM/DD/YYYY') : '',
+    date_of_birth: item?.personal_information?.date_of_birth
+      ? moment(item?.personal_information?.date_of_birth).format('MM/DD/YYYY')
+      : '',
     address_line_one: item?.address_information?.address_line_one || '',
     address_line_two: item?.address_information?.address_line_two || '',
     city: item?.address_information?.city || '',
@@ -444,7 +446,11 @@ export default function AddEmployeeScene({ navigation, route }) {
             <Text
               style={{
                 ...Fonts.poppinsRegular(14),
-                color: city_name ? Colors.BLACK : Colors.BLUR_TEXT
+                color: city_name
+                  ? Colors.BLACK
+                  : Platform.OS == 'ios'
+                  ? '#aaa'
+                  : '#666'
               }}
             >
               {city_name ||
@@ -484,7 +490,11 @@ export default function AddEmployeeScene({ navigation, route }) {
             <Text
               style={{
                 ...Fonts.poppinsRegular(14),
-                color: state_name ? Colors.BLACK : Colors.BLUR_TEXT
+                color: state_name
+                  ? Colors.BLACK
+                  : Platform.OS == 'ios'
+                  ? '#bbb'
+                  : '#666'
               }}
             >
               {state_name ||
