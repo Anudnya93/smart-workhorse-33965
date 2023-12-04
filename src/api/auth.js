@@ -41,15 +41,15 @@ export const forgotpassword = payload => {
 }
 
 export const getProfile = token => {
-  return API.get("api/v1/profile/", token)
+  return API.get('api/v1/profile/', token)
 }
 
 export const createAdminProfile = (payload, token) => {
-  return API.post("api/v1/profile/", payload, token)
+  return API.post('api/v1/profile/', payload, token)
 }
 
 export const updateAdminProfile = (payload, token) => {
-  return API.put("api/v1/profile/", payload, token)
+  return API.put('api/v1/profile/', payload, token)
 }
 
 export const getMyReviews = token => {
@@ -85,7 +85,7 @@ export const veriPhoneOTP = (body, token) => {
 }
 
 export const getCountries = token => {
-  return API.get("api/v1/country/", token)
+  return API.get('api/v1/country/', token)
 }
 
 export const getCities = (body, token) => {
@@ -93,15 +93,16 @@ export const getCities = (body, token) => {
 }
 
 export const getStates = token => {
-  return API.get("api/v1/state/", token)
+  return API.get('api/v1/state/', token)
 }
 
 export const readDevice = (payload, token) => {
-  return API.post("api/v1/device/", payload, token)
+  console.log({ payload, token })
+  return API.post('api/v1/device/', payload, token)
 }
 
 export const getAllNotifications = token => {
-  return API.get("api/v1/notification/", token)
+  return API.get('api/v1/notification/', token)
 }
 
 export const readNotification = (id, token) => {
@@ -109,13 +110,13 @@ export const readNotification = (id, token) => {
 }
 
 export const deleteAccount = token => {
-  return API.delete("api/v1/delete_account/", {}, token)
+  return API.delete('api/v1/delete_account/', {}, token)
 }
 
 export const appFeedback = (payload, token) => {
-  return API.post("api/v1/app_feedback/", payload, token)
+  return API.post('api/v1/app_feedback/', payload, token)
 }
 
-export const checkEmailAvailability = (payload) => {
-  return API.post("api/v1/check-email-existence/", payload)
+export const checkEmailAvailability = payload => {
+  return API.post('api/v1/check-email-existence/', payload)
 }

@@ -171,22 +171,27 @@ function AuthLoading({ navigation }) {
   }, [])
 
   async function registerAppWithFCM() {
-    await messaging().deleteToken()
-    const getToken = await messaging().getToken()
-    // await messaging().registerDeviceForRemoteMessages()
-    const token = await AsyncStorage.getItem('token')
-    const user = await AsyncStorage.getItem('user')
-    const userData = JSON.parse(user)
-    // console.warn("getToken", getToken)
-    const payloadRead = {
-      device_id: getToken, // Send if you can otherwise remove field
-      registration_id: getToken,
-      active: true,
-      name: userData?.first_name,
-      type: Platform.OS
-    }
-    if (token && user) {
-      _readDevice(payloadRead)
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken')
+    if (!fcmtoken) {
+      const getToken = await messaging().getToken()
+      await AsyncStorage.setItem('fcmtoken', getToken)
+      // await messaging().registerDeviceForRemoteMessages()
+      const token = await AsyncStorage.getItem('token')
+      const user = await AsyncStorage.getItem('user')
+      const userData = JSON.parse(user)
+      // console.warn("getToken", getToken)
+      const payloadRead = {
+        device_id: getToken, // Send if you can otherwise remove field
+        registration_id: getToken,
+        active: true,
+        name: userData?.first_name,
+        type: Platform.OS
+      }
+      if (token && user) {
+        _readDevice(payloadRead)
+      }
+    } else {
+      console.log('oldToken', fcmtoken)
     }
   }
 
@@ -196,7 +201,8 @@ function AuthLoading({ navigation }) {
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL
     // console.warn("enabled", enabled)
-    registerAppWithFCM()
+    AsyncStorage.setItem('fcmenabled', enabled ? 'true' : '')
+    // registerAppWithFCM()
     if (enabled) {
     }
   }

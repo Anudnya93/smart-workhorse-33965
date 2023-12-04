@@ -75,6 +75,7 @@ export default class SettingScene extends BaseScene {
     setAdminProfile(null)
     await AsyncStorage.removeItem('token')
     await AsyncStorage.removeItem('user')
+    await AsyncStorage.removeItem('fcmtoken')
     navigation.navigate('AuthLoading')
   }
 
