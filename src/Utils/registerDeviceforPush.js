@@ -9,6 +9,7 @@ async function registerAppWithFCM() {
   if (fcmenabled != '' && !fcmtoken) {
     console.log(typeof fcmtoken)
     const getToken = await messaging().getToken()
+    await AsyncStorage.setItem('fcmtoken', getToken)
     const token = await AsyncStorage.getItem('token')
     const user = await AsyncStorage.getItem('user')
     const userData = JSON.parse(user)

@@ -120,3 +120,7 @@ export const appFeedback = (payload, token) => {
 export const checkEmailAvailability = payload => {
   return API.post('api/v1/check-email-existence/', payload)
 }
+
+export const deleteFCMToken = (payload, token) => {
+  return API.post('api/v1/delete-fcm/', payload, token)
+}

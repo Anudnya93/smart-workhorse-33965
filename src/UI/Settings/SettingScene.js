@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import AppContext from '../../Utils/Context'
 import LogoutModal from './LogoutModal'
 import DeleteModal from './DeleteModal'
-import { deleteAccount } from '../../api/auth'
+import { deleteAccount, deleteFCMToken } from '../../api/auth'
 import Toast from 'react-native-simple-toast'
 import { Linking } from 'react-native'
 import { Alert } from 'react-native'
@@ -69,6 +69,16 @@ export default class SettingScene extends BaseScene {
   }
 
   logout = async () => {
+    const token = await AsyncStorage.getItem('token')
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken')
+    deleteFCMToken(
+      {
+        'fcm-token': fcmtoken
+      },
+      token
+    ).then(deleteres => {
+      console.log({ deleteres })
+    })
     const { setAdminProfile, setUser } = this.context
     const navigation = this.props.navigation
     setUser(null)
