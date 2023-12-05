@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import {
   View,
   StyleSheet,
@@ -7,7 +7,8 @@ import {
   Image,
   TouchableOpacity,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from 'react-native'
 import NotificationIcon from '../../res/Images/common/notificationIcon.png'
 import clock from '../../res/Images/common/clock.png'
@@ -32,12 +33,20 @@ const Notifications = ({ navigation }) => {
     loading: false,
     readed: [],
     unreaded: []
-  }) // Karachi
+  })
+  const [refreshing, setRefreshing] = useState(false)
 
   const { loading, unreaded, readed } = state
   const handleChange = (name, value) => {
     setState(pre => ({ ...pre, [name]: value }))
   }
+
+  useEffect(() => {
+    const sub = navigation.addListener('focus', () => {
+      handleRefresh()
+    })
+    return () => sub()
+  }, [navigation])
 
   useFocusEffect(
     useCallback(() => {
@@ -75,7 +84,6 @@ const Notifications = ({ navigation }) => {
   }
 
   const _renderItem = (item, index) => {
-    console.log({ notiitem: item })
     return (
       <View key={index} style={styles.list}>
         <View style={styles.listView}>
@@ -92,7 +100,7 @@ const Notifications = ({ navigation }) => {
           />
           <View
             style={{
-              flex: 7
+              width: '65%'
             }}
           >
             <Text
@@ -141,6 +149,12 @@ const Notifications = ({ navigation }) => {
     )
   }
 
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await _getNotification()
+    setRefreshing(false)
+  }
+
   return (
     <>
       <Header
@@ -149,6 +163,9 @@ const Notifications = ({ navigation }) => {
         onLeftPress={() => navigation.goBack()}
       />
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
         style={styles.container}
         contentContainerStyle={{ alignItems: 'center' }}
       >
@@ -288,7 +305,7 @@ const styles = StyleSheet.create({
   },
   optionView: {
     alignItems: 'center',
-    flex: 2
+    width: '20%'
   },
   titleStyle: {
     // color: colors.white,
@@ -347,7 +364,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 5,
-    flex: 2,
+    width: '15%',
     marginRight: 10
   }
 })

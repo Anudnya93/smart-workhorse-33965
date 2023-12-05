@@ -124,7 +124,12 @@ const AddressInput = ({ callback, style, address, handlesave }) => {
         onPress={() => setModalVisible(true)}
       >
         <Text
-          style={[styles.text, !selectedAddress && { color: '#666' }]}
+          style={[
+            styles.text,
+            !selectedAddress && {
+              color: Platform.OS == 'ios' ? '#bbb' : '#666'
+            }
+          ]}
           numberOfLines={1}
         >
           {selectedAddress ? selectedAddress : Strings.addressLine1 + '*'}

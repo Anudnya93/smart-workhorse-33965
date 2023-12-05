@@ -49,7 +49,11 @@ export default function EmployeeProfileScene({ navigation, route }) {
       userData?.last_name ||
       '',
     phone: adminProfile?.personal_information?.phone || '',
-    date_of_birth: adminProfile?.personal_information?.date_of_birth || '',
+    date_of_birth: adminProfile?.personal_information?.date_of_birth
+      ? moment(adminProfile?.personal_information?.date_of_birth).format(
+          'MM/DD/YYYY'
+        )
+      : '',
     profile_image: adminProfile?.personal_information?.profile_image || '',
     gender: adminProfile?.personal_information?.gender || '',
     first_name1: adminProfile?.emergency_contact?.first_name || '',

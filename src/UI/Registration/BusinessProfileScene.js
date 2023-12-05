@@ -70,7 +70,11 @@ export default function BusinessProfileScene({ navigation, route }) {
       userData?.name?.split(' ')[1] ||
       '',
     phone: adminProfile?.personal_information?.phone || userData?.phone || '',
-    date_of_birth: adminProfile?.personal_information?.date_of_birth || '',
+    date_of_birth: adminProfile?.personal_information?.date_of_birth
+      ? moment(adminProfile?.personal_information?.date_of_birth).format(
+          'MM/DD/YYYY'
+        )
+      : '',
     address_line_one: adminProfile?.business_address?.address_line_one || '',
     address_line_two: adminProfile?.business_address?.address_line_two || '',
     city: adminProfile?.business_address?.city || '',
@@ -392,7 +396,9 @@ export default function BusinessProfileScene({ navigation, route }) {
                     ? Colors.BUTTON_BG1
                     : city_name
                     ? Colors.BLACK
-                    : Colors.BLUR_TEXT
+                    : Platform.OS == 'ios'
+                    ? '#aaa'
+                    : '#666'
               }}
             >
               {city_name ||
@@ -437,7 +443,9 @@ export default function BusinessProfileScene({ navigation, route }) {
                     ? Colors.BUTTON_BG1
                     : state_name
                     ? Colors.BLACK
-                    : Colors.BLUR_TEXT
+                    : Platform.OS == 'ios'
+                    ? '#bbb'
+                    : '#666'
               }}
             >
               {state_name ||

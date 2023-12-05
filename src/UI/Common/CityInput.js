@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native'
 import Icon from './Icon'
 import { Fonts, Colors } from '../../res'
@@ -43,7 +44,9 @@ const CityInput = ({
                 ? Colors.BUTTON_BG1
                 : state
                 ? Colors.BLACK
-                : Colors.BLUR_TEXT
+                : Platform.OS == 'ios'
+                ? '#bbb'
+                : '#666'
             }}
           >
             {text}

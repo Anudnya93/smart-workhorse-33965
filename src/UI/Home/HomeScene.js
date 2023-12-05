@@ -4,13 +4,14 @@ import { BaseScene, Header } from '../Common'
 import { Fonts, Colors } from '../../res'
 import ShiftView from './ShiftView'
 import ActiveEmpView from './ActiveEmpView'
+import registerAppWithFCM from '../../Utils/registerDeviceforPush'
 export default class HomeScene extends BaseScene {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {}
   }
 
-  renderContent () {
+  renderContent() {
     return (
       <ScrollView nestedScrollEnabled={false} style={styles.childContainer}>
         <ShiftView />
@@ -19,7 +20,11 @@ export default class HomeScene extends BaseScene {
     )
   }
 
-  render () {
+  componentDidMount() {
+    registerAppWithFCM()
+  }
+
+  render() {
     return (
       <View style={styles.container}>
         <Header

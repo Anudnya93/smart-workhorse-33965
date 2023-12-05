@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import {
   ScrollView,
   View,
@@ -24,6 +24,8 @@ import { Icon } from 'react-native-elements'
 import Strings from '../../res/Strings'
 import PrimaryTextInput from '../Common/PrimaryTextInput'
 import { currencyFormatIntl } from '../../Utils/number'
+import { MultiSelect } from 'react-native-element-dropdown'
+import { Platform } from 'react-native'
 
 export default function EmployeeListScene({ navigation }) {
   const { earnings, earningLoading, _getEarnings } = useContext(AppContext)
@@ -33,13 +35,50 @@ export default function EmployeeListScene({ navigation }) {
     allEmployee: [],
     visible: false,
     name: '',
-    date: null
+    startDate: null,
+    endDate: null
   })
-  const { loading, visible, isDisplay, name, date } = state
+  const [selected, setSelected] = useState([])
+  const { loading, visible, isDisplay, name, startDate, endDate, allEmployee } =
+    state
 
   const handleChange = (key, value) => {
     setState(pre => ({ ...pre, [key]: value }))
   }
+
+  useEffect(() => {
+    _getAllEmployee()
+  }, [])
+
+  const _getAllEmployee = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token')
+      const res = await getAllEmployee(token)
+      handleChange(
+        'allEmployee',
+        res?.data?.results
+          .map(item => ({
+            name:
+              item.personal_information.first_name +
+              ' ' +
+              item.personal_information.last_name,
+            id: item?.id
+          }))
+          .map(item => {
+            return {
+              ...item,
+              label: item.name,
+              value: item.name
+            }
+          })
+          .sort((a, b) => a.label.localeCompare(b.label))
+      )
+    } catch (error) {
+      console.log({ error })
+    }
+  }
+
+  // console.log({ allEmployee })
 
   useFocusEffect(
     useCallback(() => {
@@ -47,11 +86,40 @@ export default function EmployeeListScene({ navigation }) {
     }, [])
   )
 
-  console.log({ earnings })
-
   const hideModal = () => {
     handleChange('selectedEvent', null)
     handleChange('visible', false)
+  }
+
+  const handleApplyFilter = () => {
+    const empstring =
+      selected.length > 0
+        ? (() => {
+            let ids = ''
+            selected.forEach(selection => {
+              const emp = allEmployee.find(item => item.name == selection)
+              if (emp) {
+                ids += `&employee=${emp.id}`
+              }
+            })
+            return ids
+          })()
+        : ''
+    let string = ''
+    if (empstring && startDate && endDate) {
+      string =
+        `?from=${moment(startDate, 'MM/DD/YYYY').format(
+          'YYYY-MM-DD'
+        )}&to=${moment(endDate, 'MM/DD/YYYY').format('YYYY-MM-DD')}` + empstring
+    } else if (empstring) {
+      string = '?' + empstring.slice(1)
+    } else if (startDate && endDate) {
+      string = `?from=${moment(startDate, 'MM/DD/YYYY').format(
+        'YYYY-MM-DD'
+      )}&to=${moment(endDate, 'MM/DD/YYYY').format('YYYY-MM-DD')}`
+    }
+    _getEarnings(string)
+    hideModal()
   }
 
   return (
@@ -120,7 +188,6 @@ export default function EmployeeListScene({ navigation }) {
         </View>
       )}
       <FlatList
-        scrollEnabled={false}
         style={{ width: '100%' }}
         data={earnings?.employees}
         renderItem={({ item, index }) => (
@@ -184,47 +251,79 @@ export default function EmployeeListScene({ navigation }) {
         <View style={styles.centerMode}>
           <View style={styles.modal}>
             <View style={{ alignItems: 'flex-end' }}>
-              <TouchableOpacity onPress={hideModal}>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelected([])
+                  handleChange('startDate', null)
+                  handleChange('endDate', null)
+                  hideModal()
+                }}
+              >
                 <Icon name="close" type="antdesign" />
               </TouchableOpacity>
             </View>
             <Text style={styles.titleHead}>{'Filter Payroll'}</Text>
-            <PrimaryTextInput
-              text={name}
-              key="name"
-              label="Enter employee name"
-              onChangeText={(text, isValid) => handleChange('name', text)}
+            <MultiSelect
+              maxHeight={200}
+              dropdownPosition="bottom"
+              style={styles.dropdownStyle}
+              placeholderStyle={[
+                styles.placeholderStyle,
+                selected.length > 0 && {
+                  color: Colors.TEXT_COLOR
+                }
+              ]}
+              selectedTextStyle={styles.selectedTextStyle}
+              containerStyle={{ marginTop: Platform.OS == 'android' ? -22 : 0 }}
+              fontFamily="Poppins-Regular"
+              data={allEmployee}
+              labelField="label"
+              valueField="value"
+              placeholder={
+                selected.length > 0 ? selected.join(', ') : 'Select employees'
+              }
+              value={selected}
+              onChange={item => {
+                setSelected(item)
+              }}
+              visibleSelectedItem={false}
+              itemTextStyle={styles.selectedTextStyle}
             />
             <PrimaryTextInput
-              text={date}
+              inputStyle={{ marginTop: 5 }}
+              text={startDate}
               dateType={true}
-              key="date"
-              label="Choose Date"
-              onChangeText={(text, isValid) => handleChange('date', text)}
+              key="startdate"
+              label="Choose start date"
+              onChangeText={(text, isValid) => handleChange('startDate', text)}
+            />
+            <PrimaryTextInput
+              disabled={!startDate}
+              minDate={startDate}
+              text={endDate}
+              dateType={true}
+              key="enddate"
+              label="Choose end date"
+              onChangeText={(text, isValid) => handleChange('endDate', text)}
             />
             <Button
               style={[styles.footerWhiteButton]}
-              onPress={() => {
-                _getEarnings(
-                  `?date=${moment(date).format('DD')}&month=${moment(
-                    date
-                  ).format('MM')}&year=${moment(date).format('YYYY')}`
-                )
-                hideModal()
-              }}
+              onPress={handleApplyFilter}
               title={'Apply filter'}
               color={Colors.BUTTON_BG}
+              disabled={startDate && !endDate}
             />
             <Button
               style={[styles.footerWhiteButton, { borderWidth: 0 }]}
               onPress={() => {
                 _getEarnings('')
-                handleChange('name', '')
-                handleChange('date', null)
+                setSelected([])
+                handleChange('startDate', null)
+                handleChange('endDate', null)
                 hideModal()
               }}
               isWhiteBg
-              title={'Cancel'}
+              title={'Reset'}
               color={Colors.BUTTON_BG}
             />
           </View>
@@ -257,7 +356,8 @@ const styles = StyleSheet.create({
   },
   titleHead: {
     ...Fonts.poppinsRegular(18),
-    color: Colors.TEXT_COLOR
+    color: Colors.TEXT_COLOR,
+    marginBottom: 10
   },
   title1: {
     ...Fonts.poppinsRegular(16),
@@ -343,5 +443,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     width: '90%'
+  },
+  selectedTextStyle: {
+    ...Fonts.poppinsRegular(14)
+  },
+  placeholderStyle: {
+    ...Fonts.poppinsRegular(14),
+    color: Colors.HOME_DES,
+    maxHeight: 20,
+    lineHeight: 20
+  },
+  dropdown: {
+    backgroundColor: Colors.HOME_DES
+  },
+  dropdownStyle: {
+    width: '90%',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    alignSelf: 'center',
+    backgroundColor: Colors.TEXT_INPUT_BG,
+    borderColor: Colors.TEXT_INPUT_BORDER
   }
 })
