@@ -125,7 +125,7 @@ class PrimaryTextInput extends Component {
           showIcon={false}
           confirmBtnText={'Confirm'}
           cancelBtnText={'Cancel'}
-          format=" MM/DD/YYYY"
+          format="MM/DD/YYYY"
           date={new Date(this.props.text ? this.props.text : Date.now())}
           maxDate={this.props.maxDate || new Date()}
           minDate={this.props.minDate || new Date('1900/01/01')}
@@ -142,9 +142,13 @@ class PrimaryTextInput extends Component {
               }
             ],
             dateText: styles.dateText,
-            datePicker: { justifyContent: 'center' }
+            datePicker: { justifyContent: 'center' },
+            disabled: {
+              backgroundColor: 'transparent'
+            }
           }}
           onDateChange={text => this.onChangeText(text)}
+          disabled={this.props.disabled || false}
         />
       )
     }
@@ -224,7 +228,11 @@ class PrimaryTextInput extends Component {
             >
               <Text
                 style={{
-                  color: !this.state.text ? Colors.BLUR_TEXT : Colors.BLACK,
+                  color: !this.state.text
+                    ? Platform.OS == 'ios'
+                      ? '#bbb'
+                      : '#666'
+                    : Colors.BLACK,
                   ...Fonts.poppinsRegular(14),
                   textTransform: 'capitalize'
                 }}
